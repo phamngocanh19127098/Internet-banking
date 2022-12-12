@@ -52,9 +52,9 @@ export class UsersService {
   }
 
   createRandomPaymentAccount(len) {
-    var randomAccount = '';
-    var character = '0987654321';
-    for (var i = 0; i < len; i++) {
+    let randomAccount = '';
+    const character = '0987654321';
+    for (let i = 0; i < len; i++) {
       randomAccount += character.charAt(
         Math.floor(Math.random() * character.length),
       );

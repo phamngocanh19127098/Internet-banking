@@ -1,9 +1,4 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsNumber,
-  IsPhoneNumber,
-} from '@nestjs/class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsPhoneNumber } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
