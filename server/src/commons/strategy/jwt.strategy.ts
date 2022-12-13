@@ -18,12 +18,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate({ username }) {
-    const employee = await this.authService.validateEmployee(username);
+    const user = await this.authService.validateUser(username);
 
-    if (!employee) {
+    if (!user) {
       throw new UnauthorizedException('Invalid token');
     }
 
-    return employee;
+    return user;
   }
 }

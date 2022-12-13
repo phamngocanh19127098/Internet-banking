@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { EmployeeModule } from 'src/api/employees/employee.module';
+import { UserModule } from 'src/api/users/user.module';
 import { AuthModule } from 'src/api/auth/auth.module';
-import { Employee } from 'src/api/employees/entity/employee.entity';
-import { UsersModule } from 'src/users/users.module';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/api/users/entity/user.entity';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,11 +17,10 @@ import { AppService } from './app.service';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: 'internet_banking',
-      entities: [User, Employee],
+      entities: [User],
       synchronize: false,
     }),
-    UsersModule,
-    EmployeeModule,
+    UserModule,
     AuthModule,
   ],
   controllers: [AppController],

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `user` (
                                           `password` longtext DEFAULT NULL,
                                           `refresh_token` longtext DEFAULT NULL,
                                           `email` varchar(300) CHARACTER SET utf8mb4 NOT NULL,
-										  `bdate` date DEFAULT NULL,
+										                      `bdate` date DEFAULT NULL,
                                           `phone` varchar(20) DEFAULT NULL,
                                           `address` varchar(300) CHARACTER SET utf8mb4 DEFAULT NULL,
                                           `role` ENUM('admin','employee','customer') NOT NULL,

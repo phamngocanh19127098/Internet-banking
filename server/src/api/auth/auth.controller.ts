@@ -1,28 +1,23 @@
 import { Controller, Post, UseGuards, Get, Body, Req } from '@nestjs/common';
 
-import { LocalAuthGuard } from 'src/commons/guard/local.guard';
 import { JwtAuthGuard } from 'src/commons/guard/jwt.guard';
-import {
-  CreateEmployeeDto,
-  LoginEmployeeDto,
-} from 'src/api/employees/dto/employee.dto';
+import { CreateUserDto, LoginUserDto } from 'src/api/users/dto/user.dto';
 
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger/dist/decorators';
 
 @Controller('auth')
-@ApiTags("auth")
+@ApiTags('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() dto: CreateEmployeeDto) {
+  signup(@Body() dto: CreateUserDto) {
     return this.authService.signup(dto);
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Body() dto: LoginEmployeeDto) {
+  login(@Body() dto: LoginUserDto) {
     return this.authService.login(dto);
   }
 
