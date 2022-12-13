@@ -8,8 +8,10 @@ import {
 } from 'src/api/employees/dto/employee.dto';
 
 import { AuthService } from './auth.service';
+import { ApiTags } from '@nestjs/swagger/dist/decorators';
 
 @Controller('auth')
+@ApiTags("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
