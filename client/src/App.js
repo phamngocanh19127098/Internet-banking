@@ -1,11 +1,16 @@
 import React from "react";
-
+import 'tailwindcss/tailwind.css'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from "./pages/home";
+import Login from "./pages/login";
 function App() {
   return (
-    <div className="App">
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
-
 export default App;
