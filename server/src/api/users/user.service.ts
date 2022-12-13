@@ -9,8 +9,8 @@ import { hash, compareSync } from 'bcrypt';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
 
-import { CreateUserDto, LoginUserDto } from './dto/user.dto';
-import { User } from './entity/user.entity';
+import {CreateUserDto, LoginUserDto, UpdateUserDto} from './dto/user.dto';
+import {Role, User} from './entity/user.entity';
 
 @Injectable()
 export class UserService {
@@ -73,5 +73,17 @@ export class UserService {
 
   updateRefreshToken(username: string, refreshToken: string) {
     return this.userRepository.update({ username }, { refreshToken });
+  }
+
+  findAllEmployee() {
+    return this.userRepository.findBy({ role: Role.EMPLOYEE });
+  }
+
+  updateEmployee(id: number, updateUserDto: UpdateUserDto) {
+    return this.userRepository.update(id, updateUserDto);
+  }
+
+  removeEmployee(id: number) {
+    return this.userRepository.delete(id);
   }
 }
