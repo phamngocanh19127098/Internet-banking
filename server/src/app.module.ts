@@ -12,11 +12,11 @@ import { AppService } from './app.service';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host:  process.env.DATABASE_HOST,
       port: 3306,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
-      database: 'internet_banking',
+      database: process.env.DATABASE_NAME,
       entities: [User],
       synchronize: false,
     }),
