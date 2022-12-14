@@ -9,8 +9,10 @@ import { hash, compareSync } from 'bcrypt';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
 
-import {CreateUserDto, LoginUserDto, UpdateUserDto} from './dto/user.dto';
-import {Role, User} from './entity/user.entity';
+import { sendMail } from 'src/commons/mailing/nodemailer';
+
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
+import { Role, User } from './entity/user.entity';
 
 @Injectable()
 export class UserService {
@@ -28,13 +30,19 @@ export class UserService {
       throw new BadRequestException('User already exists');
     }
 
-    let pass = randomstring.generate();
+    let pass = randomstring.generate(30);
 
     console.log(pass);
 
+    sendMail({
+      to: dto.email,
+      subject: 'Your password for Taixiu Bank',
+      html: `<h4>${pass}</h4>`,
+    });
+
     pass = await hash(pass, 10);
 
-    return this.userRepository.save({ ...dto, pass });
+    return this.userRepository.save({ ...dto, password: pass });
   }
 
   async getByLogin({ username, password }: LoginUserDto) {

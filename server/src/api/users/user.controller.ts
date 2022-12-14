@@ -1,7 +1,15 @@
-import {Controller, Post, Body, Get, Patch, Param, Delete} from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger/dist';
 
-import {CreateUserDto, UpdateUserDto} from './dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { User } from './entity/user.entity';
 
@@ -11,7 +19,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  createAccount(@Body() dto: CreateUserDto): Promise<User> {
+  createUser(@Body() dto: CreateUserDto): Promise<User> {
     return this.userService.create(dto);
   }
 
@@ -22,8 +30,8 @@ export class UserController {
 
   @Patch('updateEmployee/:id')
   updateEmployee(
-      @Param('id') id: string,
-      @Body() updateUserDto: UpdateUserDto,
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.userService.updateEmployee(+id, updateUserDto);
   }
