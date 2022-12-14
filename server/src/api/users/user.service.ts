@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { hash, compareSync } from 'bcrypt';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
@@ -45,7 +45,7 @@ export class UserService {
     return this.userRepository.save({ ...dto, password: pass });
   }
 
-  async getByLogin({ username, password }: LoginUserDto) {
+  async getByLogin({ username, password }: LoginUserDto): Promise<User> {
     const user = await this.userRepository.findOneBy({ username });
 
     if (!user) {
@@ -65,7 +65,7 @@ export class UserService {
     return this.userRepository.findOneBy({ username });
   }
 
-  async getByRefresh(refreshToken: string, username: string) {
+  async getByRefresh(refreshToken: string, username: string): Promise<User> {
     const user = await this.getByUsername(username);
 
     if (!user) {
@@ -79,12 +79,15 @@ export class UserService {
     return user;
   }
 
-  updateRefreshToken(username: string, refreshToken: string) {
+  updateRefreshToken(
+    username: string,
+    refreshToken: string,
+  ): Promise<UpdateResult> {
     return this.userRepository.update({ username }, { refreshToken });
   }
 
   findAllEmployee() {
-    return this.userRepository.findBy({ role: Role.EMPLOYEE });
+    return this.userRepository.findBy({ role: Role.ADMIN });
   }
 
   updateEmployee(id: number, updateUserDto: UpdateUserDto) {

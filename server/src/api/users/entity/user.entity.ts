@@ -39,7 +39,7 @@ export class User {
   role: Role;
 
   @Column()
-  status: string;
+  status: number;
 
   @Column({ name: 'created_at' })
   createdAt: Date;

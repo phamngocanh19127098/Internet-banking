@@ -1,10 +1,16 @@
 import { Controller, Post, UseGuards, Get, Body, Req } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
+import { UsernameWithMetadata } from 'src/commons/interface';
 import { JwtAuthGuard } from 'src/commons/guard/jwt.guard';
-import { CreateUserDto, LoginUserDto } from 'src/api/users/dto/user.dto';
+import { User } from 'src/api/users/entity/user.entity';
+import {
+  ChangeUserPasswordDto,
+  CreateUserDto,
+  LoginUserDto,
+} from 'src/api/users/dto/user.dto';
 
 import { AuthService } from './auth.service';
-import { ApiTags } from '@nestjs/swagger/dist/decorators';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -12,25 +18,23 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() dto: CreateUserDto) {
+  signup(@Body() dto: CreateUserDto): Promise<User> {
     return this.authService.signup(dto);
   }
 
   @Post('login')
-  login(@Body() dto: LoginUserDto) {
+  login(@Body() dto: LoginUserDto): Promise<UsernameWithMetadata> {
     return this.authService.login(dto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Req() req) {
-    const { id, username, refreshToken, updatedAt } = req.user;
-
-    return { id, username, refreshToken, updatedAt };
+  @Post('changepassword')
+  changePassword(@Body() dto: ChangeUserPasswordDto): Promise<User> {
+    return this.authService.changePassword(dto);
   }
 
+  // Maybe delete when handled auto refresh
   @Post('refresh')
-  refresh(@Body() body) {
+  refresh(@Body() body): Promise<UsernameWithMetadata> {
     return this.authService.refresh(body.refreshToken);
   }
 
@@ -41,5 +45,13 @@ export class AuthController {
     return {
       statusCode: 200,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Req() req) {
+    const { id, username, refreshToken, updatedAt } = req.user;
+
+    return { id, username, refreshToken, updatedAt };
   }
 }
