@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {User} from "../../users/entity/user.entity";
 
 export enum TransactionType {
   RECHARGE = 'recharge',
@@ -41,6 +42,6 @@ export class Transaction {
   @Column({ name: 'updated_at' })
   updatedAt: Date;
 
-  // @ManyToOne(() => User, (user) => user.transactions)
-  // user: User;
+  @ManyToOne(() => User, (user) => user.transactions)
+  user: User;
 }
