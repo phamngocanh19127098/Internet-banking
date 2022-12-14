@@ -12,12 +12,12 @@ export class DebtReminder {
     accountSrcNumber: number;
 
     @Column()
-    status: string;
+    status: number;
 
-    @Column({ name: 'created_at' })
+    @Column({ name: 'created_at', type: "timestamp" })
     createdAt: Date;
 
-    @Column({ name: 'updated_at' })
+    @Column({ name: 'updated_at', type: "timestamp"})
     updatedAt: Date;
 
     @Column()
@@ -26,6 +26,11 @@ export class DebtReminder {
     @Column()
     description: string;
 
+    @Column({ name: 'payment_id' })
+    paymentId: number;
+
+    @Column({ name: 'user_id' })
+    userId: number;
     //payment_id
     //user_id
 }

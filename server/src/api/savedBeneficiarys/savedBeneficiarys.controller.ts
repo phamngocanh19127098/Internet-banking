@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SavedBeneficiarysService } from './saved-beneficiarys.service';
+import { SavedBeneficiarysService } from './savedBeneficiarys.service';
 import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 
-@Controller('saved-beneficiarys')
+@Controller('savedBeneficiarys')
 export class SavedBeneficiarysController {
   constructor(
     private readonly savedBeneficiarysService: SavedBeneficiarysService,

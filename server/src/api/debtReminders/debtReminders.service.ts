@@ -3,7 +3,7 @@ import { CreateDebtReminderDto } from './dto/create-debt-reminder.dto';
 import { UpdateDebtReminderDto } from './dto/update-debt-reminder.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
-import {DebtReminder} from "./entities/debt-reminder.entity";
+import {DebtReminder} from "./entities/debtReminders.entity";
 
 @Injectable()
 export class DebtRemindersService {

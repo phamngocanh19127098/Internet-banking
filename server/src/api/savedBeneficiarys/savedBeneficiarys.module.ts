@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { SavedBeneficiarysService } from './saved-beneficiarys.service';
-import { SavedBeneficiarysController } from './saved-beneficiarys.controller';
+import { SavedBeneficiarysService } from './savedBeneficiarys.service';
+import { SavedBeneficiarysController } from './savedBeneficiarys.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {SavedBeneficiary} from "./entities/saved-beneficiary.entity";
+import {SavedBeneficiary} from "./entities/savedBeneficiary.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([SavedBeneficiary])],

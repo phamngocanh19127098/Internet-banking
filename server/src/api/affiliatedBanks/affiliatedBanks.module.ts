@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AffiliatedBanksService } from './affiliated-banks.service';
-import { AffiliatedBanksController } from './affiliated-banks.controller';
+import { AffiliatedBanksService } from './affiliatedBanks.service';
+import { AffiliatedBanksController } from './affiliatedBanks.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {AffiliatedBank} from "./entities/affiliated-bank.entity";
+import {AffiliatedBank} from "./entities/affiliatedBank.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([AffiliatedBank])],

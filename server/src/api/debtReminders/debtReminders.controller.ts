@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { DebtRemindersService } from './debt-reminders.service';
+import { DebtRemindersService } from './debtReminders.service';
 import { CreateDebtReminderDto } from './dto/create-debt-reminder.dto';
 import { UpdateDebtReminderDto } from './dto/update-debt-reminder.dto';
 
-@Controller('debt-reminders')
+@Controller('debtReminder')
 export class DebtRemindersController {
   constructor(private readonly debtRemindersService: DebtRemindersService) {}
 

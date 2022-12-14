@@ -2,9 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn
 import {User} from "../../users/entity/user.entity";
 
 export enum TransactionType {
-  RECHARGE = 'recharge',
-  TRANSFER = 'transfer',
-  DEBT_REMINDERS_PAYMENT = 'reminder',
+  RECHARGE = 1,
+  TRANSFER = 2,
+  DEBT_REMINDERS_PAYMENT = 3,
 }
 
 @Entity({name : 'transaction'})
@@ -28,18 +28,18 @@ export class Transaction {
   description: string;
 
   @Column({ name: 'employee_id' })
-  employeeId: Date; // number ???
+  employeeId: number; // number ???
 
   @Column({ name: 'transaction_type' })
-  transactionType: string;
+  transactionType: number;
 
   @Column()
-  status: string;
+  status: number;
 
-  @Column({ name: 'created_at' })
+  @Column({ name: 'created_at', type:"timestamp" })
   createdAt: Date;
 
-  @Column({ name: 'updated_at' })
+  @Column({ name: 'updated_at' ,type:"timestamp"})
   updatedAt: Date;
 
   @Column({name: 'user_id'})

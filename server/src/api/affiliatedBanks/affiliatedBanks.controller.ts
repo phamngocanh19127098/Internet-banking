@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AffiliatedBanksService } from './affiliated-banks.service';
+import { AffiliatedBanksService } from './affiliatedBanks.service';
 import { CreateAffiliatedBankDto } from './dto/create-affiliated-bank.dto';
 import { UpdateAffiliatedBankDto } from './dto/update-affiliated-bank.dto';
 
-@Controller('affiliated-banks')
+@Controller('affiliatedBanks')
 export class AffiliatedBanksController {
   constructor(
     private readonly affiliatedBanksService: AffiliatedBanksService,

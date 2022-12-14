@@ -87,16 +87,38 @@ export class UserService {
     return this.userRepository.update({ username }, { refreshToken });
   }
 
-  findAllEmployee() {
-    return this.userRepository.findBy({ role: Role.ADMIN }); // ???
+  async findAllEmployee() {
+    try {
+      return await this.userRepository.findBy({ role: Role.EMPLOYEE }); // ???
+    }catch (e) {
+        throw new InternalServerErrorException();
+    }
   }
 
-  updateEmployee(id: number, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(id, updateUserDto);
+  async updateEmployee(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const employee: User = await this.userRepository.findOneById(id)
+      console.log(employee)
+      if (!employee) {
+        throw new BadRequestException();
+      }
+      return await this.userRepository.update(id, updateUserDto);
+    }catch (e) {
+
+    }
   }
 
-  removeEmployee(id: number) {
-    return this.userRepository.delete(id);
+  async removeEmployee(id: number) {
+    try {
+      const employee: User = await this.userRepository.findOneById(id)
+      if (!employee) {
+        throw new BadRequestException();
+      }
+      return await this.userRepository.delete(id);
+    } catch (e) {
+      throw new InternalServerErrorException();
+      console.log(e.message)
+    }
   }
 
   async findUserById(id: number) {

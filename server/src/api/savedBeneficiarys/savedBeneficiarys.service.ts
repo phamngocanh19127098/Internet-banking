@@ -3,7 +3,7 @@ import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
-import {SavedBeneficiary} from "./entities/saved-beneficiary.entity";
+import {SavedBeneficiary} from "./entities/savedBeneficiary.entity";
 
 @Injectable()
 export class SavedBeneficiarysService {

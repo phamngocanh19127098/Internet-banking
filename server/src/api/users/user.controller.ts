@@ -3,9 +3,8 @@ import {
   Post,
   Body,
   Get,
-  Patch,
   Param,
-  Delete,
+  Delete, Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger/dist';
 
@@ -23,12 +22,12 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @Get('getAllEmployee')
+  @Get('employee/list')
   findAllEmployee() {
     return this.userService.findAllEmployee();
   }
 
-  @Patch('updateEmployee/:id')
+  @Put('employee/:id')
   updateEmployee(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -36,7 +35,7 @@ export class UserController {
     return this.userService.updateEmployee(+id, updateUserDto);
   }
 
-  @Delete('deleteEmployee/:id')
+  @Delete('employee/:id')
   removeEmployee(@Param('id') id: string) {
     return this.userService.removeEmployee(+id);
   }

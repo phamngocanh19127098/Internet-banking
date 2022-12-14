@@ -24,6 +24,9 @@ export class Account {
     @Column({name: 'created_by'})
     createdBy: number;
 
+    @Column({name: 'customer_id'})
+    customerId: number;
+
     // @OneToOne(()=>User,(customer_id))
     // customer_id: number
 }
