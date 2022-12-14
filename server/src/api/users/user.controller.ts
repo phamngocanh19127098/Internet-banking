@@ -40,4 +40,9 @@ export class UserController {
   removeEmployee(@Param('id') id: string) {
     return this.userService.removeEmployee(+id);
   }
+
+  @Get('/:id')
+  async findUserById(@Param('id') id: string) {
+    return await this.userService.findUserById(+id);
+  }
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 import {User} from "../../users/entity/user.entity";
 
 export enum TransactionType {
@@ -7,7 +7,7 @@ export enum TransactionType {
   DEBT_REMINDERS_PAYMENT = 'reminder',
 }
 
-@Entity({})
+@Entity({name : 'transaction'})
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,7 +28,7 @@ export class Transaction {
   description: string;
 
   @Column({ name: 'employee_id' })
-  employeeId: Date;
+  employeeId: Date; // number ???
 
   @Column({ name: 'transaction_type' })
   transactionType: string;
@@ -42,6 +42,10 @@ export class Transaction {
   @Column({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.transactions)
+  @Column({name: 'user_id'})
+  userId: number;
+
+  @OneToOne(() => User, (user) => user.transactions)
+  @JoinColumn({name: 'user_id', referencedColumnName : 'id'})
   user: User;
 }

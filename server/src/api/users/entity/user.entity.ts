@@ -48,6 +48,6 @@ export class User {
   @Column({ name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(()=>Transaction,(transaction)=>transaction.user)
-  transactions: Transaction[];
+  @OneToMany(() => Transaction, (transaction)=>transaction.user)
+  transactions : Transaction[];
 }

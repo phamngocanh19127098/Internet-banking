@@ -2,6 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Repository, UpdateResult } from 'typeorm';
@@ -87,7 +88,7 @@ export class UserService {
   }
 
   findAllEmployee() {
-    return this.userRepository.findBy({ role: Role.ADMIN });
+    return this.userRepository.findBy({ role: Role.ADMIN }); // ???
   }
 
   updateEmployee(id: number, updateUserDto: UpdateUserDto) {
@@ -96,5 +97,32 @@ export class UserService {
 
   removeEmployee(id: number) {
     return this.userRepository.delete(id);
+  }
+
+  async findUserById(id: number) {
+    // let user : User = await this.userRepository.createQueryBuilder("user").where("user.id = :id", {id}).getOne();
+    // làm mẫu nha
+    try {
+      const result = await this.userRepository
+        .createQueryBuilder('user')
+        .leftJoin('user.transactions', 'transactions')
+        .select(['user.id', 'transactions'])
+        .where('user.id = :id', {id})
+        .getOne();
+
+      if (result == null) {
+        throw new BadRequestException('Nguời dùng không tồn tại!');
+      }
+
+      return {
+        data: {
+          result,
+        },
+        statusCode: 200,
+        message: 'Lấy thông tin người dùng thành công!',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Lỗi khi đang tìm kiếm nguời dùng!')
+    }
   }
 }
