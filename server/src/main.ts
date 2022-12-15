@@ -1,6 +1,9 @@
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
+import { ResponseInterceptor } from 'src/commons/interceptors/ResponseInterceptor';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -12,6 +15,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.enableCors();
 

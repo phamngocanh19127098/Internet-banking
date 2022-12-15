@@ -2,20 +2,20 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from 'src/api/users/user.module';
-import { AuthModule } from 'src/api/auth/auth.module';
 import { User } from 'src/api/users/entity/user.entity';
+import { AuthModule } from 'src/api/auth/auth.module';
+import { Transaction } from 'src/api/transactions/entities/transaction.entity';
+import { TransactionsModule } from 'src/api/transactions/transactions.module';
+import { AffiliatedBanksModule } from 'src/api/affiliatedBanks/affiliatedBanks.module';
+import { AffiliatedBank } from 'src/api/affiliatedBanks/entities/affiliatedBank.entity';
+import { AccountsModule } from 'src/api/accounts/accounts.module';
+import { Account } from 'src/api/accounts/entities/account.entity';
+import { DebtRemindersModule } from 'src/api/debtReminders/debtReminders.module';
+import { DebtReminder } from 'src/api/debtReminders/entities/debtReminders.entity';
+import { SavedBeneficiarysModule } from 'src/api/savedBeneficiarys/savedBeneficiarys.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {Transaction} from "./api/transactions/entities/transaction.entity";
-import {TransactionsModule} from "./api/transactions/transactions.module";
-import {AffiliatedBanksModule} from "./api/affiliatedBanks/affiliatedBanks.module";
-import {AffiliatedBank} from "./api/affiliatedBanks/entities/affiliatedBank.entity";
-import {Account} from "./api/accounts/entities/account.entity";
-import {AccountsModule} from "./api/accounts/accounts.module";
-import {DebtReminder} from "./api/debtReminders/entities/debtReminders.entity";
-import {DebtRemindersModule} from "./api/debtReminders/debtReminders.module";
-import {SavedBeneficiarysModule} from "./api/savedBeneficiarys/savedBeneficiarys.module";
 
 @Module({
   imports: [
@@ -26,16 +26,23 @@ import {SavedBeneficiarysModule} from "./api/savedBeneficiarys/savedBeneficiarys
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User,Transaction,AffiliatedBank, Account, DebtReminder, SavedBeneficiarysModule],
+      entities: [
+        User,
+        Transaction,
+        AffiliatedBank,
+        Account,
+        DebtReminder,
+        SavedBeneficiarysModule,
+      ],
       synchronize: false,
     }),
     UserModule,
     AuthModule,
     TransactionsModule,
-      AffiliatedBanksModule,
-      AccountsModule,
-      DebtRemindersModule,
-      SavedBeneficiarysModule,
+    AffiliatedBanksModule,
+    AccountsModule,
+    DebtRemindersModule,
+    SavedBeneficiarysModule,
   ],
   controllers: [AppController],
   providers: [AppService],

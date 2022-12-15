@@ -23,12 +23,20 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const existed = await this.userRepository.findOneBy({
+    const existedUsername = await this.userRepository.findOneBy({
       username: dto.username,
     });
 
-    if (existed) {
+    if (existedUsername) {
       throw new BadRequestException('User already exists');
+    }
+
+    const existedEmail = await this.userRepository.findOneBy({
+      username: dto.email,
+    });
+
+    if (existedEmail) {
+      throw new BadRequestException('Email already exists');
     }
 
     let pass = randomstring.generate(30);
@@ -90,34 +98,32 @@ export class UserService {
   async findAllEmployee() {
     try {
       return await this.userRepository.findBy({ role: Role.EMPLOYEE }); // ???
-    }catch (e) {
-        throw new InternalServerErrorException();
+    } catch (e) {
+      throw new InternalServerErrorException();
     }
   }
 
   async updateEmployee(id: number, updateUserDto: UpdateUserDto) {
     try {
-      const employee: User = await this.userRepository.findOneById(id)
-      console.log(employee)
+      const employee: User = await this.userRepository.findOneById(id);
+      console.log(employee);
       if (!employee) {
         throw new BadRequestException();
       }
       return await this.userRepository.update(id, updateUserDto);
-    }catch (e) {
-
-    }
+    } catch (e) {}
   }
 
   async removeEmployee(id: number) {
     try {
-      const employee: User = await this.userRepository.findOneById(id)
+      const employee: User = await this.userRepository.findOneById(id);
       if (!employee) {
         throw new BadRequestException();
       }
       return await this.userRepository.delete(id);
     } catch (e) {
       throw new InternalServerErrorException();
-      console.log(e.message)
+      console.log(e.message);
     }
   }
 
@@ -129,7 +135,7 @@ export class UserService {
         .createQueryBuilder('user')
         .leftJoin('user.transactions', 'transactions')
         .select(['user.id', 'transactions'])
-        .where('user.id = :id', {id})
+        .where('user.id = :id', { id })
         .getOne();
 
       if (result == null) {
@@ -144,7 +150,9 @@ export class UserService {
         message: 'Lấy thông tin người dùng thành công!',
       };
     } catch (error) {
-      throw new InternalServerErrorException('Lỗi khi đang tìm kiếm nguời dùng!')
+      throw new InternalServerErrorException(
+        'Lỗi khi đang tìm kiếm nguời dùng!',
+      );
     }
   }
 }

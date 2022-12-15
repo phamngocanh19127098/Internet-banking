@@ -1,9 +1,8 @@
 import { Controller, Post, UseGuards, Get, Body, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { UsernameWithMetadata } from 'src/commons/interface';
+import { IResponseData } from 'src/interface';
 import { JwtAuthGuard } from 'src/commons/guard/jwt.guard';
-import { User } from 'src/api/users/entity/user.entity';
 import {
   ChangeUserPasswordDto,
   CreateUserDto,
@@ -18,23 +17,23 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() dto: CreateUserDto): Promise<User> {
+  signup(@Body() dto: CreateUserDto): Promise<IResponseData> {
     return this.authService.signup(dto);
   }
 
   @Post('login')
-  login(@Body() dto: LoginUserDto): Promise<UsernameWithMetadata> {
+  login(@Body() dto: LoginUserDto): Promise<IResponseData> {
     return this.authService.login(dto);
   }
 
   @Post('changepassword')
-  changePassword(@Body() dto: ChangeUserPasswordDto): Promise<User> {
+  changePassword(@Body() dto: ChangeUserPasswordDto): Promise<IResponseData> {
     return this.authService.changePassword(dto);
   }
 
   // Maybe delete when handled auto refresh
   @Post('refresh')
-  refresh(@Body() body): Promise<UsernameWithMetadata> {
+  refresh(@Body() body): Promise<IResponseData> {
     return this.authService.refresh(body.refreshToken);
   }
 

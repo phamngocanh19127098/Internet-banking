@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, hash } from 'bcrypt';
 
-import type { UsernameWithMetadata, Token } from 'src/commons/interface';
+import type { IResponseData, IToken } from 'src/interface';
 import { UserService } from 'src/api/users/user.service';
 import { User } from 'src/api/users/entity/user.entity';
 import {
@@ -24,23 +24,34 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
-  async signup(dto: CreateUserDto): Promise<User> {
+  async signup(dto: CreateUserDto): Promise<IResponseData> {
     const user = await this.userService.create(dto);
 
-    return user;
-  }
-
-  async login(loginDto: LoginUserDto): Promise<UsernameWithMetadata> {
-    const user = await this.userService.getByLogin(loginDto);
-    const token = await this.signToken(user.username);
+    delete user.password;
 
     return {
-      username: user.username,
-      metadata: token,
+      data: user,
+      statusCode: 200,
+      message: 'Đăng ký người dùng thành công.',
     };
   }
 
-  async changePassword(dto: ChangeUserPasswordDto): Promise<User> {
+  async login(loginDto: LoginUserDto): Promise<IResponseData> {
+    const user = await this.userService.getByLogin(loginDto);
+    const token = await this.signToken(user.username);
+
+    delete user.password;
+    delete user.refreshToken;
+
+    return {
+      data: user,
+      metadata: token,
+      statusCode: 200,
+      message: 'Đăng nhập thành công.',
+    };
+  }
+
+  async changePassword(dto: ChangeUserPasswordDto): Promise<IResponseData> {
     // Handle on FE
     // if (dto.newPassword !== dto.confirmNewPassword) {
     //   throw new BadRequestException(
@@ -69,7 +80,14 @@ export class AuthService {
       password: dto.newPassword,
     });
 
-    return user;
+    delete user.password;
+    delete user.refreshToken;
+
+    return {
+      data: user,
+      statusCode: 200,
+      message: 'Đổi mật khẩu thành công.',
+    };
   }
 
   async validateUser(username: string): Promise<User> {
@@ -82,7 +100,7 @@ export class AuthService {
     return user;
   }
 
-  async signToken(username: string, refresh = false): Promise<Token> {
+  async signToken(username: string, refresh = false): Promise<IToken> {
     const accessToken = this.jwtService.sign({ username });
 
     if (!refresh) {
@@ -110,7 +128,7 @@ export class AuthService {
     }
   }
 
-  async refresh(refreshToken: string): Promise<UsernameWithMetadata> {
+  async refresh(refreshToken: string): Promise<IResponseData> {
     try {
       const payload = await this.jwtService.verify(refreshToken, {
         secret: this.config.get('JWT_REFRESH_TOKEN_SECRET'),
@@ -124,8 +142,10 @@ export class AuthService {
       const token = await this.signToken(user.username, true);
 
       return {
-        username: user.username,
+        data: user,
         metadata: token,
+        statusCode: 200,
+        message: 'Tái tạo refresh token thành công.',
       };
     } catch (e) {
       throw new UnauthorizedException('Invalid token');
