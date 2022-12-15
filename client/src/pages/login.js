@@ -40,22 +40,11 @@ class Login extends Component {
                                 Quên mật khẩu?
                             </a>
                             <div className="mt-6">
-                                <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] rounded-lg">
+                                <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] hover:from-[#025223] hover:to-[#076F32] rounded-lg">
                                     Đăng nhập
                                 </button>
                             </div>
                         </form>
-
-                        <p className="mt-8 text-xs font-light text-center text-gray-700">
-                            {" "}
-                            Bạn chưa có tài khoản?{" "}
-                            <a
-                                href="#"
-                                className="font-medium text-main-green hover:underline"
-                            >
-                                Đăng ký
-                            </a>
-                        </p>
                     </div>
                 </div>
 
