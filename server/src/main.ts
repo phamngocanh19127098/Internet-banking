@@ -1,8 +1,10 @@
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
 
+import { ClassValidatorException } from 'src/commons/filters/exceptions/ClassValidatorExceptions/ClassValidatorException';
 import { ResponseInterceptor } from 'src/commons/interceptors/ResponseInterceptor';
+import { AppExceptionFilter } from 'src/commons/filters/AppException.filter';
 
 import { AppModule } from './app.module';
 
@@ -13,10 +15,14 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       transform: true,
+      exceptionFactory(errors) {
+        return new ClassValidatorException(errors);
+      },
     }),
   );
 
   app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new AppExceptionFilter(app.get(HttpAdapterHost)));
 
   app.enableCors();
 

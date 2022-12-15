@@ -3,14 +3,23 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Repository, UpdateResult } from 'typeorm';
 import { hash, compareSync } from 'bcrypt';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
 
+import { InvalidCredentialsException } from 'src/commons/filters/exceptions/auth/InvalidCredentialsException';
+import {
+  FailLoginException,
+  InvalidTokenException,
+} from 'src/commons/filters/exceptions/auth';
 import { sendMail } from 'src/commons/mailing/nodemailer';
+import {
+  EmailExistedException,
+  UsernameExistedException,
+  UserUnexistingException,
+} from 'src/commons/filters/exceptions/users';
 
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
 import { Role, User } from './entity/user.entity';
@@ -28,22 +37,22 @@ export class UserService {
     });
 
     if (existedUsername) {
-      throw new BadRequestException('User already exists');
+      throw new UsernameExistedException();
     }
 
     const existedEmail = await this.userRepository.findOneBy({
-      username: dto.email,
+      email: dto.email,
     });
 
     if (existedEmail) {
-      throw new BadRequestException('Email already exists');
+      throw new EmailExistedException();
     }
 
     let pass = randomstring.generate(30);
 
     console.log(pass);
 
-    sendMail({
+    await sendMail({
       to: dto.email,
       subject: 'Your password for Taixiu Bank',
       html: `<h4>${pass}</h4>`,
@@ -58,13 +67,13 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ username });
 
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new UserUnexistingException();
     }
 
     const checkPassword = compareSync(password, user.password);
 
     if (!checkPassword) {
-      throw new UnauthorizedException('Username or password is wrong');
+      throw new FailLoginException();
     }
 
     return user;
@@ -78,11 +87,11 @@ export class UserService {
     const user = await this.getByUsername(username);
 
     if (!user) {
-      throw new UnauthorizedException('Invalid token');
+      throw new InvalidTokenException();
     }
 
     if (refreshToken !== user.refreshToken) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new InvalidCredentialsException();
     }
 
     return user;

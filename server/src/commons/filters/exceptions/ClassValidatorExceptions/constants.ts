@@ -1,0 +1,1 @@
+export const CLASS_VALIDATOR_ERROR = 7_600;

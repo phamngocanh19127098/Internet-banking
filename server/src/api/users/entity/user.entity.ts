@@ -1,5 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
-import {Transaction} from "../../transactions/entities/transaction.entity";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Transaction } from 'src/api/transactions/entities/transaction.entity';
 
 export enum Role {
   ADMIN = 'admin',
@@ -48,6 +48,6 @@ export class User {
   @Column({ name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(() => Transaction, (transaction)=>transaction.user)
-  transactions : Transaction[];
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transactions: Transaction[];
 }

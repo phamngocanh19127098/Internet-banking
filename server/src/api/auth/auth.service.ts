@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ForbiddenException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, hash } from 'bcrypt';
@@ -15,6 +11,11 @@ import {
   CreateUserDto,
   LoginUserDto,
 } from 'src/api/users/dto/user.dto';
+import {
+  IncorrectOldPasswordException,
+  InvalidTokenException,
+  PasswordAndConfirmPasswordNotMatchException,
+} from 'src/commons/filters/exceptions/auth';
 
 @Injectable()
 export class AuthService {
@@ -64,13 +65,13 @@ export class AuthService {
     const checkPassword = compareSync(dto.password, user.password);
 
     if (!checkPassword) {
-      throw new UnauthorizedException('Old password is wrong');
+      throw new IncorrectOldPasswordException();
     }
 
     const checkNewPassword = compareSync(dto.newPassword, user.password);
 
     if (checkNewPassword) {
-      throw new ForbiddenException('New password cannot match old one.');
+      throw new PasswordAndConfirmPasswordNotMatchException();
     }
 
     dto.newPassword = await hash(dto.newPassword, 10);
@@ -94,7 +95,7 @@ export class AuthService {
     const user = await this.userService.getByUsername(username);
 
     if (!user) {
-      throw new UnauthorizedException('Invalid token');
+      throw new InvalidTokenException();
     }
 
     return user;
@@ -148,7 +149,7 @@ export class AuthService {
         message: 'Tái tạo refresh token thành công.',
       };
     } catch (e) {
-      throw new UnauthorizedException('Invalid token');
+      throw new InvalidTokenException();
     }
   }
 

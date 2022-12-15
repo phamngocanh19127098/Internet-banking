@@ -1,0 +1,5 @@
+export const FAIL_LOGIN = 7_000;
+export const INCORRECT_OLD_PASSWORD = 7_001;
+export const PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = 7_002;
+export const INVALID_TOKEN = 7_003;
+export const INVALID_CREDENTIALS = 7_004;
