@@ -1,15 +1,18 @@
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 
 import { ClassValidatorException } from 'src/commons/filters/exceptions/ClassValidatorExceptions/ClassValidatorException';
 import { ResponseInterceptor } from 'src/commons/interceptors/ResponseInterceptor';
 import { AppExceptionFilter } from 'src/commons/filters/AppException.filter';
+import { JwtAuthGuard } from 'src/commons/guard/jwt.guard';
+import { RolesGuard } from 'src/commons/guard/roles.guard';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const reflector = app.get(Reflector);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,6 +26,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new AppExceptionFilter(app.get(HttpAdapterHost)));
+  app.useGlobalGuards(new JwtAuthGuard(reflector), new RolesGuard(reflector));
 
   app.enableCors();
 
