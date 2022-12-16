@@ -1,4 +1,10 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateSavedBeneficiaryDto } from './create-saved-beneficiary.dto';
+import {IsString} from "class-validator";
 
-export class UpdateSavedBeneficiaryDto extends PartialType(CreateSavedBeneficiaryDto) {}
+export class UpdateSavedBeneficiaryDto {
+    @IsString()
+    beneficiaryDefaultName: string;
+    @IsString()
+    beneficiaryNickname: string;
+    @IsString()
+    beneficiaryAccountNumber: string;
+}

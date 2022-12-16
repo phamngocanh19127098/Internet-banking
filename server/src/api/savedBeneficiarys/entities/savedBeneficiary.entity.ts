@@ -14,7 +14,7 @@ export class SavedBeneficiary {
     updatedAt: Date;
 
     @Column({ name: 'beneficiary_account_number' })
-    beneficiaryAccountNumber: number;
+    beneficiaryAccountNumber: string;
 
     @Column({ name: 'beneficiary_default_name' })
     beneficiaryDefaultName: string;
@@ -32,8 +32,8 @@ export class SavedBeneficiary {
     @JoinColumn({ name : "customer_id", referencedColumnName : "id"})
     user: User;
 
-    @ManyToOne(()=> AffiliatedBank, (affiliatedBank) => affiliatedBank.savedBeneficiary)
-    affiliatedBank: AffiliatedBank;
+    // @ManyToOne(()=> AffiliatedBank, (affiliatedBank) => affiliatedBank.savedBeneficiary)
+    // affiliatedBank: AffiliatedBank;
     
     // customer_id
     // beneficiary_bank_id
