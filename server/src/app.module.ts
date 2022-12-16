@@ -16,6 +16,7 @@ import { SavedBeneficiarysModule } from 'src/api/savedBeneficiarys/savedBenefici
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SavedBeneficiary } from './api/savedBeneficiarys/entities/savedBeneficiary.entity';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { AppService } from './app.service';
         AffiliatedBank,
         Account,
         DebtReminder,
-        SavedBeneficiarysModule,
+        SavedBeneficiary,
       ],
       synchronize: false,
     }),

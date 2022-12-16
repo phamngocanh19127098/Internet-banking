@@ -1,6 +1,8 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { AffiliatedBank } from "src/api/affiliatedBanks/entities/affiliatedBank.entity";
+import { User } from "src/api/users/entity/user.entity";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 
-@Entity()
+@Entity('saved_beneficiary')
 export class SavedBeneficiary {
     @PrimaryGeneratedColumn()
     id: number;
@@ -26,6 +28,13 @@ export class SavedBeneficiary {
     @Column({ name: 'customer_id' })
     customerId: number;
 
+    @OneToOne(() => User)
+    @JoinColumn({ name : "customer_id", referencedColumnName : "id"})
+    user: User;
+
+    @ManyToOne(()=> AffiliatedBank, (affiliatedBank) => affiliatedBank.savedBeneficiary)
+    affiliatedBank: AffiliatedBank;
+    
     // customer_id
     // beneficiary_bank_id
 }

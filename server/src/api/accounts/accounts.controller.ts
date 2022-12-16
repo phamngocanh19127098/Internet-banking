@@ -31,4 +31,9 @@ export class AccountsController {
   remove(@Param('id') id: string) {
     return this.accountsService.remove(+id);
   }
+
+  @Get('/list/:userId')
+  async getAllByUserId (@Param('userId') id: string) {
+
+  }
 }

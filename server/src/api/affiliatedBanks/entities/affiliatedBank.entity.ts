@@ -1,6 +1,7 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { SavedBeneficiary } from "src/api/savedBeneficiarys/entities/savedBeneficiary.entity";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
-@Entity()
+@Entity('affiliated_bank')
 export class AffiliatedBank {
     @PrimaryGeneratedColumn()
     id: number;
@@ -28,4 +29,7 @@ export class AffiliatedBank {
 
     @Column()
     status: string;
+
+    @OneToMany(()=> SavedBeneficiary, (savedBeneficiary) => savedBeneficiary.affiliatedBank)
+    savedBeneficiary : SavedBeneficiary[];
 }
