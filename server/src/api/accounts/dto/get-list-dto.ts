@@ -1,19 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber } from "class-validator";
+import { IsNumberString } from "class-validator";
 
 export class GetListDto{
 
     @ApiProperty()
-    @IsNumber()
+    @IsNumberString()
     page:number;
 
     @ApiProperty()
-    @IsNumber()
+    @IsNumberString()
     perPage:number;
-
-    @ApiProperty()
-    sort?:string;
-    
-    @ApiProperty()
-    fullTextSearch?:string;
 }

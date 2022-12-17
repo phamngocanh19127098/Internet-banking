@@ -1,9 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Query } from '@nestjs/common/decorators/http/route-params.decorator';
+import { ApiTags } from '@nestjs/swagger';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { GetListDto } from './dto/get-list-dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 
 @Controller('accounts')
+@ApiTags('accounts')
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
@@ -33,7 +37,13 @@ export class AccountsController {
   }
 
   @Get('/list/:userId')
-  async getAllByUserId (@Param('userId') id: string) {
-
+  async getAllByUserId (@Param('userId') userId: string, @Query('page') page: string, @Query('perPage') perPage: string) {
+    
+    let data = await this.accountsService.getListAccountByUserId(+userId, +page, +perPage);
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy thông tin tài khoản thành công.'
+    }
   }
 }

@@ -164,4 +164,18 @@ export class UserService {
       );
     }
   }
+
+  async getUserById(id: number) {
+    let user : User = await this.userRepository.findOne({
+      where: {
+        id
+      }
+    });
+    
+    if (user == null ){
+      throw new BadRequestException('Nguời dùng không tồn tại!');
+    }
+
+    return user;
+  } 
 }
