@@ -17,6 +17,7 @@ import { SavedBeneficiarysModule } from 'src/api/savedBeneficiarys/savedBenefici
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SavedBeneficiary } from './api/savedBeneficiarys/entities/savedBeneficiary.entity';
+import { DebtReminderSocketModule } from './debt-reminder-socket/debt-reminder-socket.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { SavedBeneficiary } from './api/savedBeneficiarys/entities/savedBenefici
     AccountsModule,
     DebtRemindersModule,
     SavedBeneficiarysModule,
+    DebtReminderSocketModule,
   ],
   controllers: [AppController],
   providers: [AppService],

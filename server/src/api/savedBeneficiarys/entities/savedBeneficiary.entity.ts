@@ -32,8 +32,8 @@ export class SavedBeneficiary {
     @JoinColumn({ name : "customer_id", referencedColumnName : "id"})
     user: User;
 
-    // @ManyToOne(()=> AffiliatedBank, (affiliatedBank) => affiliatedBank.savedBeneficiary)
-    // affiliatedBank: AffiliatedBank;
+    @ManyToOne(()=> AffiliatedBank, (affiliatedBank) => affiliatedBank.savedBeneficiary)
+    affiliatedBank: AffiliatedBank;
     
     // customer_id
     // beneficiary_bank_id

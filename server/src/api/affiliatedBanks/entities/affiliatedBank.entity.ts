@@ -30,6 +30,6 @@ export class AffiliatedBank {
     @Column()
     status: string;
 
-    // @OneToMany(()=> SavedBeneficiary, (savedBeneficiary) => savedBeneficiary.affiliatedBank)
-    // savedBeneficiary : SavedBeneficiary[];
+    @OneToMany(()=> SavedBeneficiary, (savedBeneficiary) => savedBeneficiary.affiliatedBank)
+    savedBeneficiary : SavedBeneficiary[];
 }

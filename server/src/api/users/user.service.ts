@@ -171,11 +171,6 @@ export class UserService {
         id
       }
     });
-    
-    if (user == null ){
-      throw new BadRequestException('Nguời dùng không tồn tại!');
-    }
-
     return user;
   } 
 }

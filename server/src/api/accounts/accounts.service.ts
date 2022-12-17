@@ -40,7 +40,7 @@ export class AccountsService {
     return `This action removes a #${id} account`;
   }
 
-  async getListAccountByUserId(userId: number, page: number, perPage: number) {
+  async getListAccountByUserId(userId: number) {
     try {
       let user: User = await this.userService.getUserById(userId);
 
@@ -49,16 +49,13 @@ export class AccountsService {
       if (user == null) {
         throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
       }
-      const [accounts, total] = await this.repos.findAndCount({
+      const accounts = await this.repos.find({
         where: {
           customerId: userId,
         },
-        take: page || 1,
-        skip: (page - 1) * perPage|| 10,
       });
       let data = {
         accounts: accounts || [],
-        total,
       };
       return data;
     } catch (error) {
@@ -66,5 +63,34 @@ export class AccountsService {
         'Lỗi khi đang tìm kiếm các tài khoản!',
       );
     }
+  }
+
+  async getAccountInfoByAccountNumber (accountNumber: string) {
+
+    try {
+      let account : Account = await this.repos.findOne({
+        where : {
+          accountNumber
+        }
+      });
+  
+      if (account == null) {
+        throw new BadRequestException('Không tồn tại tài khoản người dùng!');
+      }
+  
+      let data = await this.repos.createQueryBuilder('account')
+        .leftJoin('account.user', 'user')
+        .select(['account.accountNumber', 'account.accountType','account.status', 'user.id', 'user.username', 'user.dob', 'user.phone', 'user.address', 'user.status', 'user.role'])
+        .where('account.accountNumber =:accountNumber', {accountNumber})
+        .getOne();
+
+      return data;
+  
+    } catch (error) {
+      throw new InternalServerErrorException('Lỗi trong quá trình lấy thông tin người dùng');
+    }
+    
+    
+    
   }
 }

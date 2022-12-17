@@ -1,6 +1,8 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { User } from "src/api/users/entity/user.entity";
+import {Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import { DebtReminderEnum } from "../enum/debtReminder.enum";
 
-@Entity()
+@Entity('debt_reminder')
 export class DebtReminder {
     @PrimaryGeneratedColumn()
     id: number;
@@ -10,9 +12,6 @@ export class DebtReminder {
 
     @Column({ name: 'account_src_number' })
     accountSrcNumber: number;
-
-    @Column()
-    status: number;
 
     @Column({ name: 'created_at', type: "timestamp" })
     createdAt: Date;
@@ -31,6 +30,20 @@ export class DebtReminder {
 
     @Column({ name: 'user_id' })
     userId: number;
+
+    @Column({name: "payment_status"})
+    paymentStatus: DebtReminderEnum
+
+    @Column({name: 'receiver_id'})
+    receiverId : number;
+
+    @OneToOne(() => User)
+    @JoinColumn({name: 'user_id', referencedColumnName: 'id'})
+    user: User;
+
+    @OneToOne(() => User)
+    @JoinColumn({ name: 'receiver_id', referencedColumnName: 'id'})
+    receiver: User;
     //payment_id
     //user_id
 }
