@@ -1,6 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { Query } from '@nestjs/common/decorators/http/route-params.decorator';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Roles, ROLES_KEY } from 'src/commons/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/commons/guard/jwt.guard';
+import { RolesGuard } from 'src/commons/guard/roles.guard';
+import { Role } from '../users/entity/user.entity';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { GetListDto } from './dto/get-list-dto';
@@ -36,7 +40,9 @@ export class AccountsController {
     return this.accountsService.remove(+id);
   }
 
+  @Roles(Role.CUSTOMER)
   @Get('/list/:userId')
+  @ApiBearerAuth()
   @ApiOperation({description: "Lấy danh sách tài khoản ngân hàng bằng userId"})
   async getAllByUserId (@Param('userId') userId: string) {
     
