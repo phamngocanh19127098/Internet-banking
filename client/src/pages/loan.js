@@ -1,6 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import HomeNavigation from '../components/homeNavigation';
+import io from "socket.io-client";
+import { findAllCreatedDebtReminder } from '../constants/debtReminderConstants';
+import { useSelector, useDispatch} from "react-redux"
+import { onInit } from '../feature/debt-reminder/debtReminderSlice';
+const SERVER_POINT = "localhost:3001";
+const socket = io(SERVER_POINT);
+
+socket.emit(findAllCreatedDebtReminder, {userId : 1039});
 const Loan = () => {
+    // const detbReminder = useSelector((state) => state.debtReminder)
+    const dispatch = useDispatch();
+    
+    useEffect(() => {
+        socket.on(findAllCreatedDebtReminder, (data) => {
+            dispatch(onInit(data))
+        });
+      },[dispatch]);
+    
+    
     return (
         <div>
             <div>

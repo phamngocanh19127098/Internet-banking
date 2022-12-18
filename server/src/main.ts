@@ -28,8 +28,14 @@ async function bootstrap() {
   app.useGlobalFilters(new AppExceptionFilter(app.get(HttpAdapterHost)));
   app.useGlobalGuards(new JwtAuthGuard(reflector), new RolesGuard(reflector));
 
-  app.enableCors();
-
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3006'
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  });
   const config = new DocumentBuilder()
     .setTitle('Internet banking')
     .setDescription('Internet banking API description')
@@ -39,6 +45,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3001);
 }
 bootstrap();

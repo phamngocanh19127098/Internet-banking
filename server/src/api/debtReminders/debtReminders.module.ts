@@ -8,6 +8,7 @@ import { UserModule } from '../users/user.module';
 @Module({
   imports: [TypeOrmModule.forFeature([DebtReminder]), UserModule],
   controllers: [DebtRemindersController],
-  providers: [DebtRemindersService]
+  providers: [DebtRemindersService],
+  exports: [DebtRemindersService]
 })
 export class DebtRemindersModule {}

@@ -1,20 +1,40 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { UseGuards } from '@nestjs/common';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
+import { Server } from 'http';
+import { DebtRemindersService } from 'src/api/debtReminders/debtReminders.service';
 import { DebtReminderSocketService } from './debt-reminder-socket.service';
 import { CreateDebtReminderSocketDto } from './dto/create-debt-reminder-socket.dto';
 import { UpdateDebtReminderSocketDto } from './dto/update-debt-reminder-socket.dto';
+import { findAllCreatedDebtReminder,  findAllReceivedDebtReminder } from 'src/constant';
+import { ListDebtReminderDto } from './dto/list-debt-reminder.dto';
 
-@WebSocketGateway()
+@WebSocketGateway({cors: {
+  origin: '*'
+}})
 export class DebtReminderSocketGateway {
-  constructor(private readonly debtReminderSocketService: DebtReminderSocketService) {}
+  @WebSocketServer()
+  server : Server;
+  constructor(
+    private readonly debtReminderSocketService: DebtReminderSocketService
+  ) {}
 
   @SubscribeMessage('createDebtReminderSocket')
   create(@MessageBody() createDebtReminderSocketDto: CreateDebtReminderSocketDto) {
     return this.debtReminderSocketService.create(createDebtReminderSocketDto);
   }
 
-  @SubscribeMessage('findAllDebtReminderSocket')
-  findAll() {
-    return this.debtReminderSocketService.findAll();
+  @SubscribeMessage(findAllCreatedDebtReminder)
+  async findAllCreatedDebtReminder(@MessageBody() user: ListDebtReminderDto) {
+    console.log(user);
+    let data = await this.debtReminderSocketService.findAllCreatedDebtReminder(user.userId);
+    return this.server.emit(findAllCreatedDebtReminder, data);
+  }
+
+  @SubscribeMessage(findAllReceivedDebtReminder)
+  async findAllReceivedDebtReminder(@MessageBody() user: ListDebtReminderDto) {
+    console.log(user);
+    let data = await this.debtReminderSocketService.findAllReceivedDebtReminder(user.userId);
+    return this.server.emit(findAllReceivedDebtReminder, data);
   }
 
   @SubscribeMessage('findOneDebtReminderSocket')

@@ -9,8 +9,11 @@ import Contact from "./pages/contact";
 import Payment from "./pages/payment";
 import Loan from "./pages/loan";
 import Recipents from "./pages/recipients";
+import { Provider } from 'react-redux';
+import store from './store';
 function App() {
   return (
+    <Provider store={store}>
     <Router>
       <Routes>
         <Route path='/' element={<Home />} />
@@ -23,6 +26,7 @@ function App() {
         <Route path='/recipents' element={<Recipents />} />
       </Routes>
     </Router>
+    </Provider>
   );
 }
 export default App;
