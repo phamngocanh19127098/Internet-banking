@@ -64,7 +64,13 @@ export class DebtRemindersService {
     return `This action updates a #${id} debtReminder`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    let debtReminder = await this.repos.findOne({
+      where : {
+        id,
+      }
+    })
+
     return `This action removes a #${id} debtReminder`;
   }
 

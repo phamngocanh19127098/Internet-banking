@@ -24,7 +24,7 @@ const debtReminderSlice = createSlice({
             console.log(action);
             state.items = action.payload;
             state.isLoading = false;
-            state.amount = 0;
+            state.amount = state.items.length;
         }
     }
 });

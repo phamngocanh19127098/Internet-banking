@@ -5,8 +5,9 @@ import { DebtRemindersService } from 'src/api/debtReminders/debtReminders.servic
 import { DebtReminderSocketService } from './debt-reminder-socket.service';
 import { CreateDebtReminderSocketDto } from './dto/create-debt-reminder-socket.dto';
 import { UpdateDebtReminderSocketDto } from './dto/update-debt-reminder-socket.dto';
-import { findAllCreatedDebtReminder,  findAllReceivedDebtReminder } from 'src/constant';
+import { findAllCreatedDebtReminder,  findAllReceivedDebtReminder, removeCreatedDebtReminder, removeReceivedDebtReminder } from 'src/constant';
 import { ListDebtReminderDto } from './dto/list-debt-reminder.dto';
+import { RemoveDebtReminderDto } from './dto/remove-debt-reminder.dto';
 
 @WebSocketGateway({cors: {
   origin: '*'
@@ -37,18 +38,17 @@ export class DebtReminderSocketGateway {
     return this.server.emit(findAllReceivedDebtReminder, data);
   }
 
-  @SubscribeMessage('findOneDebtReminderSocket')
-  findOne(@MessageBody() id: number) {
-    return this.debtReminderSocketService.findOne(id);
+  @SubscribeMessage(removeCreatedDebtReminder)
+  async remove(@MessageBody() removeDebtReminderDto: RemoveDebtReminderDto) {
+    let data = await this.debtReminderSocketService.removeCreatedDebtReminder(removeDebtReminderDto);
+    this.server.emit(findAllReceivedDebtReminder, data);
+    return this.server.emit(removeCreatedDebtReminder, {receiverId: data})
   }
 
-  @SubscribeMessage('updateDebtReminderSocket')
-  update(@MessageBody() updateDebtReminderSocketDto: UpdateDebtReminderSocketDto) {
-    return this.debtReminderSocketService.update(updateDebtReminderSocketDto.id, updateDebtReminderSocketDto);
-  }
-
-  @SubscribeMessage('removeDebtReminderSocket')
-  remove(@MessageBody() id: number) {
-    return this.debtReminderSocketService.remove(id);
+  @SubscribeMessage(removeReceivedDebtReminder)
+  async removeReceivedDebtReminder(@MessageBody() removeDebtReminderDto: RemoveDebtReminderDto) {
+    let data = await this.debtReminderSocketService.removeReceivedDebtReminder(removeDebtReminderDto);
+    this.server.emit(findAllReceivedDebtReminder, data);
+    return this.server.emit(removeReceivedDebtReminder, {userId: data})
   }
 }
