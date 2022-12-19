@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Query} from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -36,15 +36,16 @@ export class TransactionsController {
 
   @Get('list/:accountNumber')
   @ApiOperation({description: "Lấy thông tin giao dịch bằng số tài khoản"})
-  async getTransactionByAccountNumber(@Param('accountNumber') accountNumber: string){
+  //http://localhost:3001/transactions/list/12345?type=TRANSFER test
+  async getTransactionByAccountNumber(@Param('accountNumber') accountNumber: string,@Query() query){
     let data = await this.transactionsService.getTransactionByAccountNumber(
       accountNumber,
-      TransactionType.TRANSFER,
+      query.type,
     );
     return {
       data,
       statusCode: 200,
-      message: 'Lấy thông tin tài khoản thành công.'
+      message: 'Lấy thông tin giao dịch thành công.',
     }
   }
 }
