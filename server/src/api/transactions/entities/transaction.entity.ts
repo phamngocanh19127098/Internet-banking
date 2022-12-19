@@ -2,9 +2,14 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn
 import {User} from "../../users/entity/user.entity";
 
 export enum TransactionType {
-  RECHARGE = 1,
-  TRANSFER = 2,
-  DEBT_REMINDERS_PAYMENT = 3,
+  RECHARGE = "RECHARGE",
+  TRANSFER = "TRANSFER",
+  DEBT_REMINDERS_PAYMENT = "DEBT_REMINDERS_PAYMENT",
+  RECEIVE = "RECEIVE"
+}
+export enum TransactionStatus {
+  SUCCESS = 1,
+  UN_SUCCESS = 0,
 }
 
 @Entity({name : 'transaction'})
@@ -31,10 +36,10 @@ export class Transaction {
   employeeId: number; // number ???
 
   @Column({ name: 'transaction_type' })
-  transactionType: number;
+  transactionType: TransactionType;
 
   @Column()
-  status: number;
+  status: TransactionStatus;
 
   @Column({ name: 'created_at', type:"timestamp" })
   createdAt: Date;

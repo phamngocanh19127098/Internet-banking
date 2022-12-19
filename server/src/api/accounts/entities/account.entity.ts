@@ -7,16 +7,26 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entity/user.entity';
 
+export enum AccountStatus {
+  ACTIVE = 1,
+  DISABLE = 0,
+}
+
+export enum AccountType {
+  PAYMENT_ACCOUNT = 1,
+  SAVING_ACCOUNT = 2
+}
+
 @Entity()
 export class Account {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  status: number;
+  status: AccountStatus;
 
   @Column({ name: 'account_type' })
-  accountType: number;
+  accountType: AccountType;
 
   @Column({ name: 'created_at', type: 'timestamp' })
   createdAt: number;

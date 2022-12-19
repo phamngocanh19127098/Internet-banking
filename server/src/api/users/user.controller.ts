@@ -1,17 +1,11 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
-  Delete,
-  Put,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger/dist';
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards,} from '@nestjs/common';
+import {ApiTags} from '@nestjs/swagger/dist';
 
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { UserService } from './user.service';
-import { User } from './entity/user.entity';
+import {CreateUserDto, UpdateUserDto} from './dto/user.dto';
+import {UserService} from './user.service';
+import {Role, User} from './entity/user.entity';
+import {Roles} from "../../commons/decorator/roles.decorator";
+import {JwtAuthGuard} from "../../commons/guard/jwt.guard";
 
 @Controller('users')
 @ApiTags('users')
@@ -23,6 +17,8 @@ export class UserController {
     return this.userService.create(dto);
   }
 
+  // @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
   @Get('employee/list')
   findAllEmployee() {
     return this.userService.findAllEmployee();

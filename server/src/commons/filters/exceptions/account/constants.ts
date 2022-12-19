@@ -1,0 +1,1 @@
+export const UNEXISTED_ACCOUNT = 7_200;

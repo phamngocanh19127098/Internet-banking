@@ -1,19 +1,13 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  BadRequestException,
-} from '@nestjs/common';
-import { ApiBadRequestResponse } from '@nestjs/swagger';
-import { InjectRepository } from '@nestjs/typeorm';
+import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {CreateAccountDto} from './dto/CreateAccountDto';
+import {UpdateAccountDto} from './dto/update-account.dto';
+import {Repository} from 'typeorm';
+import {Account, AccountStatus, AccountType} from './entities/account.entity';
+import {UserService} from '../users/user.service';
+import {User} from '../users/entity/user.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
-
-import { CreateAccountDto } from './dto/CreateAccountDto';
-import { UpdateAccountDto } from './dto/update-account.dto';
-import { Repository } from 'typeorm';
-import { Account } from './entities/account.entity';
-import { UserService } from '../users/user.service';
-import { User } from '../users/entity/user.entity';
 
 @Injectable()
 export class AccountsService {
@@ -72,6 +66,26 @@ export class AccountsService {
     } catch (error) {
       throw new InternalServerErrorException(
         'Lỗi khi đang tìm kiếm các tài khoản!',
+      );
+    }
+  }
+
+  async getActivePaymentAccountByUserId(id: number) {
+    try {
+
+      const accounts = await this.repos.find({
+        where: {
+          customerId: id,
+          status: AccountStatus.ACTIVE,
+          accountType: AccountType.PAYMENT_ACCOUNT
+
+        },
+      });
+
+      return accounts;
+    } catch (error) {
+      throw new InternalServerErrorException(
+          'Lỗi khi đang tìm kiếm các tài khoản!',
       );
     }
   }
