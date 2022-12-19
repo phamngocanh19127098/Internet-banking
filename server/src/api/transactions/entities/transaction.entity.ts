@@ -1,11 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 import {User} from "../../users/entity/user.entity";
-
-export enum TransactionType {
-  RECHARGE = 1,
-  TRANSFER = 2,
-  DEBT_REMINDERS_PAYMENT = 3,
-}
+import {Account} from "../../accounts/entities/account.entity";
 
 @Entity({name : 'transaction'})
 export class Transaction {
@@ -13,10 +8,10 @@ export class Transaction {
   id: number;
 
   @Column({ name: 'account_des_number' })
-  accountDesNumber: number;
+  accountDesNumber: string;
 
   @Column({ name: 'account_src_number' })
-  accountSrcNumber: number;
+  accountSrcNumber: string;
 
   @Column()
   amount: number;
@@ -48,4 +43,12 @@ export class Transaction {
   @OneToOne(() => User, (user) => user.transactions)
   @JoinColumn({name: 'user_id', referencedColumnName : 'id'})
   user: User;
+
+  @OneToOne(() => Account)
+  @JoinColumn({ name: 'account_des_number', referencedColumnName: 'accountNumber'})
+  accountDes: Account;
+
+  @OneToOne(() => Account)
+  @JoinColumn({ name: 'account_src_number', referencedColumnName: 'accountNumber'})
+  accountSrc: Account;
 }
