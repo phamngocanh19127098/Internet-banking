@@ -1,4 +1,6 @@
-import {Body, Controller, Delete, Get, Headers, Param, Patch, Post} from '@nestjs/common';
+import {TransactionType} from "./enum/TransactionType.enum";
+import {ApiOperation} from "@nestjs/swagger";
+import {Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query} from '@nestjs/common';
 import {TransactionsService} from './transactions.service';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
 import {UpdateTransactionDto} from './dto/update-transaction.dto';
@@ -40,5 +42,20 @@ export class TransactionsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.transactionsService.remove(+id);
+  }
+
+  @Get('list/:accountNumber')
+  @ApiOperation({description: "Lấy thông tin giao dịch bằng số tài khoản"})
+  //http://localhost:3001/transactions/list/12345?type=TRANSFER test
+  async getTransactionByAccountNumber(@Param('accountNumber') accountNumber: string,@Query() query){
+    let data = await this.transactionsService.getTransactionByAccountNumber(
+      accountNumber,
+      query.type,
+    );
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy thông tin giao dịch thành công.',
+    }
   }
 }

@@ -6,9 +6,10 @@ import {Transaction} from "./entities/transaction.entity";
 import {UserModule} from "../users/user.module";
 import {JwtModule} from "@nestjs/jwt";
 import {AccountsModule} from "../accounts/accounts.module";
+import {Account} from "../accounts/entities/account.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction]),UserModule,JwtModule,AccountsModule],
+  imports: [TypeOrmModule.forFeature([Transaction, Account]),UserModule,JwtModule,AccountsModule],
   controllers: [TransactionsController],
   providers: [TransactionsService]
 })
