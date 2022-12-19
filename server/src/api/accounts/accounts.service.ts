@@ -81,7 +81,7 @@ export class AccountsService {
 
     depositMoney += account.currentBalance;
 
-    return this.repos.update(account.id, { currentBalance: depositMoney });
+    return this.repos.save({ ...account, currentBalance: depositMoney });
   }
 
   async depositByAccountNumber(accountNumber: string, depositMoney: number) {
@@ -95,7 +95,7 @@ export class AccountsService {
 
     depositMoney += account.currentBalance;
 
-    return this.repos.update(account.id, { currentBalance: depositMoney });
+    return this.repos.save({ ...account, currentBalance: depositMoney });
   }
 
   remove(id: number) {
