@@ -55,6 +55,7 @@ export class AccountsController {
   }
 
   @Get('/detail/:accountNumber')
+  @Roles(Role.CUSTOMER)
   @ApiOperation({description: "Lấy thông tin người dùng bằng số tài khoản"})
   async getAccountInfoByAccountNumber(@Param('accountNumber') accountNumber: string){
     let data = await this.accountsService.getAccountInfoByAccountNumber(accountNumber);
