@@ -3,21 +3,26 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
+import { UserService } from '../users/user.service';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/CreateAccountDto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import { DepositIntoAccountDto } from './dto/DepositIntoAccountDto';
+import { UpdateAccountDto } from './dto/UpdateAccountDto';
 
 @Controller('accounts')
 @ApiTags('accounts')
 export class AccountsController {
-  constructor(private readonly accountsService: AccountsService) {}
+  constructor(
+    private readonly accountsService: AccountsService,
+    private userService: UserService,
+  ) {}
 
   @Post()
   create(@Body() createAccountDto: CreateAccountDto) {
@@ -29,7 +34,24 @@ export class AccountsController {
     return this.accountsService.findAll();
   }
 
-  @Patch(':id')
+  @Put('/deposit')
+  async depositIntoAccount(@Body() dto: DepositIntoAccountDto) {
+    if (dto.accountNumber) {
+      return this.accountsService.depositByAccountNumber(
+        dto.accountNumber,
+        dto.depositMoney,
+      );
+    }
+
+    if (dto.username) {
+      return this.accountsService.depositByUsername(
+        dto.username,
+        dto.depositMoney,
+      );
+    }
+  }
+
+  @Put(':id')
   update(@Param('id') id: number, @Body() updateAccountDto: UpdateAccountDto) {
     return this.accountsService.update(id, updateAccountDto);
   }
