@@ -6,7 +6,7 @@ export class CreateTransferInternalDto {
     @IsNotEmpty()
     @ApiProperty({
         required: true,
-        example: '1000000002',
+        example: 1000000002,
     })
     accountDesNumber: number;
 
@@ -14,7 +14,7 @@ export class CreateTransferInternalDto {
     @IsNotEmpty()
     @ApiProperty({
         required: true,
-        example: '10000000',
+        example: 10000000,
     })
     amount: number;
 
@@ -28,13 +28,14 @@ export class CreateTransferInternalDto {
 }
 
 export class VerifyTransferInternalDto {
+
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({
         required: true,
-        example: '1000',
+        example: 1000,
     })
-    id: number;
+    transactionId: number;
 
 
     @IsString()
@@ -43,5 +44,5 @@ export class VerifyTransferInternalDto {
         required: true,
         example: "123456",
     })
-    optCode: string;
+    otpCode: string;
 }

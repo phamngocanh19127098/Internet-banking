@@ -18,6 +18,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SavedBeneficiary } from './api/savedBeneficiarys/entities/savedBeneficiary.entity';
 import { DebtReminderSocketModule } from './debt-reminder-socket/debt-reminder-socket.module';
+import {Otp} from "./api/otp/entities/otp.entity";
+import {OtpModule} from "./api/otp/otp.module";
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { DebtReminderSocketModule } from './debt-reminder-socket/debt-reminder-s
         Account,
         DebtReminder,
         SavedBeneficiary,
+        Otp
       ],
       synchronize: false,
     }),
@@ -46,6 +49,7 @@ import { DebtReminderSocketModule } from './debt-reminder-socket/debt-reminder-s
     DebtRemindersModule,
     SavedBeneficiarysModule,
     DebtReminderSocketModule,
+    OtpModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,18 +1,14 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  BadRequestException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {CreateAccountDto} from './dto/CreateAccountDto';
+import {UpdateAccountDto} from './dto/UpdateAccountDto';
+import {Repository} from 'typeorm';
+import {Account, AccountStatus, AccountType} from './entities/account.entity';
+import {UserService} from '../users/user.service';
+import {User} from '../users/entity/user.entity';
+import {TransactionType} from "../transactions/entities/transaction.entity";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
-
-import { CreateAccountDto } from './dto/CreateAccountDto';
-import { UpdateAccountDto } from './dto/UpdateAccountDto';
-import { Repository } from 'typeorm';
-import {Account, AccountStatus, AccountType} from './entities/account.entity';
-import { UserService } from '../users/user.service';
-import { User } from '../users/entity/user.entity';
 
 @Injectable()
 export class AccountsService {
@@ -141,6 +137,49 @@ export class AccountsService {
     } catch (error) {
       throw new InternalServerErrorException(
           'Lỗi khi đang tìm kiếm các tài khoản!',
+      );
+    }
+  }
+
+  async getActivePaymentAccountById(id: number) {
+    try {
+
+      const accounts = await this.repos.find({
+        where: {
+          id: id,
+          status: AccountStatus.ACTIVE,
+          accountType: AccountType.PAYMENT_ACCOUNT
+
+        },
+      });
+
+      return accounts;
+    } catch (error) {
+      throw new InternalServerErrorException(
+          'Lỗi khi đang tìm kiếm các tài khoản!',
+      );
+    }
+  }
+
+  async updateBalanceById(id:number,amount:number,updateType:TransactionType) {
+    try {
+      const account = await this.getOne(id);
+
+      if (!account) {
+        throw new BadRequestException(
+            'Không tìm thấy account khi thực hiện giao dịch',
+        );
+      }
+
+      if (updateType === TransactionType.TRANSFER) {
+        account.currentBalance -= amount
+      } else if (updateType === TransactionType.RECEIVE) {
+        account.currentBalance += amount
+      }
+      return this.repos.save({...account})
+    } catch (error) {
+      throw new InternalServerErrorException(
+          'Lỗi trong quá trình cập nhật số dư người dùng.',
       );
     }
   }

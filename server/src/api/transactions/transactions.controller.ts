@@ -4,7 +4,7 @@ import {Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query} from 
 import {TransactionsService} from './transactions.service';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
 import {UpdateTransactionDto} from './dto/update-transaction.dto';
-import {CreateTransferInternalDto} from "./dto/transaction.dto";
+import {CreateTransferInternalDto, VerifyTransferInternalDto} from "./dto/transaction.dto";
 import {Roles} from "../../commons/decorator/roles.decorator";
 import {Role} from "../users/entity/user.entity";
 
@@ -22,6 +22,13 @@ export class TransactionsController {
   createTransferInternal(@Body() createTransferInternalDto: CreateTransferInternalDto,
                          @Headers('authorization') authorization: string,) {
     return this.transactionsService.createTransferInternalRecord(createTransferInternalDto,authorization);
+  }
+
+  @Roles(Role.CUSTOMER)
+  @Post("/internal/transfer/verify")
+  verifyTransferInternal(@Body() verifyTransferInternalDto: VerifyTransferInternalDto,
+                         @Headers('authorization') authorization: string) {
+    return this.transactionsService.verifyTransferInternalOtp(verifyTransferInternalDto,authorization);
   }
 
   @Get()

@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
-import {User} from "../../users/entity/user.entity";
 
 export enum OTPType {
     TRANSACTION = "transaction",
@@ -7,8 +6,8 @@ export enum OTPType {
 }
 
 
-@Entity({name : 'transaction'})
-export class Transaction {
+@Entity({name : 'otp_stored'})
+export class Otp  {
     @PrimaryGeneratedColumn()
     id: number;
 

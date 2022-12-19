@@ -20,3 +20,6 @@ ALTER TABLE `internetbanking`.`otp_stored`
 
 ALTER TABLE `internetbanking`.`account`
     CHANGE COLUMN `current_balance` `current_balance` DOUBLE NULL DEFAULT 0 ;
+
+ALTER TABLE `internetbanking`.`user`
+    CHANGE COLUMN `name` `name` VARCHAR(300) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NOT NULL ;

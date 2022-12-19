@@ -1,0 +1,1 @@
+export const UNEXISTED_TRANSACTION = 7_500;
