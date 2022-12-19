@@ -26,7 +26,7 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new AppExceptionFilter(app.get(HttpAdapterHost)));
-  // app.useGlobalGuards(new JwtAuthGuard(reflector), new RolesGuard(reflector));
+  app.useGlobalGuards(new JwtAuthGuard(reflector), new RolesGuard(reflector));
 
   app.enableCors({
     origin: [
