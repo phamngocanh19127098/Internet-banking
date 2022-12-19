@@ -1,4 +1,12 @@
-import { Controller, Post, UseGuards, Get, Body, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Get,
+  Headers,
+  Body,
+  Req,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { IResponseData } from 'src/interface';
@@ -10,15 +18,21 @@ import {
 } from 'src/api/users/dto/user.dto';
 
 import { AuthService } from './auth.service';
+import { Roles } from 'src/commons/decorator/roles.decorator';
+import { Role } from '../users/entity/user.entity';
 
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Roles(Role.ADMIN, Role.EMPLOYEE)
   @Post('signup')
-  signup(@Body() dto: CreateUserDto): Promise<IResponseData> {
-    return this.authService.signup(dto);
+  signup(
+    @Body() dto: CreateUserDto,
+    @Headers('authorization') authorization: string,
+  ): Promise<IResponseData> {
+    return this.authService.signup(dto, authorization);
   }
 
   @Post('login')

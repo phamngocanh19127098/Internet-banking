@@ -8,10 +8,12 @@ import { JwtStrategy } from 'src/commons/strategy/jwt.strategy';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { AccountsModule } from '../accounts/accounts.module';
 
 @Module({
   imports: [
     UserModule,
+    AccountsModule,
     ConfigModule.forRoot({}),
     PassportModule,
     JwtModule.register({

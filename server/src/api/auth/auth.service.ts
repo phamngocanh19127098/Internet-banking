@@ -4,8 +4,9 @@ import { JwtService } from '@nestjs/jwt';
 import { compareSync, hash } from 'bcrypt';
 
 import type { IResponseData, IToken } from 'src/interface';
+import { AccountsService } from '../accounts/accounts.service';
 import { UserService } from 'src/api/users/user.service';
-import { User } from 'src/api/users/entity/user.entity';
+import { Role, User } from 'src/api/users/entity/user.entity';
 import {
   ChangeUserPasswordDto,
   CreateUserDto,
@@ -21,12 +22,33 @@ import {
 export class AuthService {
   constructor(
     private userService: UserService,
+    private accountService: AccountsService,
     private jwtService: JwtService,
     private config: ConfigService,
   ) {}
 
-  async signup(dto: CreateUserDto): Promise<IResponseData> {
+  async signup(
+    dto: CreateUserDto,
+    authorization: string,
+  ): Promise<IResponseData> {
     const user = await this.userService.create(dto);
+
+    if (dto.role === Role.CUSTOMER) {
+      const accessToken =
+        this.userService.getAccessTokenFromClient(authorization);
+
+      const decodedAccessToken = this.jwtService.decode(accessToken);
+
+      const username = Object(decodedAccessToken).username;
+
+      const employeeId = (await this.userService.getByUsername(username)).id;
+
+      this.accountService.create({
+        customerId: user.id,
+        currentBalance: 0,
+        createdBy: employeeId,
+      });
+    }
 
     delete user.password;
 

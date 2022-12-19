@@ -3,15 +3,17 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
-import { CreateAccountDto } from './dto/create-account.dto';
+import { ApiBadRequestResponse } from '@nestjs/swagger';
+import { InjectRepository } from '@nestjs/typeorm';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const randomstring = require('randomstring');
+
+import { CreateAccountDto } from './dto/CreateAccountDto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { Repository } from 'typeorm';
 import { Account } from './entities/account.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { GetListDto } from './dto/get-list-dto';
 import { UserService } from '../users/user.service';
 import { User } from '../users/entity/user.entity';
-import { ApiBadRequestResponse } from '@nestjs/swagger';
 
 @Injectable()
 export class AccountsService {
@@ -20,16 +22,27 @@ export class AccountsService {
     private repos: Repository<Account>,
     private readonly userService: UserService,
   ) {}
-  create(createAccountDto: CreateAccountDto) {
-    return 'This action adds a new account';
+  async create(dto: CreateAccountDto) {
+    const accountNumber = randomstring.generate({
+      length: 11,
+      charset: 'numeric',
+    });
+
+    const account = await this.getByAccountNumber(accountNumber);
+
+    if (!account) {
+      return this.repos.save({ ...dto, accountNumber });
+    } else {
+      this.create(dto);
+    }
+  }
+
+  getByAccountNumber(accountNumber: string) {
+    return this.repos.findOneBy({ accountNumber });
   }
 
   findAll() {
     return this.repos.find();
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
   }
 
   update(id: number, updateAccountDto: UpdateAccountDto) {
@@ -42,9 +55,7 @@ export class AccountsService {
 
   async getListAccountByUserId(userId: number) {
     try {
-      let user: User = await this.userService.getUserById(userId);
-
-      
+      const user: User = await this.userService.getUserById(userId);
 
       if (user == null) {
         throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
@@ -54,7 +65,7 @@ export class AccountsService {
           customerId: userId,
         },
       });
-      let data = {
+      const data = {
         accounts: accounts || [],
       };
       return data;
@@ -65,32 +76,41 @@ export class AccountsService {
     }
   }
 
-  async getAccountInfoByAccountNumber (accountNumber: string) {
-
+  async getAccountInfoByAccountNumber(accountNumber: string) {
     try {
-      let account : Account = await this.repos.findOne({
-        where : {
-          accountNumber
-        }
+      let account: Account = await this.repos.findOne({
+        where: {
+          accountNumber,
+        },
       });
-  
+
       if (account == null) {
         throw new BadRequestException('Không tồn tại tài khoản người dùng!');
       }
-  
-      let data = await this.repos.createQueryBuilder('account')
+
+      let data = await this.repos
+        .createQueryBuilder('account')
         .leftJoin('account.user', 'user')
-        .select(['account.accountNumber', 'account.accountType','account.status', 'user.id', 'user.username', 'user.dob', 'user.phone', 'user.address', 'user.status', 'user.role'])
-        .where('account.accountNumber =:accountNumber', {accountNumber})
+        .select([
+          'account.accountNumber',
+          'account.accountType',
+          'account.status',
+          'user.id',
+          'user.username',
+          'user.dob',
+          'user.phone',
+          'user.address',
+          'user.status',
+          'user.role',
+        ])
+        .where('account.accountNumber =:accountNumber', { accountNumber })
         .getOne();
 
       return data;
-  
     } catch (error) {
-      throw new InternalServerErrorException('Lỗi trong quá trình lấy thông tin người dùng');
+      throw new InternalServerErrorException(
+        'Lỗi trong quá trình lấy thông tin người dùng',
+      );
     }
-    
-    
-    
   }
 }

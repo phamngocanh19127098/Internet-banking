@@ -50,7 +50,7 @@ export class UserService {
 
     let pass = randomstring.generate(30);
 
-    console.log(pass);
+    console.log('Password:', pass);
 
     await sendMail({
       to: dto.email,
@@ -166,11 +166,15 @@ export class UserService {
   }
 
   async getUserById(id: number) {
-    let user : User = await this.userRepository.findOne({
+    const user: User = await this.userRepository.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
     return user;
-  } 
+  }
+
+  getAccessTokenFromClient(authorization: string) {
+    return authorization.slice(7);
+  }
 }
