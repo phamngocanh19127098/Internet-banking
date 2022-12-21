@@ -20,6 +20,7 @@ import {
 import { AuthService } from './auth.service';
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
+import { RequestRefreshTokenDto } from './dto/RequestRefreshToken.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -47,7 +48,7 @@ export class AuthController {
 
   // Maybe delete when handled auto refresh
   @Post('refresh')
-  refresh(@Body() body): Promise<IResponseData> {
+  refresh(@Body() body: RequestRefreshTokenDto): Promise<IResponseData> {
     return this.authService.refresh(body.refreshToken);
   }
 
