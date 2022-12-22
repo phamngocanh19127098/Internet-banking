@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SavedBeneficiarysService } from './savedBeneficiarys.service';
 import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('savedBeneficiarys')
 @Controller('savedBeneficiarys')
 export class SavedBeneficiarysController {
   constructor(
@@ -25,7 +35,10 @@ export class SavedBeneficiarysController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSavedBeneficiaryDto: UpdateSavedBeneficiaryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSavedBeneficiaryDto: UpdateSavedBeneficiaryDto,
+  ) {
     return this.savedBeneficiarysService.update(+id, updateSavedBeneficiaryDto);
   }
 

@@ -34,6 +34,7 @@ export class AccountsController {
     return this.accountsService.findAll();
   }
 
+  @Roles(Role.EMPLOYEE)
   @Put('/deposit')
   async depositIntoAccount(@Body() dto: DepositIntoAccountDto) {
     if (dto.accountNumber) {

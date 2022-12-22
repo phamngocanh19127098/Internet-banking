@@ -1,13 +1,26 @@
-import {TransactionType} from "./enum/TransactionType.enum";
-import {ApiOperation} from "@nestjs/swagger";
-import {Body, Controller, Delete, Get, Headers, Param, Patch, Post, Query} from '@nestjs/common';
-import {TransactionsService} from './transactions.service';
-import {CreateTransactionDto} from './dto/create-transaction.dto';
-import {UpdateTransactionDto} from './dto/update-transaction.dto';
-import {CreateTransferInternalDto, VerifyTransferInternalDto} from "./dto/transaction.dto";
-import {Roles} from "../../commons/decorator/roles.decorator";
-import {Role} from "../users/entity/user.entity";
-
+import { TransactionType } from './enum/TransactionType.enum';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { TransactionsService } from './transactions.service';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import {
+  CreateTransferInternalDto,
+  VerifyTransferInternalDto,
+} from './dto/transaction.dto';
+import { Roles } from '../../commons/decorator/roles.decorator';
+import { Role } from '../users/entity/user.entity';
+@ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
@@ -18,17 +31,27 @@ export class TransactionsController {
   }
 
   @Roles(Role.CUSTOMER)
-  @Post("/internal/transfer")
-  createTransferInternal(@Body() createTransferInternalDto: CreateTransferInternalDto,
-                         @Headers('authorization') authorization: string,) {
-    return this.transactionsService.createTransferInternalRecord(createTransferInternalDto,authorization);
+  @Post('/internal/transfer')
+  createTransferInternal(
+    @Body() createTransferInternalDto: CreateTransferInternalDto,
+    @Headers('authorization') authorization: string,
+  ) {
+    return this.transactionsService.createTransferInternalRecord(
+      createTransferInternalDto,
+      authorization,
+    );
   }
 
   @Roles(Role.CUSTOMER)
-  @Post("/internal/transfer/verify")
-  verifyTransferInternal(@Body() verifyTransferInternalDto: VerifyTransferInternalDto,
-                         @Headers('authorization') authorization: string) {
-    return this.transactionsService.verifyTransferInternalOtp(verifyTransferInternalDto,authorization);
+  @Post('/internal/transfer/verify')
+  verifyTransferInternal(
+    @Body() verifyTransferInternalDto: VerifyTransferInternalDto,
+    @Headers('authorization') authorization: string,
+  ) {
+    return this.transactionsService.verifyTransferInternalOtp(
+      verifyTransferInternalDto,
+      authorization,
+    );
   }
 
   @Get()
@@ -42,7 +65,10 @@ export class TransactionsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTransactionDto: UpdateTransactionDto,
+  ) {
     return this.transactionsService.update(+id, updateTransactionDto);
   }
 
@@ -52,9 +78,12 @@ export class TransactionsController {
   }
 
   @Get('list/:accountNumber')
-  @ApiOperation({description: "Lấy thông tin giao dịch bằng số tài khoản"})
+  @ApiOperation({ description: 'Lấy thông tin giao dịch bằng số tài khoản' })
   //http://localhost:3001/transactions/list/12345?type=TRANSFER test
-  async getTransactionByAccountNumber(@Param('accountNumber') accountNumber: string,@Query() query){
+  async getTransactionByAccountNumber(
+    @Param('accountNumber') accountNumber: string,
+    @Query() query,
+  ) {
     let data = await this.transactionsService.getTransactionByAccountNumber(
       accountNumber,
       query.type,
@@ -63,6 +92,6 @@ export class TransactionsController {
       data,
       statusCode: 200,
       message: 'Lấy thông tin giao dịch thành công.',
-    }
+    };
   }
 }

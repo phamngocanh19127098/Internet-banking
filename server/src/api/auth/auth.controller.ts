@@ -21,11 +21,15 @@ import { AuthService } from './auth.service';
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import { RequestRefreshTokenDto } from './dto/RequestRefreshToken.dto';
+import { UserService } from '../users/user.service';
 
-@Controller('auth')
 @ApiTags('auth')
+@Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @Roles(Role.ADMIN, Role.EMPLOYEE)
   @Post('signup')
@@ -46,13 +50,7 @@ export class AuthController {
     return this.authService.changePassword(dto);
   }
 
-  // Maybe delete when handled auto refresh
-  @Post('refresh')
-  refresh(@Body() body: RequestRefreshTokenDto): Promise<IResponseData> {
-    return this.authService.refresh(body.refreshToken);
-  }
-
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
   @Post('logout')
   async logout(@Req() req) {
     await this.authService.logout(req.user);
@@ -61,11 +59,15 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
   @Get('profile')
-  getProfile(@Req() req) {
-    const { id, username, refreshToken, updatedAt } = req.user;
+  async getProfile(@Req() req) {
+    const { id } = req.user;
 
-    return { id, username, refreshToken, updatedAt };
+    const user = await this.userService.getUserById(id);
+
+    delete user.password;
+
+    return user;
   }
 }

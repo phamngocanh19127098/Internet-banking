@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AffiliatedBanksService } from './affiliatedBanks.service';
 import { CreateAffiliatedBankDto } from './dto/create-affiliated-bank.dto';
 import { UpdateAffiliatedBankDto } from './dto/update-affiliated-bank.dto';
 
+@ApiTags('affiliatedBanks')
 @Controller('affiliatedBanks')
 export class AffiliatedBanksController {
   constructor(
@@ -25,7 +35,10 @@ export class AffiliatedBanksController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAffiliatedBankDto: UpdateAffiliatedBankDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAffiliatedBankDto: UpdateAffiliatedBankDto,
+  ) {
     return this.affiliatedBanksService.update(+id, updateAffiliatedBankDto);
   }
 
