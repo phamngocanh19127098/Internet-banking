@@ -2,9 +2,10 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { userLogin } from '../features/auth/authActions'
-import { useEffect } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Error from '../components/Error'
 import Spinner from '../components/Spinner'
+import ReCAPTCHA from "react-google-recaptcha";
 
 const LoginScreen = () => {
   const { loading, userInfo, error } = useSelector((state) => state.auth)
@@ -13,6 +14,7 @@ const LoginScreen = () => {
   const { register, handleSubmit } = useForm()
 
   const navigate = useNavigate()
+  const [disableSubmit, setDisableSubmit] = useState(true);
 
   // redirect authenticated user to profile screen
   useEffect(() => {
@@ -22,8 +24,18 @@ const LoginScreen = () => {
     }
   }, [navigate, userInfo])
 
+  let recaptchaInstance
+
+  useEffect(() => {
+    console.log(recaptchaInstance)
+  }, [recaptchaInstance])
+
+
+
   const submitForm = (data) => {
+    recaptchaInstance.reset();
     dispatch(userLogin(data))
+
   }
 
   return (
@@ -64,6 +76,11 @@ const LoginScreen = () => {
                 className="form__input block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-new-green focus:ring-new-green focus:outline-none focus:ring focus:ring-opacity-40"
               />
             </div>
+            <ReCAPTCHA
+              ref={e => recaptchaInstance = e}
+              onChange={useCallback(() => setDisableSubmit(false))}
+              sitekey="6LeHeaYjAAAAAKisiQpAT0bgE0nXUJShFMPMvbt5"
+            />
             <a
               href="#"
               className="text-xs text-black hover:underline"
@@ -71,22 +88,11 @@ const LoginScreen = () => {
               Quên mật khẩu?
             </a>
             <div className="mt-6">
-              <button className="form__submit button w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] rounded-lg">
+              <button type="submit" disabled={disableSubmit} className=" button w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] rounded-lg">
                 Đăng nhập
               </button>
             </div>
           </form>
-
-          <p className="mt-8 text-xs font-light text-center text-gray-700">
-            {" "}
-            Bạn chưa có tài khoản?{" "}
-            <a
-              href="#"
-              className="font-medium text-main-green hover:underline"
-            >
-              Đăng ký
-            </a>
-          </p>
         </div>
       </div>
 
