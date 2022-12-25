@@ -55,7 +55,10 @@ export class UserService {
     await sendMail({
       to: dto.email,
       subject: 'Your password for Taixiu Bank',
-      html: `<h4>${pass}</h4>`,
+      html: `<p>Dear <strong>${dto.username}</strong>,</p>
+      <p>Your password is: <strong>${pass}</strong></p>
+      <p>Thank for using our bank,</p>
+      <p><strong>TAIXIU BANK</strong></p>`,
     });
 
     pass = await hash(pass, 10);

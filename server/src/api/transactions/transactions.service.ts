@@ -96,15 +96,16 @@ export class TransactionsService {
         otpCode,
       );
 
-      const otpRes: Otp = await this.otpService.createTransferOtp(
-        otpTransferDto,
-      );
+      await this.otpService.createTransferOtp(otpTransferDto);
 
-      const mailRes = await sendMail({
+      const otpExpireTime =
+        Number(process.env.OTP_EXPIRATION_TIME) / 60000 || 1;
+
+      await sendMail({
         to: user.email,
         subject: `OTP Transaction ${record.id} Verification `,
         html: `<p>Dear <strong>${user.name}</strong>,</p>
-            <p>Your <strong>OTP </strong>(expires in 1 minute)&nbsp;for completing your transaction <strong>${record.id}</strong> is: <strong>${otpCode}</strong></p>
+            <p>Your <strong>OTP </strong>(expires in ${otpExpireTime} minute)&nbsp;for completing your transaction <strong>${record.id}</strong> is: <strong>${otpCode}</strong></p>
             <p>Please use this Passcode to complete your transaction. Do not share this Passcode with anyone.</p>
             <p>Thank you,</p>
             <p><strong>TAIXIU BANK</strong></p>`,

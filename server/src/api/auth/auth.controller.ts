@@ -22,6 +22,8 @@ import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import { RequestRefreshTokenDto } from './dto/RequestRefreshToken.dto';
 import { UserService } from '../users/user.service';
+import { ForgotPasswordDto } from './dto/ForgotPasswordDto';
+import { VerifyForgotPasswordDto } from '../otp/dto/otp.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -45,6 +47,7 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @Roles(Role.ADMIN, Role.EMPLOYEE, Role.CUSTOMER)
   @Post('changepassword')
   changePassword(@Body() dto: ChangeUserPasswordDto): Promise<IResponseData> {
     return this.authService.changePassword(dto);
@@ -56,6 +59,7 @@ export class AuthController {
     await this.authService.logout(req.user);
     return {
       statusCode: 200,
+      message: 'Đăng xuất thành công.',
     };
   }
 
@@ -74,5 +78,15 @@ export class AuthController {
   @Post('refresh')
   refresh(@Body() body: RequestRefreshTokenDto): Promise<IResponseData> {
     return this.authService.refresh(body.refreshToken);
+  }
+
+  @Post('forgotpassword')
+  forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto);
+  }
+
+  @Post('forgotpassword/verify')
+  verifyForgotPassword(@Body() dto: VerifyForgotPasswordDto) {
+    return this.authService.verifyForgotPassword(dto);
   }
 }
