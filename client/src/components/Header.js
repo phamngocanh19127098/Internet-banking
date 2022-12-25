@@ -14,15 +14,13 @@ const Header = () => {
   const { data, isFetching } = useGetDetailsQuery('userDetails', {
     pollingInterval: 900000, // 15mins
   })
-  const { test, setTest } = useState()
   async function getTest() {
-    const test = await fetcherAccessToken();
-    setTest(test);
-    return test
+    const test2 = await fetcherAccessToken();
+    //localStorage.setItem('userToken', test2)
   }
+
   useEffect(() => {
-    const check = getTest()
-    console.log("TEST ", check)
+    getTest()
   }, [])
 
 

@@ -8,13 +8,9 @@ const config = {
 
 
 export const fetcherAccessToken = async () => {
-    const data = {
-        "refreshToken": localStorage.getItem('refreshToken')
-    }
-    const { response } = await axios.post(
-        `http://localhost:3001/auth/refresh`, data
-        ,
-    )
+    const token = { "refreshToken": localStorage.getItem('refreshToken') }
+    const response = await axios
+        .post(`http://localhost:3001/auth/refresh`, token)
+        .catch((error) => console.log('Error: ', error));
     return response
 }
-
