@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { useGetDetailsQuery } from '../app/services/auth/authService'
 import { logout, setCredentials } from '../features/auth/authSlice'
 import '../styles/header.css'
-
+import { fetcherAccessToken } from '../fetchers/token'
+import axios from 'axios'
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
@@ -13,6 +14,17 @@ const Header = () => {
   const { data, isFetching } = useGetDetailsQuery('userDetails', {
     pollingInterval: 900000, // 15mins
   })
+  const { test, setTest } = useState()
+  async function getTest() {
+    const test = await fetcherAccessToken();
+    setTest(test);
+    return test
+  }
+  useEffect(() => {
+    const check = getTest()
+    console.log("TEST ", check)
+  }, [])
+
 
   useEffect(() => {
     if (data) dispatch(setCredentials(data.data))

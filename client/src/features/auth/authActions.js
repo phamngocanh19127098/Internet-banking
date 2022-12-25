@@ -23,7 +23,8 @@ export const userLogin = createAsyncThunk(
 
       // store user's token in local storage
       localStorage.setItem('userToken', data.metadata.accessToken)
-      console.log(jwtDecode(data.metadata.accessToken))
+      localStorage.setItem('refreshToken', data.metadata.refreshToken)
+      console.log(localStorage.getItem('refreshToken'))
 
       localStorage.setItem('userInfomation', JSON.stringify(data.data))
 

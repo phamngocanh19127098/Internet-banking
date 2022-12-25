@@ -22,5 +22,8 @@ export const authApi = createApi({
   }),
 })
 
+
+
+
 // export react hook
 export const { useGetDetailsQuery } = authApi
