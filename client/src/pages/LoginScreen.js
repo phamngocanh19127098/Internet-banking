@@ -79,7 +79,7 @@ const LoginScreen = () => {
             <ReCAPTCHA
               ref={e => recaptchaInstance = e}
               onChange={useCallback(() => setDisableSubmit(false))}
-              sitekey="6LeHeaYjAAAAAKisiQpAT0bgE0nXUJShFMPMvbt5"
+              sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // client key testing
             />
             <a
               href="#"
