@@ -22,26 +22,19 @@ export class SavedBeneficiarysService {
               .getOne();
 
           if (infoAccount == null){
-              throw new BadRequestException();
+              console.log(infoAccount)
+              throw new BadRequestException('Tài khoản không tồn tại');
           }
+
 
           if (!createSavedBeneficiaryDto.beneficiaryNickname) {
               createSavedBeneficiaryDto.beneficiaryNickname = infoAccount.user.name || "Ẩn Danh";
           }
 
-          const beneficiary: SavedBeneficiary = await this.savedBeneficiaryRepository.save({...createSavedBeneficiaryDto, customerId: infoAccount.customerId});
+          return await this.savedBeneficiaryRepository.save({...createSavedBeneficiaryDto, customerId: infoAccount.customerId});
 
-          return{
-              statusCode: 201,
-              message: "Lưu người thụ hưởng thành công",
-              data: beneficiary
-          }
       } catch (e) {
-          return{
-              statusCode: 400,
-              message: "Lỗi trong lưu người thụ hưởng",
-              error: e.error
-          }
+          throw new BadRequestException(e.message);
       }
   }
 
@@ -54,53 +47,30 @@ export class SavedBeneficiarysService {
   }
 
   async update(id: number, updateSavedBeneficiaryDto: UpdateSavedBeneficiaryDto) {
-        try {
-            if (updateSavedBeneficiaryDto.beneficiaryAccountNumber) {
+      try {
+            const beneficiary: SavedBeneficiary = await this.savedBeneficiaryRepository.findOneById(id)
 
-                const infoAccount = await this.accountRepository.createQueryBuilder('account')
-                    .leftJoinAndSelect("account.user","user")
-                    .where( 'account.account_number= :account_number',{account_number: updateSavedBeneficiaryDto.beneficiaryAccountNumber})
-                    .getOne();
-
-                if (infoAccount == null){
-                    throw new BadRequestException();
-                }
-
-                if (!updateSavedBeneficiaryDto.beneficiaryNickname) {
-                    updateSavedBeneficiaryDto.beneficiaryNickname = infoAccount.user.name || "Ẩn Danh";
-                }
-
-                await this.savedBeneficiaryRepository.update(id,updateSavedBeneficiaryDto);
-                return{
-                    statusCode: 200,
-                    message: "Cập nhật người thụ hưởng thành công",
-                }
-            } else {
-                const beneficiary = await this.savedBeneficiaryRepository.findOneBy({id:id})
-
-                if (beneficiary == null) {
-                    throw new BadRequestException();
-                }
-
-                const nickName = (!updateSavedBeneficiaryDto.beneficiaryNickname) ? beneficiary.beneficiaryNickname : updateSavedBeneficiaryDto.beneficiaryNickname
-                const defaultName = (!updateSavedBeneficiaryDto.beneficiaryDefaultName) ? beneficiary.beneficiaryDefaultName : updateSavedBeneficiaryDto.beneficiaryDefaultName
-
-                beneficiary.beneficiaryNickname = nickName;
-                beneficiary.beneficiaryDefaultName = defaultName;
-
-                await this.savedBeneficiaryRepository.save(beneficiary);
-
-                return{
-                    statusCode: 200,
-                    message: "Cập nhật người thụ hưởng thành công",
-                }
+            if (beneficiary == null) {
+                throw new BadRequestException('Người thụ hưởng không tồn tại');
             }
+
+
+          if (updateSavedBeneficiaryDto.beneficiaryAccountNumber) {
+              beneficiary.beneficiaryAccountNumber = updateSavedBeneficiaryDto.beneficiaryAccountNumber
+          }
+
+          if (updateSavedBeneficiaryDto.beneficiaryDefaultName) {
+              beneficiary.beneficiaryDefaultName = updateSavedBeneficiaryDto.beneficiaryDefaultName
+          }
+
+          if (!updateSavedBeneficiaryDto.beneficiaryNickname) {
+              beneficiary.beneficiaryNickname = updateSavedBeneficiaryDto.beneficiaryDefaultName || "Ẩn Danh";
+          } else {
+              beneficiary.beneficiaryNickname = updateSavedBeneficiaryDto.beneficiaryNickname
+          }
+            return await this.savedBeneficiaryRepository.save(beneficiary);
         }catch (e) {
-            return{
-                statusCode: 400,
-                message: "Lỗi trong cập nhật người thụ hưởng",
-                error: e.error
-            }
+          throw new BadRequestException("Lỗi trong cập nhật người thụ hưởng");
         }
   }
 
@@ -109,21 +79,22 @@ export class SavedBeneficiarysService {
           const result = await this.savedBeneficiaryRepository.findOneBy({id: id})
 
           if (result == null) {
-              throw new BadRequestException();
+              throw new BadRequestException('Người thụ hưởng không tồn tại');
           }
-          await this.savedBeneficiaryRepository.remove(result);
+          return await this.savedBeneficiaryRepository.remove(result);
 
-          return {
-              statusCode: 200,
-              message: `Xoá thành công #${result.beneficiaryNickname} khỏi danh sách thụ hưởng`,
-          }
+          // return {
+          //     statusCode: 200,
+          //     message: `Xoá thành công #${result.beneficiaryNickname} khỏi danh sách thụ hưởng`,
+          // }
       }
        catch (e) {
-           return{
-               statusCode: 400,
-               message: "Lỗi trong xoá người thụ hưởng",
-               error: e.error
-           }
+           throw new BadRequestException("Lỗi trong xoá người thụ hưởng");
+           // return{
+           //     statusCode: 400,
+           //     message: "Lỗi trong xoá người thụ hưởng",
+           //     error: e.error
+           // }
       }
   }
 
