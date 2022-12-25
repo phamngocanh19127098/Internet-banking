@@ -68,6 +68,11 @@ export class AuthController {
 
     delete user.password;
 
-    return user;
+    return { data: user, statusCode: 200, message: 'Lấy profile thành công.' };
+  }
+
+  @Post('refresh')
+  refresh(@Body() body: RequestRefreshTokenDto): Promise<IResponseData> {
+    return this.authService.refresh(body.refreshToken);
   }
 }
