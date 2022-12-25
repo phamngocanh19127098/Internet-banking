@@ -1,32 +1,47 @@
-import React from "react";
-import 'tailwindcss/tailwind.css'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Home from "./pages/home";
-import Login from "./pages/login";
-import Accounts from "./pages/accounts";
-import Other from "./pages/other";
-import Contact from "./pages/contact";
-import Payment from "./pages/payment";
-import Loan from "./pages/loan";
-import Recipents from "./pages/recipients";
-import { Provider } from 'react-redux';
-import store from './store';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom'
+import Header from './components/Header'
+import LoginScreen from './pages/LoginScreen'
+import RegisterScreen from './pages/RegisterScreen'
+import ProfileScreen from './pages/ProfileScreen'
+import HomeScreen from './pages/HomeScreen'
+import ProtectedRoute from './routing/ProtectedRoute'
+import Home from './pages/home'
+import Loan from './pages/loan'
+import Recipents from './pages/recipients'
+import Contact from './pages/contact'
+import Other from './pages/other'
+import Accounts from './pages/accounts'
+import Payment from './pages/payment'
+
 function App() {
   return (
-    <Provider store={store}>
     <Router>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/accounts' element={<Accounts />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/other' element={<Other />} />
-        <Route path='/payment' element={<Payment />} />
-        <Route path='/loan' element={<Loan />} />
-        <Route path='/recipents' element={<Recipents />} />
-      </Routes>
+      <Header />
+      <main className='container content'>
+        <Routes>
+          <Route path='/home' element={<HomeScreen />} />
+          <Route path='/login' element={<LoginScreen />} />
+          <Route path='/register' element={<RegisterScreen />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path='/' element={<Home />} />
+            <Route path='/accounts' element={<Accounts />} />
+            <Route path='/loan' element={<Loan />} />
+            <Route path='/recipents' element={<Recipents />} />
+            <Route path='/payments' element={<Payment />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/other' element={<Other />} />
+            <Route path='/user-profile' element={<ProfileScreen />} />
+          </Route>
+          <Route path='*' element={<Navigate to='/' replace />} />
+        </Routes>
+      </main>
     </Router>
-    </Provider>
-  );
+  )
 }
-export default App;
+
+export default App

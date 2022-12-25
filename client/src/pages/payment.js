@@ -4,7 +4,7 @@ const Payment = () => {
     return (
         <div>
             <div>
-                <div className=' bg-cover w-full flex h-screen bg-[#F0F2FF] '>
+                <div className=' bg-cover w-screen flex h-screen bg-[#F0F2FF] '>
                     <HomeNavigation id={3} />
                     <div className="h-screen flex-auto">
                         <div
