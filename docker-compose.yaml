@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  server-s:
+    build: ./server
+    container_name: server-c
+    ports:
+      - 3001:3001
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    env_file:
+      - ./server/.env
+  client-s:
+    build: ./client
+    container_name: client-c
+    ports:
+      - 3000:3000
+    stdin_open: true
+    depends_on:
+      - server-s
+  

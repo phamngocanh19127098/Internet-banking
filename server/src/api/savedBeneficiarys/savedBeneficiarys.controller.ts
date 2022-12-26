@@ -20,13 +20,23 @@ export class SavedBeneficiarysController {
   ) {}
 
   @Post()
-  create(@Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto) {
-    return this.savedBeneficiarysService.create(createSavedBeneficiaryDto);
+  async create(@Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto) {
+    const data = await this.savedBeneficiarysService.create(createSavedBeneficiaryDto);
+
+    return {
+      statusCode: 201,
+      message: "Lưu người thụ hưởng thành công"
+    }
   }
 
   @Get()
-  findAll() {
-    return this.savedBeneficiarysService.findAll();
+  async findAll() {
+    const data = await this.savedBeneficiarysService.findAll();
+    return{
+      data,
+      statusCode: 200,
+      message: "Lấy toàn bộ thông tin người thụ hưởng thụ hưởng thành công"
+    }
   }
 
   @Get(':id')
@@ -35,15 +45,26 @@ export class SavedBeneficiarysController {
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateSavedBeneficiaryDto: UpdateSavedBeneficiaryDto,
   ) {
-    return this.savedBeneficiarysService.update(+id, updateSavedBeneficiaryDto);
+    const data = await this.savedBeneficiarysService.update(+id, updateSavedBeneficiaryDto);
+
+    return {
+      data,
+      statusCode: 200,
+      message: 'Cập nhật người thụ hưởng thành công',
+    };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.savedBeneficiarysService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const data = await this.savedBeneficiarysService.remove(+id);
+
+    return {
+      statusCode: 200,
+      message: 'Xoá người thụ hưởng thành công'
+    }
   }
 }
