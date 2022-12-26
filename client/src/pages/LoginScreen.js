@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from 'react'
 import Error from '../components/Error'
 import Spinner from '../components/Spinner'
 import ReCAPTCHA from "react-google-recaptcha";
+import { useLocation } from 'react-router-dom'
 
 const LoginScreen = () => {
   const { loading, userInfo, error } = useSelector((state) => state.auth)
@@ -15,22 +16,16 @@ const LoginScreen = () => {
 
   const navigate = useNavigate()
   const [disableSubmit, setDisableSubmit] = useState(true);
-
+  const location = useLocation();
   // redirect authenticated user to profile screen
   useEffect(() => {
     console.log(userInfo)
     if (userInfo) {
-      navigate('/user-profile')
+      navigate("/")
     }
   }, [navigate, userInfo])
 
   let recaptchaInstance
-
-  useEffect(() => {
-    console.log(recaptchaInstance)
-  }, [recaptchaInstance])
-
-
 
   const submitForm = (data) => {
     recaptchaInstance.reset();
