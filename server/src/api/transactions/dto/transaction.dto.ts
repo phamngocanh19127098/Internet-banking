@@ -25,6 +25,33 @@ export class CreateTransferInternalDto {
   description: string;
 }
 
+export class CreateTransferExternalDto {
+  @IsString()
+  @IsNotEmpty()
+  accountNumber: string;
+
+  @IsNotEmpty()
+  transactionInfo: CreateTransferExternalDto;
+
+  @IsString()
+  @IsNotEmpty()
+  msgToken: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  timestamp: number;
+
+  @IsString()
+  @IsNotEmpty()
+  signature: string;
+
+  @IsString()
+  @IsNotEmpty()
+  slug: string;
+}
+
+
+
 export class VerifyTransferInternalDto {
   @IsNumber()
   @IsNotEmpty()

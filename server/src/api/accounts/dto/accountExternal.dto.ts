@@ -14,9 +14,6 @@ export class GetAccountInfoExternalDto {
   @IsNotEmpty()
   msgToken: string;
 
-  @IsString()
-  @IsNotEmpty()
-  signature: string;
 
   @IsString()
   @IsNotEmpty()

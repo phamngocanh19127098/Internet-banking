@@ -97,7 +97,7 @@ export class AccountsController {
     };
   }
 
-  @Get('/external/get-info')
+  @Post('/external/get-info')
   @ApiOperation({ description: 'Lấy thông tin người dùng bằng số tài khoản' })
   async getAccountInfoExternalByAccountNumber(
     @Body() dto: GetAccountInfoExternalDto,
