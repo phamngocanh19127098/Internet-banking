@@ -62,7 +62,7 @@ export class TransactionsController {
     );
   }
 
-  @Post('/external/transfer/verify')
+  @Post('/external/order-for-payment')
   async createTransferExternal(
     @Body() dto: CreateTransferExternalDto,
   ) {
@@ -71,10 +71,12 @@ export class TransactionsController {
       throw new NotConnectBankInfoException()
     let data = {
       ...dto.transactionInfo,
-      accountDesNumber: dto.accountNumber
+      accountSrcNumber: dto.accountNumber,
+      // bankDesId: linkedBank.id
     }
     verifyMessage(dto.msgToken,data,dto.timestamp,linkedBank.secretKey)
     verifySignature(dto.signature,linkedBank.publicKey,linkedBank.cryptoType,data)
+    return this.transactionsService.createTransferExternalRecord(dto.transactionInfo,dto.accountNumber,linkedBank.id)
   }
 
   @Get()

@@ -123,6 +123,47 @@ export class TransactionsService {
     }
   }
 
+  async createTransferExternalRecord(
+    dto: CreateTransferInternalDto,accountSrcNumber: string, bankId: number
+  ) {
+    try {
+      const des: Account[] =
+        await this.accountService.getActivePaymentAccountByAccountNumber(
+          dto.accountDesNumber,
+        );
+
+      if (des.length === 0) {
+        throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
+      }
+
+      await this.accountService.updateBalanceByAccountNumber(
+        dto.accountDesNumber,
+        dto.amount,
+        TransactionType.RECEIVE,
+      );
+
+      const record: Transaction = await this.transactionRepository.save({
+        ...dto,
+        status: TransactionStatus.SUCCESS,
+        accountSrcNumber: accountSrcNumber,
+        transactionType: TransactionType.RECEIVE,
+        bankDesId: bankId
+      });
+
+
+
+      return {
+        data: record,
+        statusCode: 200,
+        message: 'Tạo giao dịch chuyển khoản thành công.',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Lỗi trong quá trình tạo thông tin giao dịch.',
+      );
+    }
+  }
+
   async verifyTransferInternalOtp(
     dto: VerifyTransferInternalDto,
     authorization: string,
