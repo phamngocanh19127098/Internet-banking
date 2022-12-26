@@ -17,7 +17,6 @@ const HomeNavigation = (props) => {
         newChoice.map((x, idx) => (
             (props.id === idx) ? x.current = true : x.current = false
         ))
-        console.log(newChoice)
         setMenus(newChoice)
     }, props)
     const handlechange = (index) => {
@@ -25,7 +24,6 @@ const HomeNavigation = (props) => {
         newChoice.map((x, idx) => (
             (index === idx) ? x.current = true : x.current = false
         ))
-        console.log(newChoice)
         setMenus(newChoice)
     };
 

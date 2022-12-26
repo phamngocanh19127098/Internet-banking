@@ -1,7 +1,7 @@
 import React from 'react';
 import HomeNavigation from '../components/homeNavigation';
 import { useSelector } from 'react-redux'
-const Home = () => {
+const HomeCustomer = () => {
     const { userInfo } = useSelector((state) => state.auth)
     return (
         <div>
@@ -37,4 +37,4 @@ const Home = () => {
 }
 
 
-export default Home;
+export default HomeCustomer;

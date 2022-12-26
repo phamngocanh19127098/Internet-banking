@@ -1,16 +1,14 @@
 import axios from "axios";
-const config = {
-    headers: {
-        "Content-type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem('refreshToken')}`,
-    },
-};
-
 
 export const fetcherAccessToken = async () => {
-    const token = { "refreshToken": localStorage.getItem('refreshToken') }
-    const response = await axios
-        .post(`http://localhost:3001/auth/refresh`, token)
-        .catch((error) => console.log('Error: ', error));
-    return response
+    const url = `http://localhost:3001/auth/refresh`
+    const { data, status } = await axios({
+        method: 'post',
+        url,
+        data: {
+            "refreshToken": localStorage.getItem('refreshToken')
+        }
+    });
+    return { data, status }
 }
+

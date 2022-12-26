@@ -10,14 +10,14 @@ import RegisterScreen from './pages/RegisterScreen'
 import ProfileScreen from './pages/ProfileScreen'
 import HomeScreen from './pages/HomeScreen'
 import ProtectedRoute from './routing/ProtectedRoute'
-import Home from './pages/home'
+import HomeCustomer from './pages/homeCustomer'
 import Loan from './pages/loan'
 import Recipents from './pages/recipients'
 import Contact from './pages/contact'
 import Other from './pages/other'
 import Accounts from './pages/accounts'
 import Payment from './pages/payment'
-
+import ChangePassword from './pages/changePwd'
 function App() {
   return (
     <Router>
@@ -28,14 +28,15 @@ function App() {
           <Route path='/login' element={<LoginScreen />} />
           <Route path='/register' element={<RegisterScreen />} />
           <Route element={<ProtectedRoute />}>
-            <Route path='/' element={<Home />} />
+            <Route path='/' element={<HomeCustomer />} />
             <Route path='/accounts' element={<Accounts />} />
             <Route path='/loan' element={<Loan />} />
             <Route path='/recipents' element={<Recipents />} />
-            <Route path='/payments' element={<Payment />} />
+            <Route path='/payment' element={<Payment />} />
             <Route path='/contact' element={<Contact />} />
             <Route path='/other' element={<Other />} />
             <Route path='/user-profile' element={<ProfileScreen />} />
+            <Route path='/changepwd' element={<ChangePassword />} />
           </Route>
           <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
