@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateTransferInternalDto {
-  @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty({
-    required: true,
-    example: 1000000002,
-  })
-  accountDesNumber: number;
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({
+        required: true,
+        example: 1000000002,
+    })
+    accountDesNumber: string;
 
   @IsNumber()
   @IsNotEmpty()

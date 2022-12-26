@@ -19,10 +19,10 @@ export class Transaction {
   id: number;
 
   @Column({ name: 'account_des_number' })
-  accountDesNumber: number;
+  accountDesNumber: string;
 
   @Column({ name: 'account_src_number' })
-  accountSrcNumber: number;
+  accountSrcNumber: string;
 
   @Column()
   amount: number;
