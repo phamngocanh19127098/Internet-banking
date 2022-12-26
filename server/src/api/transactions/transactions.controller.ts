@@ -5,7 +5,7 @@ import {
   Controller,
   Delete,
   Get,
-  Headers,
+  Headers, Logger,
   Param,
   Patch,
   Post,
@@ -55,7 +55,8 @@ export class TransactionsController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Headers('origin') origin: string,) {
+    Logger.log(origin)
     return this.transactionsService.findAll();
   }
 

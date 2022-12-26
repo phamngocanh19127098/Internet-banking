@@ -36,7 +36,7 @@ import { sendMail } from '../../commons/mailing/nodemailer';
 export class TransactionsService {
   constructor(
     @InjectRepository(Transaction)
-    private transactionResponsive: Repository<Transaction>,
+    private transactionRepository: Repository<Transaction>,
     @InjectRepository(Account)
     private accountRepository: Repository<Account>,
     private userService: UserService,
@@ -60,7 +60,7 @@ export class TransactionsService {
       const username = Object(decodedAccessToken).username;
       const user: User = await this.userService.getByUsername(username);
       const des: Account[] =
-        await this.accountService.getActivePaymentAccountById(
+        await this.accountService.getActivePaymentAccountByAccountNumber(
           dto.accountDesNumber,
         );
 
@@ -80,10 +80,10 @@ export class TransactionsService {
 
       const paymentAccount = accounts[0];
 
-      const record: Transaction = await this.transactionResponsive.save({
+      const record: Transaction = await this.transactionRepository.save({
         ...dto,
         status: TransactionStatus.UN_SUCCESS,
-        accountSrcNumber: paymentAccount.id,
+        accountSrcNumber: paymentAccount.accountNumber,
         userId: user.id,
         transactionType: TransactionType.TRANSFER,
       });
@@ -104,7 +104,7 @@ export class TransactionsService {
         to: user.email,
         subject: `OTP Transaction ${record.id} Verification `,
         html: `<p>Dear <strong>${user.name}</strong>,</p>
-            <p>Your <strong>OTP </strong>(expires in 1 minute)&nbsp;for completing your transaction <strong>${record.id}</strong> is: <strong>${otpCode}</strong></p>
+            <p>Your <strong>OTP </strong>(expires in 5 minute)&nbsp;for completing your transaction <strong>${record.id}</strong> is: <strong>${otpCode}</strong></p>
             <p>Please use this Passcode to complete your transaction. Do not share this Passcode with anyone.</p>
             <p>Thank you,</p>
             <p><strong>TAIXIU BANK</strong></p>`,
@@ -161,17 +161,17 @@ export class TransactionsService {
       }
       transaction.status = TransactionStatus.SUCCESS;
 
-      await this.accountService.updateBalanceById(
+      await this.accountService.updateBalanceByAccountNumber(
         transaction.accountSrcNumber,
         transaction.amount,
         TransactionType.TRANSFER,
       );
-      await this.accountService.updateBalanceById(
+      await this.accountService.updateBalanceByAccountNumber(
         transaction.accountDesNumber,
         transaction.amount,
         TransactionType.RECEIVE,
       );
-      const res = await this.transactionResponsive.save(transaction);
+      const res = await this.transactionRepository.save(transaction);
       return {
         data: res,
         statusCode: 200,
@@ -185,11 +185,11 @@ export class TransactionsService {
   }
 
   findAll() {
-    return this.transactionResponsive.find();
+    return this.transactionRepository.find();
   }
 
   findOne(id: number) {
-    return this.transactionResponsive.findOneBy({ id });
+    return this.transactionRepository.findOneBy({ id });
   }
 
   update(id: number, updateTransactionDto: UpdateTransactionDto) {
@@ -215,7 +215,7 @@ export class TransactionsService {
         throw new BadRequestException('Không tồn tại tài khoản người dùng!');
       }
 
-      let data = await this.transactionResponsive
+      let data = await this.transactionRepository
         .createQueryBuilder('transaction')
         .leftJoin('transaction.accountDes', 'accountDes')
         .leftJoin('transaction.accountSrc', 'accountSrc')

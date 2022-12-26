@@ -143,11 +143,11 @@ export class AccountsService {
     }
   }
 
-  async getActivePaymentAccountById(id: number) {
+  async getActivePaymentAccountByAccountNumber(accountNumber: string) {
     try {
       const accounts = await this.repos.find({
         where: {
-          id: id,
+          accountNumber: accountNumber,
           status: AccountStatus.ACTIVE,
           accountType: AccountType.PAYMENT_ACCOUNT,
         },
@@ -161,13 +161,13 @@ export class AccountsService {
     }
   }
 
-  async updateBalanceById(
-    id: number,
+  async updateBalanceByAccountNumber(
+    accountNumber: string,
     amount: number,
     updateType: TransactionType,
   ) {
     try {
-      const account = await this.getOne(id);
+      const account = await this.getByAccountNumber(accountNumber);
 
       if (!account) {
         throw new BadRequestException(
