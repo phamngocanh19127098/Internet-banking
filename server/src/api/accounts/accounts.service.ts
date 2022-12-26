@@ -205,6 +205,7 @@ export class AccountsService {
           'account.status',
           'user.id',
           'user.username',
+          'user.name',
           'user.dob',
           'user.phone',
           'user.address',
