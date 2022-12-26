@@ -6,6 +6,6 @@ import { UNEXISTING_USER } from './constants';
 
 export class UserUnexistingException extends BaseException {
   constructor() {
-    super('User does not exist', HttpStatus.NOT_FOUND, UNEXISTING_USER);
+    super('User does not exist', HttpStatus.BAD_REQUEST, UNEXISTING_USER);
   }
 }
