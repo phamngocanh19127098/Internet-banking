@@ -1,16 +1,12 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CreateAccountDto } from './dto/CreateAccountDto';
-import { UpdateAccountDto } from './dto/UpdateAccountDto';
-import { Repository } from 'typeorm';
-import { Account, AccountStatus, AccountType } from './entities/account.entity';
-import { UserService } from '../users/user.service';
-import { User } from '../users/entity/user.entity';
-import { TransactionType } from '../transactions/entities/transaction.entity';
+import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {CreateAccountDto} from './dto/CreateAccountDto';
+import {UpdateAccountDto} from './dto/UpdateAccountDto';
+import {Repository} from 'typeorm';
+import {Account, AccountStatus, AccountType} from './entities/account.entity';
+import {UserService} from '../users/user.service';
+import {Role, User} from '../users/entity/user.entity';
+import {TransactionType} from '../transactions/entities/transaction.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
 
@@ -219,6 +215,47 @@ export class AccountsService {
         .getOne();
 
       return data;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Lỗi trong quá trình lấy thông tin người dùng',
+      );
+    }
+  }
+
+  async getAccountNameByAccountNumber(accountNumber: string) {
+    try {
+      let account: Account = await this.repos.findOne({
+        where: {
+          accountNumber: accountNumber,
+          accountType: AccountType.PAYMENT_ACCOUNT,
+          status: AccountStatus.ACTIVE
+        },
+      });
+
+      if (account == null) {
+        throw new BadRequestException('Không tồn tại tài khoản người dùng!');
+      }
+
+
+      let data = await this.repos
+        .createQueryBuilder('account')
+        .leftJoin('account.user', 'user')
+        .select([
+          'account.accountNumber',
+          'user.id',
+          'user.name',
+        ])
+        .where('account.id =:id AND user.role =:role', {
+          id: account.id,
+          role: Role.CUSTOMER
+        })
+        .getOne();
+
+      return {
+        data,
+        statusCode: 200,
+        message: 'Lấy thông tin tài khoản thành công.',
+      };
     } catch (error) {
       throw new InternalServerErrorException(
         'Lỗi trong quá trình lấy thông tin người dùng',

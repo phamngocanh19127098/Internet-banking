@@ -23,6 +23,10 @@ export class AffiliatedBanksService {
     return `This action returns a #${id} affiliatedBank`;
   }
 
+  findOneBySlug(slug: string) {
+    return this.repos.findOneBy({ slug });
+  }
+
   update(id: number, updateAffiliatedBankDto: UpdateAffiliatedBankDto) {
     return `This action updates a #${id} affiliatedBank`;
   }

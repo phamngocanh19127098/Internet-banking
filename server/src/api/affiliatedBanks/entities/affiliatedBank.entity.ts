@@ -1,6 +1,11 @@
 import { SavedBeneficiary } from "src/api/savedBeneficiarys/entities/savedBeneficiary.entity";
 import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 
+export enum CryptoType {
+    RSA = 1,
+    PGP = 2
+}
+
 @Entity('affiliated_bank')
 export class AffiliatedBank {
     @PrimaryGeneratedColumn()
@@ -19,7 +24,7 @@ export class AffiliatedBank {
     connectionType: string;
 
     @Column({name: 'crypto_type'})
-    cryptoType: number;
+    cryptoType: CryptoType;
 
     @Column()
     name: string;
@@ -29,6 +34,9 @@ export class AffiliatedBank {
 
     @Column()
     status: string;
+
+    @Column({name: 'secret_key'})
+    secretKey: string;
 
     // @OneToMany(()=> SavedBeneficiary, (savedBeneficiary) => savedBeneficiary.affiliatedBank)
     // savedBeneficiary : SavedBeneficiary[];

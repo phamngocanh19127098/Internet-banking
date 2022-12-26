@@ -7,6 +7,7 @@ import {AffiliatedBank} from "./entities/affiliatedBank.entity";
 @Module({
   imports: [TypeOrmModule.forFeature([AffiliatedBank])],
   controllers: [AffiliatedBanksController],
-  providers: [AffiliatedBanksService]
+  providers: [AffiliatedBanksService],
+  exports: [AffiliatedBanksService],
 })
 export class AffiliatedBanksModule {}

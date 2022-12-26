@@ -15,6 +15,10 @@ import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/CreateAccountDto';
 import { DepositIntoAccountDto } from './dto/DepositIntoAccountDto';
 import { UpdateAccountDto } from './dto/UpdateAccountDto';
+import {GetAccountInfoExternalDto} from "./dto/accountExternal.dto";
+import verifyMessage from "../../commons/verify/VerifyMessage";
+import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
+import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
 
 @Controller('accounts')
 @ApiTags('accounts')
@@ -22,6 +26,7 @@ export class AccountsController {
   constructor(
     private readonly accountsService: AccountsService,
     private userService: UserService,
+    private affiliatedBanksService: AffiliatedBanksService
   ) {}
 
   @Post()
@@ -90,5 +95,21 @@ export class AccountsController {
       statusCode: 200,
       message: 'Lấy thông tin tài khoản thành công.',
     };
+  }
+
+  @Get('/external/get-info')
+  @ApiOperation({ description: 'Lấy thông tin người dùng bằng số tài khoản' })
+  async getAccountInfoExternalByAccountNumber(
+    @Body() dto: GetAccountInfoExternalDto,
+  ) {
+    const linkedBank = await this.affiliatedBanksService.findOneBySlug(dto.slug)
+    if (!linkedBank)
+      throw new NotConnectBankInfoException()
+    let data = {
+      accountNumber: dto.accountNumber,
+      slug: dto.slug
+    }
+    verifyMessage(dto.msgToken,data,dto.timestamp,linkedBank.secretKey)
+    return this.accountsService.getAccountNameByAccountNumber(dto.accountNumber)
   }
 }
