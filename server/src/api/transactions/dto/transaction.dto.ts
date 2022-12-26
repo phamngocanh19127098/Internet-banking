@@ -31,7 +31,7 @@ export class CreateTransferExternalDto {
   accountNumber: string;
 
   @IsNotEmpty()
-  transactionInfo: CreateTransferExternalDto;
+  transactionInfo: CreateTransferInternalDto;
 
   @IsString()
   @IsNotEmpty()
