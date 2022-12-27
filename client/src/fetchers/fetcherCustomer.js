@@ -45,15 +45,14 @@ export const fetcherAddReceiver = async (accNum, nickName) => {
 }
 
 
-export const fetcherListReceivers = async (id) => {
-    const url = `http://localhost:3001/accounts/detail/${id}`
-
+export const fetcherListReceivers = async (userId) => {
+    const url = `http://localhost:3001/savedBeneficiarys/list/${userId}`
     try {
-        const { data, status } = await axios({
+        const { data, statusCode } = await axios({
             method: 'get',
             url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
         });
-        return { data, status }
+        return { data, statusCode }
     } catch (err) {
         console.error("Error response:");
         const data = err.response.data

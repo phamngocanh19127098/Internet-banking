@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { fetcherReceiver } from '../fetchers/fetcherCustomer';
 import { fetcherAddReceiver } from '../fetchers/fetcherCustomer';
 const AddRecipent = (props) => {
-    const { userInfo } = useSelector((state) => state.auth)
     const [name, setName] = useState("")
     const [nickname, setNickName] = useState("")
     const [accNum, setAccNum] = useState("")
