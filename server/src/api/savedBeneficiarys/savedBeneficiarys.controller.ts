@@ -11,7 +11,7 @@ import { SavedBeneficiarysService } from './savedBeneficiarys.service';
 import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import { ApiTags } from '@nestjs/swagger';
-import {User} from "../../commons/decorator/user.decorato";
+import { User } from '../../commons/decorator/user.decorato';
 import {Roles} from "../../commons/decorator/roles.decorator";
 import {Role} from "../users/entity/user.entity";
 
@@ -27,8 +27,6 @@ export class SavedBeneficiarysController {
   async create(
       @User() user,
       @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto) {
-
-    console.log(user)
     const data = await this.savedBeneficiarysService.create(
       createSavedBeneficiaryDto,
       user.id,
@@ -47,13 +45,18 @@ export class SavedBeneficiarysController {
     return{
       data,
       statusCode: 200,
-      message: "Lấy toàn bộ thông tin người thụ hưởng thụ hưởng thành công"
+      message: "Lấy danh sách người thụ hưởng thụ hưởng thành công"
     }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.savedBeneficiarysService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const data = await this.savedBeneficiarysService.findOne(+id);
+    return{
+      data,
+      statusCode: 200,
+      message: "Lấy thông tin người thụ hưởng thụ hưởng thành công"
+    }
   }
 
   @Patch(':id')
@@ -75,6 +78,7 @@ export class SavedBeneficiarysController {
     const data = await this.savedBeneficiarysService.remove(+id);
 
     return {
+      data: {},
       statusCode: 200,
       message: 'Xoá người thụ hưởng thành công'
     }
