@@ -11,6 +11,9 @@ import { SavedBeneficiarysService } from './savedBeneficiarys.service';
 import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import { ApiTags } from '@nestjs/swagger';
+import {User} from "../../commons/decorator/user.decorato";
+import {Roles} from "../../commons/decorator/roles.decorator";
+import {Role} from "../users/entity/user.entity";
 
 @ApiTags('savedBeneficiarys')
 @Controller('savedBeneficiarys')
@@ -20,18 +23,27 @@ export class SavedBeneficiarysController {
   ) {}
 
   @Post()
-  async create(@Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto) {
-    const data = await this.savedBeneficiarysService.create(createSavedBeneficiaryDto);
+  @Roles(Role.CUSTOMER)
+  async create(
+      @User() user,
+      @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto) {
+
+    console.log(user)
+    const data = await this.savedBeneficiarysService.create(
+      createSavedBeneficiaryDto,
+      user.id,
+    );
 
     return {
+      data,
       statusCode: 201,
       message: "Lưu người thụ hưởng thành công"
     }
   }
 
-  @Get()
-  async findAll() {
-    const data = await this.savedBeneficiarysService.findAll();
+  @Get('list/:userId')
+  async findAll(@Param('userId') userId: string) {
+    const data = await this.savedBeneficiarysService.findAll(+userId);
     return{
       data,
       statusCode: 200,

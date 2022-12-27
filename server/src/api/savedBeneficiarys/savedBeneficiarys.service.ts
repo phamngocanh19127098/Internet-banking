@@ -5,6 +5,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {SavedBeneficiary} from "./entities/savedBeneficiary.entity";
 import {Account} from "../accounts/entities/account.entity";
+import {User} from "../../commons/decorator/user.decorato";
 
 @Injectable()
 export class SavedBeneficiarysService {
@@ -14,7 +15,10 @@ export class SavedBeneficiarysService {
       @InjectRepository(Account)
       private accountRepository: Repository<Account>
   ) {}
-  async create(createSavedBeneficiaryDto: CreateSavedBeneficiaryDto) {
+  async create(
+    createSavedBeneficiaryDto: CreateSavedBeneficiaryDto,
+    customerId: number,
+  ) {
       try {
           const infoAccount = await this.accountRepository.createQueryBuilder('account')
               .leftJoinAndSelect("account.user","user")
@@ -28,22 +32,22 @@ export class SavedBeneficiarysService {
 
 
           if (!createSavedBeneficiaryDto.beneficiaryNickname) {
-              createSavedBeneficiaryDto.beneficiaryNickname = infoAccount.user.name || "Ẩn Danh";
+              createSavedBeneficiaryDto.beneficiaryNickname = infoAccount.user.name || infoAccount.user.username;
           }
 
-          return await this.savedBeneficiaryRepository.save({...createSavedBeneficiaryDto, customerId: infoAccount.customerId});
+          return await this.savedBeneficiaryRepository.save({...createSavedBeneficiaryDto, customerId: customerId});
 
       } catch (e) {
           throw new BadRequestException(e.message);
       }
   }
 
-  findAll() {
-    return this.savedBeneficiaryRepository.find();
+  findAll(userId: number) {
+    return this.savedBeneficiaryRepository.findBy({ customerId: userId });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} savedBeneficiary`;
+    return this.savedBeneficiaryRepository.findOneBy({id: id});
   }
 
   async update(id: number, updateSavedBeneficiaryDto: UpdateSavedBeneficiaryDto) {
