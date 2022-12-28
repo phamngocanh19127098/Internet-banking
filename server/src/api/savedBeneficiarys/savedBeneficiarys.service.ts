@@ -35,7 +35,8 @@ export class SavedBeneficiarysService {
               createSavedBeneficiaryDto.beneficiaryNickname = infoAccount.user.name || infoAccount.user.username;
           }
 
-          return await this.savedBeneficiaryRepository.save({...createSavedBeneficiaryDto, customerId: customerId});
+
+          return await this.savedBeneficiaryRepository.save({...createSavedBeneficiaryDto, customerId: customerId, beneficiaryDefaultName: infoAccount.user.name});
 
       } catch (e) {
           throw new BadRequestException(e.message);
