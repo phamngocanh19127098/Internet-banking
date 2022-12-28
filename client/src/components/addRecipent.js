@@ -63,6 +63,7 @@ const AddRecipent = (props) => {
 
     const handleSaveClick = (e) => {
         addNewRecipent()
+        props.handleChange()
         props.onClose()
     }
     return (

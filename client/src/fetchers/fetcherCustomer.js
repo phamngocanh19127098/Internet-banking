@@ -45,6 +45,24 @@ export const fetcherAddReceiver = async (accNum, nickName) => {
 }
 
 
+
+export const fetcherDeleteReceiver = async (id) => {
+    const url = `http://localhost:3001/savedBeneficiarys/${id}`
+    try {
+        const { data, status } = await axios({
+            method: 'delete',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
 export const fetcherListReceivers = async (userId) => {
     const url = `http://localhost:3001/savedBeneficiarys/list/${userId}`
     try {

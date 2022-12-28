@@ -4,14 +4,18 @@ import { useSelector } from 'react-redux';
 import HomeNavigation from '../components/homeNavigation';
 import AddRecipent from '../components/addRecipent';
 import { fetcherListReceivers } from '../fetchers/fetcherCustomer';
-
+import DeleteRecipent from '../components/deleteRecipent';
 
 const Recipents = () => {
     const { userInfo } = useSelector((state) => state.auth)
     const [showAddModal, setShowAddModal] = useState(false);
     const handleOnCloseAdd = () => setShowAddModal(false)
+    const [showEditModal, setShowEditModal] = useState(false);
+    const handleOnCloseEdit = () => setShowEditModal(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const handleOnCloseDelete = () => setShowDeleteModal(false)
     const [listRecipents, setListRecipents] = useState([{}])
-
+    const [idDelete, setIdDelete] = useState()
     async function getList() {
         const list = await fetcherListReceivers(userInfo.id)
         setListRecipents(list.data.data)
@@ -22,6 +26,10 @@ const Recipents = () => {
     useEffect(() => {
         getList()
     }, []);
+
+    function hanldeChange() {
+        getList()
+    }
     return (
         <div>
             <div>
@@ -43,6 +51,12 @@ const Recipents = () => {
                                                     <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                                                         Số tài khoản
                                                     </th>
+                                                    <th className="px-8 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                                                        Chỉnh sửa thông tin
+                                                    </th>
+                                                    <th className="px-6 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black">
+                                                        Xóa người nhận
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody className=" ">
@@ -61,7 +75,21 @@ const Recipents = () => {
                                                             </div>
 
                                                         </td>
+                                                        <td className="px-6 py-2">
+                                                            <div>
+                                                                <button className="px-12 py-2 text-sm font-bold text-white bg-green rounded-full hover:bg-[#1bc46e]">Edit</button>
+                                                            </div>
 
+
+                                                        </td>
+                                                        <td className="px-6 py-2">
+                                                            <div>
+                                                                <button onClick={() => {
+                                                                    setShowDeleteModal(true); setIdDelete(account.id)
+                                                                }}
+                                                                    className="px-10 py-2 text-sm font-bold text-white text-center bg-medium-pink-red rounded-full hover:bg-[#870e2b] disabled:bg-[#edb395] ">Remove</button>
+                                                            </div>
+                                                        </td>
 
                                                     </tr>
 
@@ -81,7 +109,9 @@ const Recipents = () => {
                         </div>
                     </div>
                 </div>
-                {showAddModal && <AddRecipent onClose={handleOnCloseAdd} visible={showAddModal} />
+                {showAddModal && <AddRecipent onClose={handleOnCloseAdd} visible={showAddModal} handleChange={hanldeChange} />
+                }
+                {showDeleteModal && <DeleteRecipent onClose={handleOnCloseDelete} visible={showDeleteModal} idDel={idDelete} handleChange={hanldeChange} />
                 }
             </div>
 

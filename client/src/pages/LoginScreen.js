@@ -83,7 +83,7 @@ const LoginScreen = () => {
               Quên mật khẩu?
             </a>
             <div className="mt-6">
-              <button type="submit" disabled={disableSubmit} className=" button w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] rounded-lg">
+              <button type="submit" disabled={disableSubmit} className=" button w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] hover:from-[#076F32] hover:to-[#076F32] rounded-lg">
                 Đăng nhập
               </button>
             </div>

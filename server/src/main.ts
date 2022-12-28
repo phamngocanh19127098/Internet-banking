@@ -33,7 +33,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:3006'
     ],
-    methods: ["GET", "POST"],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
   const config = new DocumentBuilder()
