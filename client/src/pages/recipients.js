@@ -5,7 +5,8 @@ import HomeNavigation from '../components/homeNavigation';
 import AddRecipent from '../components/addRecipent';
 import { fetcherListReceivers } from '../fetchers/fetcherCustomer';
 import DeleteRecipent from '../components/deleteRecipent';
-
+import EditRecipent from '../components/editRecipent';
+import Loader from '../components/loading';
 const Recipents = () => {
     const { userInfo } = useSelector((state) => state.auth)
     const [showAddModal, setShowAddModal] = useState(false);
@@ -16,6 +17,8 @@ const Recipents = () => {
     const handleOnCloseDelete = () => setShowDeleteModal(false)
     const [listRecipents, setListRecipents] = useState([{}])
     const [idDelete, setIdDelete] = useState()
+    const [editInfo, setEditInfo] = useState()
+    const [isLoading, setIsLoading] = useState(false)
     async function getList() {
         const list = await fetcherListReceivers(userInfo.id)
         setListRecipents(list.data.data)
@@ -28,8 +31,34 @@ const Recipents = () => {
     }, []);
 
     function hanldeChange() {
-        getList()
+        setIsLoading(true)
+        setTimeout(() => {
+            getList()
+            setIsLoading(false)
+        }, 1000);
+
     }
+
+    if (isLoading) return (
+        <div>
+            <div>
+                <div className=' bg-cover w-screen flex h-screen bg-[#F0F2FF] '>
+                    <HomeNavigation id={2} />
+                    <div className="h-screen flex-auto">
+                        <div
+                            className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
+                        >
+                            <Loader />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    );
+
     return (
         <div>
             <div>
@@ -77,7 +106,10 @@ const Recipents = () => {
                                                         </td>
                                                         <td className="px-6 py-2">
                                                             <div>
-                                                                <button className="px-12 py-2 text-sm font-bold text-white bg-green rounded-full hover:bg-[#1bc46e]">Edit</button>
+                                                                <button onClick={() => {
+                                                                    setShowEditModal(true); setEditInfo({ ...editInfo, "id": account.id, "name": account.beneficiaryDefaultName, "nickname": account.beneficiaryNickname, "accNum": account.beneficiaryAccountNumber })
+                                                                }}
+                                                                    className="px-12 py-2 text-sm font-bold text-white bg-green rounded-full hover:bg-[#1bc46e]">Edit</button>
                                                             </div>
 
 
@@ -112,6 +144,8 @@ const Recipents = () => {
                 {showAddModal && <AddRecipent onClose={handleOnCloseAdd} visible={showAddModal} handleChange={hanldeChange} />
                 }
                 {showDeleteModal && <DeleteRecipent onClose={handleOnCloseDelete} visible={showDeleteModal} idDel={idDelete} handleChange={hanldeChange} />
+                }
+                {showEditModal && <EditRecipent onClose={handleOnCloseEdit} visible={showEditModal} editInfo={editInfo} handleChange={hanldeChange} />
                 }
             </div>
 

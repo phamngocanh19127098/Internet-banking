@@ -63,6 +63,27 @@ export const fetcherDeleteReceiver = async (id) => {
 }
 
 
+export const fetcherEditReceiver = async (id, nickname, name, accNum) => {
+    const url = `http://localhost:3001/savedBeneficiarys/${id}`
+    try {
+        const { data, status } = await axios({
+            method: 'patch',
+            url, data: {
+                "beneficiaryAccountNumber": accNum,
+                "beneficiaryDefaultName": name,
+                "beneficiaryNickname": nickname
+            }, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
 export const fetcherListReceivers = async (userId) => {
     const url = `http://localhost:3001/savedBeneficiarys/list/${userId}`
     try {

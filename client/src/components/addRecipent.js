@@ -26,7 +26,8 @@ const AddRecipent = (props) => {
     }
 
     useEffect(() => {
-        console.log(accNum)
+        if (nickname === "")
+            console.log(true)
         if (statuscode === 200) {
             if (accNum !== null) {
                 setNotification(name)
@@ -62,6 +63,9 @@ const AddRecipent = (props) => {
     }
 
     const handleSaveClick = (e) => {
+        if (nickname === "") {
+            setNickName(name)
+        }
         addNewRecipent()
         props.handleChange()
         props.onClose()
@@ -97,7 +101,6 @@ const AddRecipent = (props) => {
                     <input className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
                         id="nickname"
                         type="text"
-                        required
                         onChange={event => setNickName(event.target.value)}
                         placeholder="Nhập số tài khoản" />
                 </div>
