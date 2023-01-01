@@ -79,6 +79,7 @@ export class TransactionsController {
     return this.transactionsService.createTransferExternalRecord(dto.transactionInfo,dto.accountNumber,linkedBank.id)
   }
 
+  @Roles(Role.ADMIN)
   @Get()
   findAll(@Headers('origin') origin: string,) {
     Logger.log(origin)
@@ -120,4 +121,5 @@ export class TransactionsController {
       message: 'Lấy thông tin giao dịch thành công.',
     };
   }
+
 }

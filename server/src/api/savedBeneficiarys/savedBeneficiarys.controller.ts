@@ -1,17 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { SavedBeneficiarysService } from './savedBeneficiarys.service';
-import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
-import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { User } from '../../commons/decorator/user.decorato';
+import {Body, Controller, Delete, Get, Param, Patch, Post,} from '@nestjs/common';
+import {SavedBeneficiarysService} from './savedBeneficiarys.service';
+import {CreateSavedBeneficiaryDto} from './dto/create-saved-beneficiary.dto';
+import {UpdateSavedBeneficiaryDto} from './dto/update-saved-beneficiary.dto';
+import {ApiTags} from '@nestjs/swagger';
+import {User} from '../../commons/decorator/user.decorato';
 import {Roles} from "../../commons/decorator/roles.decorator";
 import {Role} from "../users/entity/user.entity";
 
@@ -39,6 +31,7 @@ export class SavedBeneficiarysController {
     }
   }
 
+  @Roles(Role.CUSTOMER)
   @Get('list/:userId')
   async findAll(@Param('userId') userId: string) {
     const data = await this.savedBeneficiarysService.findAll(+userId);
@@ -59,6 +52,7 @@ export class SavedBeneficiarysController {
     }
   }
 
+  @Roles(Role.CUSTOMER)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -73,6 +67,7 @@ export class SavedBeneficiarysController {
     };
   }
 
+  @Roles(Role.CUSTOMER)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const data = await this.savedBeneficiarysService.remove(+id);

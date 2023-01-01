@@ -27,6 +27,13 @@ export class CreateUserDto {
     example: 'admin',
   })
   role: Role;
+
+  @Allow()
+  @IsString()
+  @ApiProperty({
+    name : "Anh Pham"
+  })
+  name : string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {

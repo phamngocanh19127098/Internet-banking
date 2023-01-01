@@ -73,7 +73,7 @@ export class AuthService {
 
   async login(loginDto: LoginUserDto): Promise<IResponseData> {
     const user = await this.userService.getByLogin(loginDto);
-    const token = await this.signToken(user.username);
+    const token = await this.signToken(user);
 
     delete user.password;
     delete user.refreshToken;
@@ -128,19 +128,23 @@ export class AuthService {
     return user;
   }
 
-  async signToken(username: string, refresh = false): Promise<IToken> {
-    const accessToken = this.jwtService.sign({ username });
+  async signToken(user: User, refresh = false): Promise<IToken> {
+    const accessToken = this.jwtService.sign({
+      username: user.username,
+      id : user.id,
+      role : user.role
+    });
 
     if (!refresh) {
       const refreshToken = this.jwtService.sign(
-        { username },
+        { username : user.username },
         {
           secret: this.config.get('JWT_REFRESH_TOKEN_SECRET'),
           expiresIn: this.config.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
         },
       );
 
-      await this.userService.updateRefreshToken(username, refreshToken);
+      await this.userService.updateRefreshToken(user.username, refreshToken);
 
       return {
         accessToken,
@@ -167,7 +171,7 @@ export class AuthService {
         payload.username,
       );
 
-      const token = await this.signToken(user.username, true);
+      const token = await this.signToken(user, true);
 
       return {
         data: user,

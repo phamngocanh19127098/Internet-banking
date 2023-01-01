@@ -11,6 +11,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { AffiliatedBanksService } from './affiliatedBanks.service';
 import { CreateAffiliatedBankDto } from './dto/create-affiliated-bank.dto';
 import { UpdateAffiliatedBankDto } from './dto/update-affiliated-bank.dto';
+import {Roles} from "../../commons/decorator/roles.decorator";
+import {Role} from "../users/entity/user.entity";
 
 @ApiTags('affiliatedBanks')
 @Controller('affiliatedBanks')
@@ -24,6 +26,7 @@ export class AffiliatedBanksController {
     return this.affiliatedBanksService.create(createAffiliatedBankDto);
   }
 
+  @Roles(Role.CUSTOMER)
   @Get()
   findAll() {
     return this.affiliatedBanksService.findAll();
