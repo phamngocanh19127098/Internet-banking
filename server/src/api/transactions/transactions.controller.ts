@@ -1,5 +1,5 @@
 import { TransactionType } from './enum/TransactionType.enum';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -80,13 +80,19 @@ export class TransactionsController {
   }
 
   @Roles(Role.ADMIN)
+  @ApiOperation({description: "Lấy danh sách các giao dịch"})
+  @ApiOkResponse({
+    description: 'Lấy danh sách các giao dịch thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Không tồn tại ngân hàng cần đối soát',
+  })
   @Get()
-  findAll(@Headers('origin') origin: string,
+  findAll(
           @Query('fromDate') fromDate: Date,
           @Query('toDate') toDate : Date,
           @Query('affiliatedBankId') affiliatedBankId : string,
   ) {
-    Logger.log(origin)
     return this.transactionsService.findAll(fromDate, toDate, +affiliatedBankId);
   }
 

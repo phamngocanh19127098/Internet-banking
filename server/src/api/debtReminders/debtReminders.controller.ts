@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import { DebtRemindersService } from './debtReminders.service';
@@ -12,6 +12,10 @@ export class DebtRemindersController {
   constructor(private readonly debtRemindersService: DebtRemindersService) {}
 
   @Post()
+  @ApiOkResponse({
+    description: "Tạo nhắc nợ thành công"
+    }
+  )
   @Roles(Role.CUSTOMER)
   async create(@Body() createDebtReminderDto: CreateDebtReminderDto) {
     let data = await this.debtRemindersService.create(createDebtReminderDto);
@@ -44,6 +48,9 @@ export class DebtRemindersController {
 
   @Get('/list/created/:userId')
   @Roles(Role.CUSTOMER)
+  @ApiOkResponse({
+    description: "Lấy thông tin danh sách nợ do bản thân tạo thành công"
+  })
   @ApiOperation({description : 'Lấy danh sách nợ được tạo do bản thân tạo'})
   async getAllDebtReminderCreated(@Param('userId') userId: string) {
     let result = await this.debtRemindersService.getDebtReminderCreated(+userId);
@@ -56,6 +63,9 @@ export class DebtRemindersController {
 
   @Get('/list/received/:userId')
   @Roles(Role.CUSTOMER)
+  @ApiOkResponse({
+    description: "Lấy thông tin danh sách nợ do người khác gửi thành công"
+  })
   @ApiOperation({description : 'Lấy danh sách nợ được tạo do người khác gửi'})
   async getAllDebtReminderReceived(@Param('userId') userId: string) {
     let result = await this.debtRemindersService.getDebtReminderReceived(+userId);
@@ -66,6 +76,11 @@ export class DebtRemindersController {
     }
   }
 
+  @ApiOkResponse({
+    description: "Lấy thông tin danh sách nợ chưa thanh toán thành công"
+  })
+  @Roles(Role.CUSTOMER)
+  @ApiOperation({description : 'Lấy thông tin danh sách nợ chưa thanh toán'})
   @Get('/list/unpaid/:userId')
   async getUnPaidDebt(@Param('userId') userId : string) {
     let result = await this.debtRemindersService.getUnPaidDebtReminder(+userId);

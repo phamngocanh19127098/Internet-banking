@@ -109,7 +109,11 @@ export class UserService {
 
   async findAllEmployee() {
     try {
-      return await this.userRepository.findBy({ role: Role.EMPLOYEE }); // ???
+      let employee = await this.userRepository.findBy({ role: Role.EMPLOYEE }); // ???
+      for (let e of employee) {
+        delete e.password
+      }
+      return employee;
     } catch (e) {
       throw new InternalServerErrorException();
     }
@@ -118,24 +122,24 @@ export class UserService {
   async updateEmployee(id: number, updateUserDto: UpdateUserDto) {
     try {
       const employee: User = await this.userRepository.findOneById(id);
-      console.log(employee);
       if (!employee) {
-        throw new BadRequestException();
+        throw new BadRequestException("Nhân viên không tồn tại");
       }
       return await this.userRepository.update(id, updateUserDto);
-    } catch (e) {}
+    } catch (e) {
+      throw new InternalServerErrorException("Lỗi trong quá trình cập nhập nhân viên")
+    }
   }
 
   async removeEmployee(id: number) {
     try {
       const employee: User = await this.userRepository.findOneById(id);
       if (!employee) {
-        throw new BadRequestException();
+        throw new BadRequestException("Nhân viên không tồn tại");
       }
       return await this.userRepository.delete(id);
     } catch (e) {
-      throw new InternalServerErrorException();
-      console.log(e.message);
+      throw new InternalServerErrorException("Lỗi trong quá trình xóa nhân viên");
     }
   }
 

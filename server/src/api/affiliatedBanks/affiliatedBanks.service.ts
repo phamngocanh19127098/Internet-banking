@@ -15,8 +15,8 @@ export class AffiliatedBanksService {
     return 'This action adds a new affiliatedBank';
   }
 
-  findAll() {
-    return this.repos.find();
+  async findAll() {
+    return await this.repos.find();
   }
 
   findOne(id: number) {

@@ -1,16 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { AffiliatedBanksService } from './affiliatedBanks.service';
-import { CreateAffiliatedBankDto } from './dto/create-affiliated-bank.dto';
-import { UpdateAffiliatedBankDto } from './dto/update-affiliated-bank.dto';
+import {Body, Controller, Delete, Get, Param, Patch, Post,} from '@nestjs/common';
+import {ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {AffiliatedBanksService} from './affiliatedBanks.service';
+import {CreateAffiliatedBankDto} from './dto/create-affiliated-bank.dto';
+import {UpdateAffiliatedBankDto} from './dto/update-affiliated-bank.dto';
 import {Roles} from "../../commons/decorator/roles.decorator";
 import {Role} from "../users/entity/user.entity";
 
@@ -26,10 +18,21 @@ export class AffiliatedBanksController {
     return this.affiliatedBanksService.create(createAffiliatedBankDto);
   }
 
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
   @Get()
-  findAll() {
-    return this.affiliatedBanksService.findAll();
+  @ApiOperation({
+    description: "Lấy danh sách ngân hàng đã liên kết"
+  })
+  @ApiOkResponse({
+    description: "Lấy danh sách ngân hàng đã liên kết thành công"
+  })
+  async findAll() {
+    let data = await this.affiliatedBanksService.findAll();
+    return {
+      statusCode: 200,
+      message: "Lấy danh sách ngân hàng liên kết thành công",
+      data
+    }
   }
 
   @Get(':id')
