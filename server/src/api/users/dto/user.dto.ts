@@ -9,7 +9,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @ApiProperty({
     required: true,
-    example: 'user',
+    example: 'user1000',
   })
   username: string;
 
@@ -17,7 +17,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @ApiProperty({
     required: true,
-    example: 'user@gmail.com',
+    example: 'user1000@gmail.com',
   })
   email: string;
 
@@ -28,12 +28,11 @@ export class CreateUserDto {
   })
   role: Role;
 
-  @Allow()
   @IsString()
   @ApiProperty({
-    name : "Anh Pham"
+    example: 'Anh Pham',
   })
-  name : string;
+  name: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -124,7 +123,7 @@ export class ChangeUserPasswordDto extends PartialType(LoginUserDto) {
   @IsNotEmpty()
   @ApiProperty({
     required: true,
-    example: 'user123',
+    example: '123123',
   })
   newPassword: string;
 }

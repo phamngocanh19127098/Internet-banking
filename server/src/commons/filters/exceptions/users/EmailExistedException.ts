@@ -6,6 +6,6 @@ import { EXISTED_EMAIL } from './constants';
 
 export class EmailExistedException extends BaseException {
   constructor() {
-    super('Email has existed', HttpStatus.FORBIDDEN, EXISTED_EMAIL);
+    super('Email has existed', HttpStatus.BAD_REQUEST, EXISTED_EMAIL);
   }
 }

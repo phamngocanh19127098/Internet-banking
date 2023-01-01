@@ -48,7 +48,7 @@ export class UserService {
       throw new EmailExistedException();
     }
 
-    let pass = randomstring.generate(30);
+    const pass = randomstring.generate(30);
 
     console.log('Password:', pass);
 
@@ -111,7 +111,7 @@ export class UserService {
     try {
       let employee = await this.userRepository.findBy({ role: Role.EMPLOYEE }); // ???
       for (let e of employee) {
-        delete e.password
+        delete e.password;
       }
       return employee;
     } catch (e) {
@@ -123,11 +123,13 @@ export class UserService {
     try {
       const employee: User = await this.userRepository.findOneById(id);
       if (!employee) {
-        throw new BadRequestException("Nhân viên không tồn tại");
+        throw new BadRequestException('Nhân viên không tồn tại');
       }
       return await this.userRepository.update(id, updateUserDto);
     } catch (e) {
-      throw new InternalServerErrorException("Lỗi trong quá trình cập nhập nhân viên")
+      throw new InternalServerErrorException(
+        'Lỗi trong quá trình cập nhập nhân viên',
+      );
     }
   }
 
@@ -135,11 +137,13 @@ export class UserService {
     try {
       const employee: User = await this.userRepository.findOneById(id);
       if (!employee) {
-        throw new BadRequestException("Nhân viên không tồn tại");
+        throw new BadRequestException('Nhân viên không tồn tại');
       }
       return await this.userRepository.delete(id);
     } catch (e) {
-      throw new InternalServerErrorException("Lỗi trong quá trình xóa nhân viên");
+      throw new InternalServerErrorException(
+        'Lỗi trong quá trình xóa nhân viên',
+      );
     }
   }
 

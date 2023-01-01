@@ -8,7 +8,7 @@ export class FailLoginException extends BaseException {
   constructor() {
     super(
       'Username or password is incorrect',
-      HttpStatus.UNAUTHORIZED,
+      HttpStatus.BAD_REQUEST,
       FAIL_LOGIN,
     );
   }

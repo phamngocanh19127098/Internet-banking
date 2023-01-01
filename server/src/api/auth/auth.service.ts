@@ -39,21 +39,11 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
-  async signup(
-    dto: CreateUserDto,
-    authorization: string,
-  ): Promise<IResponseData> {
+  async signup(dto: CreateUserDto, client): Promise<IResponseData> {
     const user = await this.userService.create(dto);
 
     if (dto.role === Role.CUSTOMER) {
-      const accessToken =
-        this.userService.getAccessTokenFromClient(authorization);
-
-      const decodedAccessToken = this.jwtService.decode(accessToken);
-
-      const username = Object(decodedAccessToken).username;
-
-      const employeeId = (await this.userService.getByUsername(username)).id;
+      const employeeId = client.id;
 
       this.accountService.create({
         customerId: user.id,
@@ -131,13 +121,13 @@ export class AuthService {
   async signToken(user: User, refresh = false): Promise<IToken> {
     const accessToken = this.jwtService.sign({
       username: user.username,
-      id : user.id,
-      role : user.role
+      id: user.id,
+      role: user.role,
     });
 
     if (!refresh) {
       const refreshToken = this.jwtService.sign(
-        { username : user.username },
+        { username: user.username },
         {
           secret: this.config.get('JWT_REFRESH_TOKEN_SECRET'),
           expiresIn: this.config.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),

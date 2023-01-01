@@ -8,7 +8,7 @@ export class PasswordAndConfirmPasswordNotMatchException extends BaseException {
   constructor() {
     super(
       'New password not match old one.',
-      HttpStatus.UNAUTHORIZED,
+      HttpStatus.BAD_REQUEST,
       PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH,
     );
   }
