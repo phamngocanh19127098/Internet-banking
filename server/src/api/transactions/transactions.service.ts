@@ -1,36 +1,25 @@
+import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
+import {CreateTransactionDto} from './dto/create-transaction.dto';
+import {UpdateTransactionDto} from './dto/update-transaction.dto';
+import {Transaction, TransactionStatus, TransactionType,} from './entities/transaction.entity';
+import {Brackets, Repository} from 'typeorm';
+import {InjectRepository} from '@nestjs/typeorm';
+import {CreateTransferInternalDto, VerifyTransferInternalDto,} from './dto/transaction.dto';
+import {UserService} from '../users/user.service';
+import {JwtService} from '@nestjs/jwt';
+import {AccountsService} from '../accounts/accounts.service';
+import {UnExistedAccountException} from '../../commons/filters/exceptions/account/UnExistedAccountException';
+import {User} from '../users/entity/user.entity';
+import {generateOTPCode} from '../../commons/otp-generate/OtpGenerate';
+import {Account} from '../accounts/entities/account.entity';
+import {CreateTransferOtpDto} from '../otp/dto/otp.dto';
+import {OtpService} from '../otp/otp.service';
+import {OtpExpiredTimeException} from '../../commons/filters/exceptions/otp/OtpExpiredTimeException';
+import {InvalidOtpException} from '../../commons/filters/exceptions/otp/InvalidOtpException';
 import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import {
-  Transaction,
-  TransactionStatus,
-  TransactionType,
-} from './entities/transaction.entity';
-import { Brackets, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import {
-  CreateTransferInternalDto,
-  VerifyTransferInternalDto,
-} from './dto/transaction.dto';
-import { UserService } from '../users/user.service';
-import { JwtService } from '@nestjs/jwt';
-import { AccountsService } from '../accounts/accounts.service';
-import { UnExistedAccountException } from '../../commons/filters/exceptions/account/UnExistedAccountException';
-import { User } from '../users/entity/user.entity';
-import { generateOTPCode } from '../../commons/otp-generate/OtpGenerate';
-import { Account } from '../accounts/entities/account.entity';
-import { CreateTransferOtpDto } from '../otp/dto/otp.dto';
-import { OtpService } from '../otp/otp.service';
-import { Otp } from '../otp/entities/otp.entity';
-import { OtpExpiredTimeException } from '../../commons/filters/exceptions/otp/OtpExpiredTimeException';
-import { InvalidOtpException } from '../../commons/filters/exceptions/otp/InvalidOtpException';
-import { UnExistedTransactionException } from '../../commons/filters/exceptions/transaction/UnExistedTransactionException';
-import { sendMail } from '../../commons/mailing/nodemailer';
+  UnExistedTransactionException
+} from '../../commons/filters/exceptions/transaction/UnExistedTransactionException';
+import {sendMail} from '../../commons/mailing/nodemailer';
 
 @Injectable()
 export class TransactionsService {
@@ -226,8 +215,33 @@ export class TransactionsService {
     }
   }
 
-  findAll() {
-    return this.transactionRepository.find();
+  async findAll(fromDate: Date, toDate: Date, affiliatedBankId : number) {
+    let query = this.transactionRepository.createQueryBuilder('transaction')
+          .leftJoin('transaction.bankDes', 'bankDes')
+          .andWhere('transaction.bankDesId is not null')
+          .select(['transaction', 'bankDes'])
+    if (fromDate && toDate) {
+      query.andWhere('transaction.createdAt >= :fromDate', {fromDate})
+      query.andWhere('transaction.createdAt <= :toDate', {toDate})
+    }
+
+    if (affiliatedBankId) {
+      query.andWhere('transaction.bankDesId = :affiliatedBankId', {affiliatedBankId})
+    }
+
+    let result = await query.getMany();
+    const { receivedAmount, sentAmount } = this.calculateTransaction(result);
+
+    return {
+      statusCode : 200,
+      message: "Lấy danh sách các giao dịch thành công",
+      data: {
+        receivedAmount,
+        sentAmount,
+        transactions : result,
+      },
+    }
+
   }
 
   findOne(id: number) {
@@ -284,5 +298,19 @@ export class TransactionsService {
         'Lỗi trong quá trình lấy giao dịch người dùng',
       );
     }
+  }
+
+  calculateTransaction (transactions : Transaction []) {
+    let receivedAmount = 0;
+    let sentAmount = 0;
+    for (let transaction of transactions) {
+      if (transaction.transactionType == TransactionType.TRANSFER){
+        sentAmount += transaction.amount;
+      }
+      if (transaction.transactionType == TransactionType.RECEIVE){
+        receivedAmount += transaction.amount;
+      }
+    }
+    return { receivedAmount, sentAmount };
   }
 }

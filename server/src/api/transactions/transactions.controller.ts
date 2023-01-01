@@ -81,9 +81,13 @@ export class TransactionsController {
 
   @Roles(Role.ADMIN)
   @Get()
-  findAll(@Headers('origin') origin: string,) {
+  findAll(@Headers('origin') origin: string,
+          @Query('fromDate') fromDate: Date,
+          @Query('toDate') toDate : Date,
+          @Query('affiliatedBankId') affiliatedBankId : string,
+  ) {
     Logger.log(origin)
-    return this.transactionsService.findAll();
+    return this.transactionsService.findAll(fromDate, toDate, +affiliatedBankId);
   }
 
   @Get(':id')
