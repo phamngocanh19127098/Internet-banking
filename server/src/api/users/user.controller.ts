@@ -1,11 +1,10 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put,} from '@nestjs/common';
 import {ApiTags} from '@nestjs/swagger/dist';
 
 import {CreateUserDto, UpdateUserDto} from './dto/user.dto';
 import {UserService} from './user.service';
 import {Role, User} from './entity/user.entity';
 import {Roles} from "../../commons/decorator/roles.decorator";
-import {JwtAuthGuard} from "../../commons/guard/jwt.guard";
 
 @Controller('users')
 @ApiTags('users')
@@ -13,6 +12,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
+  @Roles(Role.EMPLOYEE)
   create(@Body() dto: CreateUserDto): Promise<User> {
     return this.userService.create(dto);
   }

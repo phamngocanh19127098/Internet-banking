@@ -61,9 +61,9 @@ export class UserService {
       <p><strong>TAIXIU BANK</strong></p>`,
     });
 
-    pass = await hash(pass, 10);
+    const hashPassword = await hash(pass, 10);
 
-    return this.userRepository.save({ ...dto, password: pass });
+    return this.userRepository.save({ ...dto, password: hashPassword });
   }
 
   async getByLogin({ username, password }: LoginUserDto): Promise<User> {
