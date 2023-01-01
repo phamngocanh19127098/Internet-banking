@@ -7,7 +7,15 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import { UserService } from '../users/user.service';
@@ -15,10 +23,10 @@ import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/CreateAccountDto';
 import { DepositIntoAccountDto } from './dto/DepositIntoAccountDto';
 import { UpdateAccountDto } from './dto/UpdateAccountDto';
-import {GetAccountInfoExternalDto} from "./dto/accountExternal.dto";
-import verifyMessage from "../../commons/verify/VerifyMessage";
-import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
-import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
+import { GetAccountInfoExternalDto } from './dto/accountExternal.dto';
+import verifyMessage from '../../commons/verify/VerifyMessage';
+import { AffiliatedBanksService } from '../affiliatedBanks/affiliatedBanks.service';
+import { NotConnectBankInfoException } from '../../commons/filters/exceptions/sercurity/NotConnectBankInfoException';
 
 @Controller('accounts')
 @ApiTags('accounts')
@@ -26,7 +34,7 @@ export class AccountsController {
   constructor(
     private readonly accountsService: AccountsService,
     private userService: UserService,
-    private affiliatedBanksService: AffiliatedBanksService
+    private affiliatedBanksService: AffiliatedBanksService,
   ) {}
 
   @Post()
@@ -39,6 +47,16 @@ export class AccountsController {
     return this.accountsService.findAll();
   }
 
+  @ApiOperation({ description: 'Nạp tiền vào tài khoản' })
+  @ApiOkResponse({ description: 'Nạp tiền vào tài khoản thành công' })
+  @ApiBadRequestResponse({
+    description: 'Sai username hoặc sai số tài khoản hoặc sai kiểu dữ liệu',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiBearerAuth()
   @Roles(Role.EMPLOYEE)
   @Put('/deposit')
   async depositIntoAccount(@Body() dto: DepositIntoAccountDto) {
@@ -102,14 +120,17 @@ export class AccountsController {
   async getAccountInfoExternalByAccountNumber(
     @Body() dto: GetAccountInfoExternalDto,
   ) {
-    const linkedBank = await this.affiliatedBanksService.findOneBySlug(dto.slug)
-    if (!linkedBank)
-      throw new NotConnectBankInfoException()
+    const linkedBank = await this.affiliatedBanksService.findOneBySlug(
+      dto.slug,
+    );
+    if (!linkedBank) throw new NotConnectBankInfoException();
     let data = {
       accountNumber: dto.accountNumber,
-      slug: dto.slug
-    }
-    verifyMessage(dto.msgToken,data,dto.timestamp,linkedBank.secretKey)
-    return this.accountsService.getAccountNameByAccountNumber(dto.accountNumber)
+      slug: dto.slug,
+    };
+    verifyMessage(dto.msgToken, data, dto.timestamp, linkedBank.secretKey);
+    return this.accountsService.getAccountNameByAccountNumber(
+      dto.accountNumber,
+    );
   }
 }
