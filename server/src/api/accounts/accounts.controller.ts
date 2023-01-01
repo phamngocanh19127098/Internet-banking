@@ -16,7 +16,7 @@ import { CreateAccountDto } from './dto/CreateAccountDto';
 import { DepositIntoAccountDto } from './dto/DepositIntoAccountDto';
 import { UpdateAccountDto } from './dto/UpdateAccountDto';
 import {GetAccountInfoExternalDto} from "./dto/accountExternal.dto";
-import verifyMessage from "../../commons/verify/VerifyMessage";
+import verifyMessage from "../../commons/crypto/verify/VerifyMessage";
 import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
 import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
 

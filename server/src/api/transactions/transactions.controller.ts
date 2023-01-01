@@ -22,9 +22,13 @@ import {
 import { Roles } from '../../commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
-import verifyMessage from "../../commons/verify/VerifyMessage";
+import verifyMessage from "../../commons/crypto/verify/VerifyMessage";
 import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
-import verifySignature from "../../commons/verify/VerifySignature";
+import verifySignature from "../../commons/crypto/verify/VerifySignature";
+import getRSAKey from "../../commons/crypto/rsa-key/getRSAKey";
+import testSignature from "../../commons/crypto/testSign";
+import testMsgToken from "../../commons/crypto/testMsgToken";
+import createSignature from "../../commons/crypto/createSignature";
 @ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {
@@ -72,11 +76,33 @@ export class TransactionsController {
     let data = {
       ...dto.transactionInfo,
       accountSrcNumber: dto.accountNumber,
-      // bankDesId: linkedBank.id
+      slug: dto.slug
     }
     verifyMessage(dto.msgToken,data,dto.timestamp,linkedBank.secretKey)
     verifySignature(dto.signature,linkedBank.publicKey,linkedBank.cryptoType,data)
-    return this.transactionsService.createTransferExternalRecord(dto.transactionInfo,dto.accountNumber,linkedBank.id)
+    const newTrans = await this.transactionsService.createTransferExternalRecord(dto.transactionInfo,dto.accountNumber,linkedBank.id)
+    const newTransInfor = {
+      ...newTrans.data
+    }
+    return {
+      ...newTrans,
+      signature: createSignature(newTransInfor)
+    }
+  }
+
+  @Get('/external/test-api')
+  async testExternalApi(
+  ) {
+    const timestamp = (new  Date()).getTime();
+    Logger.log(timestamp)
+    let data = {
+      accountNumber: '59025838490',
+      slug: 'VIETCOMBANK'
+    }
+    const testToken = testMsgToken(data,timestamp,"d59zceEqyC")
+    const testSign = testSignature(data)
+    return { testToken, testSign}
+
   }
 
   @Roles(Role.ADMIN)
@@ -116,7 +142,7 @@ export class TransactionsController {
 
   @Get('list/:accountNumber')
   @ApiOperation({ description: 'Lấy thông tin giao dịch bằng số tài khoản' })
-  //http://localhost:3001/transactions/list/12345?type=TRANSFER test
+  //http://localhost:3001/transactions/list/12345?type=TRANSFER testSign.ts
   async getTransactionByAccountNumber(
     @Param('accountNumber') accountNumber: string,
     @Query() query,

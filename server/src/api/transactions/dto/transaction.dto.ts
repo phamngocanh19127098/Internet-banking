@@ -25,7 +25,8 @@ export class CreateTransferInternalDto {
   description: string;
 }
 
-export class CreateTransferExternalDto {
+export class CreateTransferExternalDto
+{
   @IsString()
   @IsNotEmpty()
   accountNumber: string;
