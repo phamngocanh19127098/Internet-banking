@@ -6,6 +6,6 @@ import { EXISTED_USERNAME } from './constants';
 
 export class UsernameExistedException extends BaseException {
   constructor() {
-    super('User has existed', HttpStatus.FORBIDDEN, EXISTED_USERNAME);
+    super('User has existed', HttpStatus.BAD_REQUEST, EXISTED_USERNAME);
   }
 }

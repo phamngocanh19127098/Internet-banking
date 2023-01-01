@@ -1,11 +1,17 @@
 import { TransactionType } from './enum/TransactionType.enum';
-import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
   Delete,
   Get,
-  Headers, Logger,
+  Headers,
+  Logger,
   Param,
   Patch,
   Post,
@@ -21,16 +27,16 @@ import {
 } from './dto/transaction.dto';
 import { Roles } from '../../commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
-import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
-import verifyMessage from "../../commons/verify/VerifyMessage";
-import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
-import verifySignature from "../../commons/verify/VerifySignature";
+import { NotConnectBankInfoException } from '../../commons/filters/exceptions/sercurity/NotConnectBankInfoException';
+import verifyMessage from '../../commons/verify/VerifyMessage';
+import { AffiliatedBanksService } from '../affiliatedBanks/affiliatedBanks.service';
+import verifySignature from '../../commons/verify/VerifySignature';
 @ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {
   constructor(
     private readonly transactionsService: TransactionsService,
-    private affiliatedBanksService:AffiliatedBanksService
+    private affiliatedBanksService: AffiliatedBanksService,
   ) {}
 
   @Post()
@@ -63,24 +69,32 @@ export class TransactionsController {
   }
 
   @Post('/external/order-for-payment')
-  async createTransferExternal(
-    @Body() dto: CreateTransferExternalDto,
-  ) {
-    const linkedBank = await this.affiliatedBanksService.findOneBySlug(dto.slug)
-    if (!linkedBank)
-      throw new NotConnectBankInfoException()
+  async createTransferExternal(@Body() dto: CreateTransferExternalDto) {
+    const linkedBank = await this.affiliatedBanksService.findOneBySlug(
+      dto.slug,
+    );
+    if (!linkedBank) throw new NotConnectBankInfoException();
     let data = {
       ...dto.transactionInfo,
       accountSrcNumber: dto.accountNumber,
       // bankDesId: linkedBank.id
-    }
-    verifyMessage(dto.msgToken,data,dto.timestamp,linkedBank.secretKey)
-    verifySignature(dto.signature,linkedBank.publicKey,linkedBank.cryptoType,data)
-    return this.transactionsService.createTransferExternalRecord(dto.transactionInfo,dto.accountNumber,linkedBank.id)
+    };
+    verifyMessage(dto.msgToken, data, dto.timestamp, linkedBank.secretKey);
+    verifySignature(
+      dto.signature,
+      linkedBank.publicKey,
+      linkedBank.cryptoType,
+      data,
+    );
+    return this.transactionsService.createTransferExternalRecord(
+      dto.transactionInfo,
+      dto.accountNumber,
+      linkedBank.id,
+    );
   }
 
   @Roles(Role.ADMIN)
-  @ApiOperation({description: "Lấy danh sách các giao dịch"})
+  @ApiOperation({ description: 'Lấy danh sách các giao dịch' })
   @ApiOkResponse({
     description: 'Lấy danh sách các giao dịch thành công',
   })
@@ -89,11 +103,15 @@ export class TransactionsController {
   })
   @Get()
   findAll(
-          @Query('fromDate') fromDate: Date,
-          @Query('toDate') toDate : Date,
-          @Query('affiliatedBankId') affiliatedBankId : string,
+    @Query('fromDate') fromDate: Date,
+    @Query('toDate') toDate: Date,
+    @Query('affiliatedBankId') affiliatedBankId: string,
   ) {
-    return this.transactionsService.findAll(fromDate, toDate, +affiliatedBankId);
+    return this.transactionsService.findAll(
+      fromDate,
+      toDate,
+      +affiliatedBankId,
+    );
   }
 
   @Get(':id')
@@ -131,5 +149,4 @@ export class TransactionsController {
       message: 'Lấy thông tin giao dịch thành công.',
     };
   }
-
 }

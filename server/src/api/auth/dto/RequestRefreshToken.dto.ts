@@ -3,6 +3,6 @@ import { IsString } from 'class-validator';
 
 export class RequestRefreshTokenDto {
   @IsString()
-  @ApiProperty()
+  @ApiProperty({ example: 'refresh token' })
   refreshToken: string;
 }

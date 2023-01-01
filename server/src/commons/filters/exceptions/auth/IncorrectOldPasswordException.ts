@@ -8,7 +8,7 @@ export class IncorrectOldPasswordException extends BaseException {
   constructor() {
     super(
       'Old password is incorrect',
-      HttpStatus.UNAUTHORIZED,
+      HttpStatus.BAD_REQUEST,
       INCORRECT_OLD_PASSWORD,
     );
   }
