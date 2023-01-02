@@ -1,4 +1,4 @@
-import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags,} from '@nestjs/swagger';
+import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
 import {Body, Controller, Delete, Get, Headers, Logger, Param, Patch, Post, Query,} from '@nestjs/common';
 import {TransactionsService} from './transactions.service';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
@@ -131,15 +131,17 @@ export class TransactionsController {
   }
 
   @Get('list/:accountNumber')
-  @ApiOperation({ description: 'Lấy thông tin giao dịch bằng số tài khoản' })
+  // @ApiOperation({ description: 'Lấy thông tin giao dịch bằng số tài khoản' })
+  @ApiQuery({ name: 'type', enum: TransactionType })
   //http://localhost:3001/transactions/list/12345?type=TRANSFER test
   async getTransactionByAccountNumber(
     @Param('accountNumber') accountNumber: string,
-    @Query() query,
+    @Query('type') type: TransactionType = TransactionType.TRANSFER,
+    // @Query() query,
   ) {
     let data = await this.transactionsService.getTransactionByAccountNumber(
       accountNumber,
-      query.type,
+      type,
     );
     return {
       data,
