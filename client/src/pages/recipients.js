@@ -27,7 +27,11 @@ const Recipents = () => {
         console.log(listRecipents)
     }, [listRecipents]);
     useEffect(() => {
-        getList()
+        setIsLoading(true)
+        setTimeout(() => {
+            getList()
+            setIsLoading(false)
+        }, 300);
     }, []);
 
     function hanldeChange() {
