@@ -1,16 +1,10 @@
-import {
-  Controller,
-  Post,
-  UseGuards,
-  Get,
-  Headers,
-  Body,
-  Req,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Req } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -18,7 +12,6 @@ import {
 } from '@nestjs/swagger';
 
 import { IResponseData } from 'src/interface';
-import { JwtAuthGuard } from 'src/commons/guard/jwt.guard';
 import {
   ChangeUserPasswordDto,
   CreateUserDto,
@@ -46,11 +39,17 @@ export class AuthController {
   @ApiCreatedResponse({
     description: 'Tạo tài khoản thành công',
   })
+  @ApiBadRequestResponse({
+    description: 'Username hoặc Email đã tồn tại hoặc sai kiểu dữ liệu',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
   @ApiUnauthorizedResponse({
     description: 'Không có quyền dùng tính năng này',
   })
-  @ApiBadRequestResponse({
-    description: 'Username hoặc Email đã tồn tại hoặc sai kiểu dữ liệu',
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi đăng ký tài khoản',
   })
   @ApiBearerAuth()
   @Roles(Role.ADMIN, Role.EMPLOYEE)
@@ -59,10 +58,13 @@ export class AuthController {
     return this.authService.signup(dto, client);
   }
 
-  @ApiOperation({ description: 'Đăng nhập tài khoản' })
+  @ApiOperation({ description: 'Đăng nhập' })
   @ApiOkResponse({ description: 'Đăng nhập thành công' })
   @ApiBadRequestResponse({
     description: 'Tài khoản hoặc mật khẩu không đúng hoặc sai kiểu dữ liệu',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi đăng nhập',
   })
   @Post('login')
   login(@Body() dto: LoginUserDto): Promise<IResponseData> {
@@ -75,8 +77,14 @@ export class AuthController {
     description:
       'Mật khẩu cũ không đúng hoặc mật khẩu không trùng khớp hoặc sai kiểu dữ liệu',
   })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
   @ApiUnauthorizedResponse({
     description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi đổi mật khẩu',
   })
   @ApiBearerAuth()
   @Roles(Role.ADMIN, Role.EMPLOYEE, Role.CUSTOMER)
@@ -87,10 +95,15 @@ export class AuthController {
 
   @ApiOperation({ description: 'Đăng xuất tài khoản' })
   @ApiOkResponse({ description: 'Đăng xuất thành công' })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
   @ApiUnauthorizedResponse({
     description: 'Không có quyền dùng tính năng này',
   })
-  @ApiBearerAuth()
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi đăng xuất',
+  })
   @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
   @Post('logout')
   async logout(@Req() req) {
@@ -103,10 +116,15 @@ export class AuthController {
 
   @ApiOperation({ description: 'Lấy thông tin người dùng' })
   @ApiOkResponse({ description: 'Lấy profile thành công' })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
   @ApiUnauthorizedResponse({
     description: 'Không có quyền dùng tính năng này',
   })
-  @ApiBearerAuth()
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy thông tin người dùng',
+  })
   @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
   @Get('profile')
   async getProfile(@Req() req) {
@@ -125,6 +143,9 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: 'Refresh Token không khả dụng',
   })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi tái tạo access token',
+  })
   @Post('refresh')
   refresh(@Body() body: RequestRefreshTokenDto): Promise<IResponseData> {
     return this.authService.refresh(body.refreshToken);
@@ -133,6 +154,9 @@ export class AuthController {
   @ApiOperation({ description: 'Quên mật khẩu' })
   @ApiOkResponse({ description: 'Quên mật khẩu thành công' })
   @ApiBadRequestResponse({ description: 'Sai username hoặc sai kiểu dữ liệu' })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi quên mật khẩu',
+  })
   @Post('forgotpassword')
   forgotPassword(@Body() dto: ForgotPasswordDto) {
     return this.authService.forgotPassword(dto);
@@ -142,6 +166,9 @@ export class AuthController {
   @ApiOkResponse({ description: 'Xác nhận quên mật khẩu thành công' })
   @ApiBadRequestResponse({
     description: 'Sai username hoặc sai otp hoặc sai kiểu dữ liệu',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi xác nhận mật khẩu',
   })
   @Post('forgotpassword/verify')
   verifyForgotPassword(@Body() dto: VerifyForgotPasswordDto) {

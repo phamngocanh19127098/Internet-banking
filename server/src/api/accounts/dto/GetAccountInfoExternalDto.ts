@@ -1,8 +1,6 @@
-import {IsNotEmpty, IsNumber, IsString} from 'class-validator';
-import {ApiProperty} from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class GetAccountInfoExternalDto
-{
+export class GetAccountInfoExternalDto {
   @IsString()
   @IsNotEmpty()
   accountNumber: string;
@@ -14,7 +12,6 @@ export class GetAccountInfoExternalDto
   @IsString()
   @IsNotEmpty()
   msgToken: string;
-
 
   @IsString()
   @IsNotEmpty()

@@ -14,7 +14,7 @@ export enum AccountStatus {
 
 export enum AccountType {
   PAYMENT_ACCOUNT = 1,
-  SAVING_ACCOUNT = 2
+  SAVING_ACCOUNT = 2,
 }
 
 @Entity()
