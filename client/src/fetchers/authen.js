@@ -8,6 +8,7 @@ export const fetcherForgetPwd = async (username) => {
     return response
 }
 
+
 export const fetcherVerifyOTP = async (username, OTP) => {
     const data = { "username": username, "otpCode": OTP }
     const response = await axios

@@ -10,14 +10,14 @@ const useAuth = () => {
 
     if (userInfo) {
         const { username, role } = userInfo
+        const roles = [role]
         isCustomer = role.includes('customer')
         isEmployee = role.includes('employee')
         isAdmin = role.includes('admin')
         if (isCustomer) status = "customer"
-        if (isEmployee) status = "eployee"
+        if (isEmployee) status = "employee"
         if (isAdmin) status = "admin"
-
-        return { username, role, status, isCustomer, isEmployee, isAdmin }
+        return { username, roles, status, isCustomer, isEmployee, isAdmin }
     }
 
     return { username: '', roles: [], isCustomer, isEmployee, isAdmin, status }

@@ -1,21 +1,11 @@
 import React, { Component, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import useAuth from '../routing/useAuth';
 
-const HomeNavigation = (props) => {
+const EmployeeNavigation = (props) => {
     const { userInfo } = useSelector((state) => state.auth)
-
     const [Menus, setMenus] = useState([
-        { id: 0, title: "Tổng quan", link: "/customer", current: false },
-        { id: 1, title: "Danh sách tài khoản", link: "/accounts", current: false },
-        { id: 2, title: "Danh sách người nhận", link: "/recipents", current: false },
-        { id: 3, title: "Chuyển khoản", link: "/payment", current: false },
-        { id: 4, title: "Ghi nợ", link: "/loan", current: false },
-        { id: 5, title: "Các chức năng khác ", link: "/other", current: false },
-        { id: 6, title: "Liên hệ", link: "/contact", current: false },
-        { id: 7, title: "Lịch sử giao dịch", link: "/transactions", current: false },
-        //  { id: 8, title: "Nhan vien", link: "/employee", current: false },
+        { id: 0, title: "Thêm người dùng mới", link: "/employee", current: false },
     ])
 
 
@@ -73,4 +63,4 @@ const HomeNavigation = (props) => {
 }
 
 
-export default HomeNavigation;
+export default EmployeeNavigation;

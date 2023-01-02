@@ -137,3 +137,20 @@ export const fetcherVerifyTransfer = async (transactionId, otpCode) => {
         return { data, status }
     }
 }
+
+
+export const fetcherListTransactions = async (accountNumber) => {
+    const url = `http://localhost:3001/transactions/list/${accountNumber}`
+    try {
+        const { data, statusCode } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, statusCode }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
