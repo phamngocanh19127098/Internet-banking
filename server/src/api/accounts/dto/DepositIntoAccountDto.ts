@@ -2,16 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Allow, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class DepositIntoAccountDto {
-  @ApiProperty({
-    description: 'username',
-    required: false,
-    example: 'customer',
-  })
+  // @ApiProperty({
+  //   description: 'Tên đăng nhập của tài khoản',
+  //   required: false,
+  //   example: 'customer',
+  // })
   @Allow()
   username?: string;
 
   @ApiProperty({
-    description: 'số tài khoản',
+    description: 'Số tài khoản',
     required: false,
     example: '59025838490',
   })
@@ -19,7 +19,7 @@ export class DepositIntoAccountDto {
   accountNumber?: string;
 
   @ApiProperty({
-    description: 'số tiền cần nạp',
+    description: 'Số tiền cần nạp',
     required: true,
     example: 1000,
   })

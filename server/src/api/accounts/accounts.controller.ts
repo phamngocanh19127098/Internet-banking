@@ -5,31 +5,33 @@ import {
   Body,
   Param,
   Delete,
-  Put, Logger,
+  Put,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import { UserService } from '../users/user.service';
 import { AccountsService } from './accounts.service';
-import { CreateAccountDto } from './dto/CreateAccountDto';
 import { DepositIntoAccountDto } from './dto/DepositIntoAccountDto';
 import { UpdateAccountDto } from './dto/UpdateAccountDto';
-import {GetAccountInfoExternalDto} from "./dto/accountExternal.dto";
-import verifyMessage from "../../commons/crypto/verify/VerifyMessage";
-import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
-import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
-import {GetAccountInfoDto} from "./dto/GetAccountInfoDto";
-import SolarBankService, { SOLAR_BANK_CODE} from "../../client/SolarBank/SolarBank.service";
-import RSAKey from "../../commons/crypto/getRSAKey";
+import { GetAccountInfoExternalDto } from './dto/GetAccountInfoExternalDto';
+import verifyMessage from '../../commons/crypto/verify/VerifyMessage';
+import { AffiliatedBanksService } from '../affiliatedBanks/affiliatedBanks.service';
+import { NotConnectBankInfoException } from '../../commons/filters/exceptions/sercurity/NotConnectBankInfoException';
+import { GetAccountInfoDto } from './dto/GetAccountInfoDto';
+import SolarBankService, {
+  SOLAR_BANK_CODE,
+} from '../../client/SolarBank/SolarBank.service';
 
 @Controller('accounts')
 @ApiTags('accounts')
@@ -37,14 +39,19 @@ export class AccountsController {
   constructor(
     private readonly accountsService: AccountsService,
     private userService: UserService,
-    private affiliatedBanksService: AffiliatedBanksService
+    private affiliatedBanksService: AffiliatedBanksService,
   ) {}
 
-  @Post()
-  create(@Body() createAccountDto: CreateAccountDto) {
-    return this.accountsService.create(createAccountDto);
-  }
+  // @Post()
+  // create(@Body() createAccountDto: CreateAccountDto) {
+  //   return this.accountsService.create(createAccountDto);
+  // }
 
+  @ApiOperation({ description: 'Lấy tất cả tài khoản' })
+  @ApiOkResponse({ description: 'Lấy tất cả tài khoản thành công' })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy tất cả tài khoản',
+  })
   @Get()
   findAll() {
     return this.accountsService.findAll();
@@ -59,6 +66,9 @@ export class AccountsController {
     description: 'Vai trò của bạn không được dùng tính năng này',
   })
   @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi nạp tiền vào tài khoản',
+  })
   @ApiBearerAuth()
   @Roles(Role.EMPLOYEE)
   @Put('/deposit')
@@ -78,22 +88,36 @@ export class AccountsController {
     }
   }
 
-  @Put(':id')
-  update(@Param('id') id: number, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountsService.update(id, updateAccountDto);
-  }
+  // @Put(':id')
+  // update(@Param('id') id: number, @Body() updateAccountDto: UpdateAccountDto) {
+  //   return this.accountsService.update(id, updateAccountDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.accountsService.remove(id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: number) {
+  //   return this.accountsService.remove(id);
+  // }
 
-  @Roles(Role.CUSTOMER)
-  @Get('/list/:userId')
-  @ApiBearerAuth()
   @ApiOperation({
     description: 'Lấy danh sách tài khoản ngân hàng bằng userId',
   })
+  @ApiOkResponse({
+    description: 'Lấy danh sách tài khoản ngân hàng bằng userId thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Sai userId hoặc sai kiểu dữ liệu',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách tài khoản ngân hàng bằng userId',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Get('/list/:userId')
   async getAllByUserId(@Param('userId') userId: number) {
     const data = await this.accountsService.getListAccountByUserId(userId);
     return {
@@ -103,12 +127,24 @@ export class AccountsController {
     };
   }
 
+  @ApiOperation({
+    description: 'Lấy thông tin tài khoản bằng số tài khoản',
+  })
+  @ApiOkResponse({
+    description: 'Lấy thông tin tài khoản bằng số tài khoản thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Sai số tài khoản hoặc sai kiểu dữ liệu',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy thông tin tài khoản bằng số tài khoản',
+  })
   @Get('/detail/:accountNumber')
-  @ApiOperation({ description: 'Lấy thông tin người dùng bằng số tài khoản' })
   async getAccountInfoByAccountNumber(
     @Param('accountNumber') accountNumber: string,
   ) {
-    let data = await this.accountsService.getAccountInfoByAccountNumber(
+    const data = await this.accountsService.getAccountInfoByAccountNumber(
       accountNumber,
     );
     return {
@@ -118,23 +154,24 @@ export class AccountsController {
     };
   }
 
+  // Api documentation
   @Post('/get-info')
   @ApiOperation({ description: 'Lấy thông tin người dùng bằng số tài khoản' })
-  async getAccountNameByAccountNumber(
-    @Body() dto: GetAccountInfoDto
-  ) {
-    if(!dto.bankDesId) {
-      return  this.accountsService.getAccountNameByAccountNumber(
+  async getAccountNameByAccountNumber(@Body() dto: GetAccountInfoDto) {
+    if (!dto.bankDesId) {
+      return this.accountsService.getAccountNameByAccountNumber(
         dto.accountNumber,
       );
-    }
-    else {
+    } else {
       const linkedBank = await this.affiliatedBanksService.findOne(
         dto.bankDesId,
       );
       if (!linkedBank) throw new NotConnectBankInfoException();
       if (linkedBank.slug === SOLAR_BANK_CODE) {
-        return SolarBankService.getAccountInfo(dto.accountNumber,process.env.RSA_PRIVATE_KEY)
+        return SolarBankService.getAccountInfo(
+          dto.accountNumber,
+          process.env.RSA_PRIVATE_KEY,
+        );
       }
     }
   }
@@ -148,7 +185,7 @@ export class AccountsController {
       dto.slug,
     );
     if (!linkedBank) throw new NotConnectBankInfoException();
-    let data = {
+    const data = {
       accountNumber: dto.accountNumber,
       slug: dto.slug,
     };
