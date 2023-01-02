@@ -1,4 +1,4 @@
-import RSAKey from "./rsa-key/getRSAKey";
+import RSAKey from "./getRSAKey";
 import {Logger} from "@nestjs/common";
 import verifySignature from "./verify/VerifySignature";
 import {CryptoType} from "../../api/affiliatedBanks/entities/affiliatedBank.entity";
@@ -10,9 +10,9 @@ export default function testSignature (obj: any) {
   let data = JSON.stringify(obj)
   let signer = crypto.createSign("RSA-SHA256")
   signer.update(data);
-  let sign = signer.sign(RSAKey.privateKey, "hex");
-  Logger.log(sign);//from  w ww . j  a  va  2  s.  c  om
+  let sign = signer.sign(process.env.RSA_PRIVATE_KEY, "hex");
+  Logger.log(sign);
 
-  verifySignature(sign,RSAKey.publicKey,CryptoType.RSA, obj)
+  verifySignature(sign,process.env.RSA_PUBLIC_KEY,CryptoType.RSA, obj)
   return sign
 }

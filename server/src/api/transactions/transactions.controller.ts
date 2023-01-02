@@ -31,10 +31,10 @@ import {NotConnectBankInfoException} from "../../commons/filters/exceptions/serc
 import verifyMessage from "../../commons/crypto/verify/VerifyMessage";
 import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
 import verifySignature from "../../commons/crypto/verify/VerifySignature";
-import getRSAKey from "../../commons/crypto/rsa-key/getRSAKey";
 import testSignature from "../../commons/crypto/testSign";
 import testMsgToken from "../../commons/crypto/testMsgToken";
 import createSignature from "../../commons/crypto/createSignature";
+import RSAKey from "../../commons/crypto/getRSAKey";
 @ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {

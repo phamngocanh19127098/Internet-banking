@@ -5,7 +5,7 @@ import {
   Body,
   Param,
   Delete,
-  Put,
+  Put, Logger,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -27,6 +27,9 @@ import {GetAccountInfoExternalDto} from "./dto/accountExternal.dto";
 import verifyMessage from "../../commons/crypto/verify/VerifyMessage";
 import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
 import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
+import {GetAccountInfoDto} from "./dto/GetAccountInfoDto";
+import SolarBankService, { SOLAR_BANK_CODE} from "../../client/SolarBank/SolarBank.service";
+import RSAKey from "../../commons/crypto/getRSAKey";
 
 @Controller('accounts')
 @ApiTags('accounts')
@@ -113,6 +116,27 @@ export class AccountsController {
       statusCode: 200,
       message: 'Lấy thông tin tài khoản thành công.',
     };
+  }
+
+  @Post('/get-info')
+  @ApiOperation({ description: 'Lấy thông tin người dùng bằng số tài khoản' })
+  async getAccountNameByAccountNumber(
+    @Body() dto: GetAccountInfoDto
+  ) {
+    if(!dto.bankDesId) {
+      return  this.accountsService.getAccountNameByAccountNumber(
+        dto.accountNumber,
+      );
+    }
+    else {
+      const linkedBank = await this.affiliatedBanksService.findOne(
+        dto.bankDesId,
+      );
+      if (!linkedBank) throw new NotConnectBankInfoException();
+      if (linkedBank.slug === SOLAR_BANK_CODE) {
+        return SolarBankService.getAccountInfo(dto.accountNumber,process.env.RSA_PRIVATE_KEY)
+      }
+    }
   }
 
   @Post('/external/get-info')

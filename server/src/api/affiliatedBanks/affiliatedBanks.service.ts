@@ -20,7 +20,7 @@ export class AffiliatedBanksService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} affiliatedBank`;
+    return this.repos.findOneBy({ id });
   }
 
   findOneBySlug(slug: string) {
