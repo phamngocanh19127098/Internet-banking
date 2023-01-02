@@ -32,7 +32,7 @@ import { RequestRefreshTokenDto } from './dto/RequestRefreshToken.dto';
 import { UserService } from '../users/user.service';
 import { ForgotPasswordDto } from './dto/ForgotPasswordDto';
 import { VerifyForgotPasswordDto } from '../otp/dto/otp.dto';
-import { User } from 'src/commons/decorator/user.decorato';
+import { User } from 'src/commons/decorator/user.decorator';
 
 @ApiTags('auth')
 @Controller('auth')

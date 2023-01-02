@@ -1,11 +1,19 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post,} from '@nestjs/common';
-import {SavedBeneficiarysService} from './savedBeneficiarys.service';
-import {CreateSavedBeneficiaryDto} from './dto/create-saved-beneficiary.dto';
-import {UpdateSavedBeneficiaryDto} from './dto/update-saved-beneficiary.dto';
-import {ApiTags} from '@nestjs/swagger';
-import {User} from '../../commons/decorator/user.decorato';
-import {Roles} from "../../commons/decorator/roles.decorator";
-import {Role} from "../users/entity/user.entity";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { SavedBeneficiarysService } from './savedBeneficiarys.service';
+import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
+import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { User } from '../../commons/decorator/user.decorator';
+import { Roles } from '../../commons/decorator/roles.decorator';
+import { Role } from '../users/entity/user.entity';
 
 @ApiTags('savedBeneficiarys')
 @Controller('savedBeneficiarys')
@@ -17,8 +25,9 @@ export class SavedBeneficiarysController {
   @Post()
   @Roles(Role.CUSTOMER)
   async create(
-      @User() user,
-      @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto) {
+    @User() user,
+    @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto,
+  ) {
     const data = await this.savedBeneficiarysService.create(
       createSavedBeneficiaryDto,
       user.id,
@@ -27,29 +36,29 @@ export class SavedBeneficiarysController {
     return {
       data,
       statusCode: 201,
-      message: "Lưu người thụ hưởng thành công"
-    }
+      message: 'Lưu người thụ hưởng thành công',
+    };
   }
 
   @Roles(Role.CUSTOMER)
   @Get('list/:userId')
   async findAll(@Param('userId') userId: string) {
     const data = await this.savedBeneficiarysService.findAll(+userId);
-    return{
+    return {
       data,
       statusCode: 200,
-      message: "Lấy danh sách người thụ hưởng thụ hưởng thành công"
-    }
+      message: 'Lấy danh sách người thụ hưởng thụ hưởng thành công',
+    };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.savedBeneficiarysService.findOne(+id);
-    return{
+    return {
       data,
       statusCode: 200,
-      message: "Lấy thông tin người thụ hưởng thụ hưởng thành công"
-    }
+      message: 'Lấy thông tin người thụ hưởng thụ hưởng thành công',
+    };
   }
 
   @Roles(Role.CUSTOMER)
@@ -58,7 +67,10 @@ export class SavedBeneficiarysController {
     @Param('id') id: string,
     @Body() updateSavedBeneficiaryDto: UpdateSavedBeneficiaryDto,
   ) {
-    const data = await this.savedBeneficiarysService.update(+id, updateSavedBeneficiaryDto);
+    const data = await this.savedBeneficiarysService.update(
+      +id,
+      updateSavedBeneficiaryDto,
+    );
 
     return {
       data,
@@ -75,7 +87,7 @@ export class SavedBeneficiarysController {
     return {
       data: {},
       statusCode: 200,
-      message: 'Xoá người thụ hưởng thành công'
-    }
+      message: 'Xoá người thụ hưởng thành công',
+    };
   }
 }

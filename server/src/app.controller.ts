@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { Role } from './api/users/entity/user.entity';
 import { AppService } from './app.service';
 import { Roles } from './commons/decorator/roles.decorator';
-import { User } from './commons/decorator/user.decorato';
+import { User } from './commons/decorator/user.decorator';
 
 @Controller()
 export class AppController {
@@ -11,7 +11,6 @@ export class AppController {
   @Roles(Role.CUSTOMER)
   @Get()
   getHello(@User() user): string {
-    
     return this.appService.getHello();
   }
 }

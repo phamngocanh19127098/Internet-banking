@@ -37,7 +37,6 @@ async function bootstrap() {
     .setTitle('Internet banking')
     .setDescription('Internet banking API description')
     .setVersion('1.0')
-    .addTag('cats')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
