@@ -1,5 +1,4 @@
 import axios from "axios";
-import RSAKey from "../../commons/crypto/getRSAKey";
 import {BadRequestException, Logger} from "@nestjs/common";
 const jwt = require('jsonwebtoken')
 export const SOLAR_BANK_CODE = 'SLB'
@@ -9,7 +8,7 @@ class AccountService {
   async getAccountInfo(accountNumber:string,privateKey: string) {
     const payload = {
       des_account_number: accountNumber,
-      des_bankcode: SOLAR_BANK_CODE
+      des_bank_code: SOLAR_BANK_CODE
     }
     Logger.log(privateKey)
     const token = jwt.sign(payload,privateKey,{
@@ -42,7 +41,7 @@ class AccountService {
         message: 'Lấy thông tin tài khoản thành công.',
       };
     }).catch( (error) => {
-      Logger.log(error.response.data)
+      // Logger.log(error.response.data)
       throw new BadRequestException(error.response.data.message)
     });
   }
