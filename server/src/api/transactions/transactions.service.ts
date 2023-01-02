@@ -20,6 +20,7 @@ import {
   UnExistedTransactionException
 } from '../../commons/filters/exceptions/transaction/UnExistedTransactionException';
 import {sendMail} from '../../commons/mailing/nodemailer';
+import {DebtReminder} from "../debtReminders/entities/debtReminders.entity";
 
 @Injectable()
 export class TransactionsService {
@@ -32,6 +33,8 @@ export class TransactionsService {
     private jwtService: JwtService,
     private accountService: AccountsService,
     private otpService: OtpService,
+    @InjectRepository(DebtReminder)
+    private readonly debtReminderRepository : Repository<DebtReminder>
   ) {}
   create(createTransactionDto: CreateTransactionDto) {
     return 'This action adds a new transaction';
@@ -40,6 +43,7 @@ export class TransactionsService {
   async createTransferInternalRecord(
     dto: CreateTransferInternalDto,
     authorization: string,
+    transactionType : TransactionType
   ) {
     try {
       const accessToken =
@@ -74,7 +78,7 @@ export class TransactionsService {
         status: TransactionStatus.UN_SUCCESS,
         accountSrcNumber: paymentAccount.accountNumber,
         userId: user.id,
-        transactionType: TransactionType.TRANSFER,
+        transactionType: transactionType,
       });
 
       const otpCode = generateOTPCode();
@@ -304,11 +308,18 @@ export class TransactionsService {
     let receivedAmount = 0;
     let sentAmount = 0;
     for (let transaction of transactions) {
+
       if (transaction.transactionType == TransactionType.TRANSFER){
         sentAmount += transaction.amount;
       }
-      if (transaction.transactionType == TransactionType.RECEIVE){
+      else if (transaction.transactionType == TransactionType.RECEIVE){
         receivedAmount += transaction.amount;
+      }
+      else if (transaction.transactionType == TransactionType.RECHARGE){
+        receivedAmount += transaction.amount;
+      }
+      else if (transaction.transactionType == TransactionType.DEBT_REMINDERS_PAYMENT){
+        sentAmount += transaction.amount;
       }
     }
     return { receivedAmount, sentAmount };

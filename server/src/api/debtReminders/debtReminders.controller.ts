@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Headers} from '@nestjs/common';
 import {ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import { DebtRemindersService } from './debtReminders.service';
 import { CreateDebtReminderDto } from './dto/create-debt-reminder.dto';
 import { UpdateDebtReminderDto } from './dto/update-debt-reminder.dto';
+import {User} from "../../commons/decorator/user.decorato";
+import {PayDebtReminderDto} from "../transactions/dto/pay-debt-reminder.dto";
 
 @Controller('debtReminder')
 @ApiTags("debtReminder")
@@ -89,6 +91,15 @@ export class DebtRemindersController {
       data : result,
       message: "Lấy thông tin danh sách nợ chưa thanh toán thành công"
     }
+  }
+
+  @Roles(Role.CUSTOMER)
+  @Post("/pay")
+  async liquidateDebtReminder(
+      @User() user,
+      @Body() payDebtReminderDto : PayDebtReminderDto,
+      @Headers('authorization') authorization: string){
+      return this.debtRemindersService.payDebtReminder(user, payDebtReminderDto, authorization)
   }
 
 }

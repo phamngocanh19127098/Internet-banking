@@ -263,4 +263,26 @@ export class AccountsService {
       );
     }
   }
+
+  async getPaymentAccountByUserId(userId : number) {
+    try {
+      let query = this.repos.createQueryBuilder('account')
+          .leftJoin('account.user', 'user')
+          .select(['account.accountNumber'])
+          .where('user.id = :userId', {userId})
+          .andWhere('account.accountType = :accountType', {accountType : AccountType.PAYMENT_ACCOUNT})
+
+
+      let data = await query.getOne();
+      if (!data){
+        throw new BadRequestException("Không tồn tại tài khoản thanh toán")
+      }
+      return data;
+    }
+    catch (e) {
+      throw new InternalServerErrorException("Lỗi trong quá trình lấy danh sách account")
+    }
+
+
+  }
 }

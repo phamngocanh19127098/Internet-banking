@@ -1,12 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { CreateDebtReminderDto } from './dto/create-debt-reminder.dto';
-import { UpdateDebtReminderDto } from './dto/update-debt-reminder.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { DebtReminder } from './entities/debtReminders.entity';
-import { DebtReminderEnum } from './enum/debtReminder.enum';
-import { UserService } from '../users/user.service';
-import { BadRequestException, NotAcceptableException } from '@nestjs/common/exceptions';
+import {Injectable} from '@nestjs/common';
+import {CreateDebtReminderDto} from './dto/create-debt-reminder.dto';
+import {UpdateDebtReminderDto} from './dto/update-debt-reminder.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {DebtReminder} from './entities/debtReminders.entity';
+import {DebtReminderEnum} from './enum/debtReminder.enum';
+import {UserService} from '../users/user.service';
+import {BadRequestException, NotAcceptableException} from '@nestjs/common/exceptions';
+import {AccountsService} from "../accounts/accounts.service";
+import {CreateTransferInternalDto} from "../transactions/dto/transaction.dto";
+import {PayDebtReminderDto} from "../transactions/dto/pay-debt-reminder.dto";
+import {TransactionsService} from "../transactions/transactions.service";
+import {TransactionType} from "../transactions/entities/transaction.entity";
 
 @Injectable()
 export class DebtRemindersService {
@@ -14,6 +19,8 @@ export class DebtRemindersService {
     @InjectRepository(DebtReminder)
     private repos: Repository<DebtReminder>,
     private readonly userService : UserService,
+    private readonly accountService: AccountsService,
+    private readonly transactionService: TransactionsService,
   ) {}
   async create(createDebtReminderDto: CreateDebtReminderDto) {
     
@@ -114,5 +121,20 @@ export class DebtRemindersService {
       .getMany();
 
     return debtReminder || [];
+  }
+
+  async payDebtReminder(user, payDebtReminderDto : PayDebtReminderDto, authorization: string){
+    console.log(payDebtReminderDto)
+    let receiverAccount = await this.accountService.getPaymentAccountByUserId(payDebtReminderDto.toUserId);
+    if (!receiverAccount) {
+      throw new BadRequestException("Không tồn tại tài khoản nhận")
+    }
+    let createTransferInternalDto: CreateTransferInternalDto = {
+      accountDesNumber: receiverAccount.accountNumber,
+      amount: payDebtReminderDto.amount,
+      description: ''
+    }
+
+    return await this.transactionService.createTransferInternalRecord(createTransferInternalDto,authorization ,TransactionType.DEBT_REMINDERS_PAYMENT);
   }
 }

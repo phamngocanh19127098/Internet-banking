@@ -1,32 +1,11 @@
-import { TransactionType } from './enum/TransactionType.enum';
-import {
-  ApiBadRequestResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Headers,
-  Logger,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
-import { TransactionsService } from './transactions.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import {
-  CreateTransferExternalDto,
-  CreateTransferInternalDto,
-  VerifyTransferInternalDto,
-} from './dto/transaction.dto';
-import { Roles } from '../../commons/decorator/roles.decorator';
-import { Role } from '../users/entity/user.entity';
+import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags,} from '@nestjs/swagger';
+import {Body, Controller, Delete, Get, Headers, Logger, Param, Patch, Post, Query,} from '@nestjs/common';
+import {TransactionsService} from './transactions.service';
+import {CreateTransactionDto} from './dto/create-transaction.dto';
+import {UpdateTransactionDto} from './dto/update-transaction.dto';
+import {CreateTransferExternalDto, CreateTransferInternalDto, VerifyTransferInternalDto,} from './dto/transaction.dto';
+import {Roles} from '../../commons/decorator/roles.decorator';
+import {Role} from '../users/entity/user.entity';
 import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
 import verifyMessage from "../../commons/crypto/verify/VerifyMessage";
 import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
@@ -34,7 +13,8 @@ import verifySignature from "../../commons/crypto/verify/VerifySignature";
 import testSignature from "../../commons/crypto/testSign";
 import testMsgToken from "../../commons/crypto/testMsgToken";
 import createSignature from "../../commons/crypto/createSignature";
-import RSAKey from "../../commons/crypto/getRSAKey";
+import {TransactionType} from "./entities/transaction.entity";
+
 @ApiTags('transactions')
 @Controller('transactions')
 export class TransactionsController {
@@ -57,6 +37,7 @@ export class TransactionsController {
     return this.transactionsService.createTransferInternalRecord(
       createTransferInternalDto,
       authorization,
+      TransactionType.TRANSFER
     );
   }
 

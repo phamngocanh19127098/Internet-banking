@@ -9,10 +9,12 @@ import {AccountsModule} from "../accounts/accounts.module";
 import {Account} from "../accounts/entities/account.entity";
 import {OtpModule} from "../otp/otp.module";
 import {AffiliatedBanksModule} from "../affiliatedBanks/affiliatedBanks.module";
+import {DebtReminder} from "../debtReminders/entities/debtReminders.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction, Account]),UserModule,JwtModule,AccountsModule,OtpModule,AffiliatedBanksModule],
+  imports: [TypeOrmModule.forFeature([Transaction, Account, DebtReminder]),UserModule,JwtModule,AccountsModule,OtpModule,AffiliatedBanksModule],
   controllers: [TransactionsController],
-  providers: [TransactionsService]
+  providers: [TransactionsService],
+  exports: [TransactionsService]
 })
 export class TransactionsModule {}
