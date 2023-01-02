@@ -265,6 +265,9 @@ export class TransactionsService {
     transactionType: string,
   ) {
     try {
+      let timeZone = new Date()
+      timeZone.setDate(timeZone.getDate() - 30);
+
       let account: Account = await this.accountRepository.findOne({
         where: {
           accountNumber,
@@ -292,7 +295,7 @@ export class TransactionsService {
               accountNumber,
             });
           }),
-        )
+        ).andWhere('transaction.createdAt >:timeZone',{timeZone})
         .orderBy('transaction.createdAt', 'DESC')
         .getMany();
 
