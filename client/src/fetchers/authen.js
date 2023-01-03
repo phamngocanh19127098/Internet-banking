@@ -11,7 +11,6 @@ export const fetcherForgetPwd = async (username) => {
   return response;
 };
 
-
 export const fetcherVerifyOTP = async (username, OTP) => {
   const data = { username: username, otpCode: OTP };
   console.log("data", data);
@@ -31,7 +30,12 @@ export const fetcherchangePwd = async (username, password, newPassword) => {
     newPassword: newPassword,
   };
   const response = await axios
-    .post(`http://localhost:3001/auth/changepassword`, data)
-    .catch((error) => console.log("Error: ", error));
+    .post(`http://localhost:3001/auth/changepassword`, data, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+      alert(error.response.data.error.message);
+    });
   return response;
 };

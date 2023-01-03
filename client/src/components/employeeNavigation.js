@@ -14,7 +14,7 @@ const EmployeeNavigation = (props) => {
       props.id === idx ? (x.current = true) : (x.current = false)
     );
     setMenus(newChoice);
-  }, props);
+  }, [props]);
   const handlechange = (index) => {
     const newChoice = [...Menus];
     newChoice.map((x, idx) =>
@@ -61,7 +61,7 @@ const EmployeeNavigation = (props) => {
       </div>
       <ul className="pt-6">
         {Menus.map((Menu, index) => (
-          <div className="p-2">
+          <div className="p-2" key={index}>
             <Link to={Menu.link}>
               <button
                 onClick={() => handlechange(index)}

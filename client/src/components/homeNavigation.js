@@ -40,7 +40,7 @@ const HomeNavigation = (props) => {
       props.id === idx ? (x.current = true) : (x.current = false)
     );
     setMenus(newChoice);
-  }, props);
+  }, [props]);
   const handlechange = (index) => {
     const newChoice = [...Menus];
     newChoice.map((x, idx) =>

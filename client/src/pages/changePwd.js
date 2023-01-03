@@ -5,18 +5,42 @@ import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../features/auth/authActions";
 import { useEffect, useState, useCallback } from "react";
 import { fetcherchangePwd } from "../fetchers/authen";
-import axios from "axios";
 
 const ChangePassword = () => {
   const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch } = useForm();
 
-  // redirect authenticated user to profile screen
+  const field1Value = watch("newPassword");
+  const field2Value = watch("confirmNewPassword");
+  const field3Value = watch("password");
+  const fieldsMatch12 = field1Value === field2Value;
+  const fieldsMatch13 = field1Value === field3Value;
 
   const submitForm = async (data) => {
     console.log(userInfo.username, data.password, data.newPassword);
-    //const response = await fetcherchangePwd(userInfo.username, data.password, data.newPassword)
+
+    let response;
+
+    if (!fieldsMatch13) {
+      if (fieldsMatch12) {
+        response = await fetcherchangePwd(
+          userInfo.username,
+          data.password,
+          data.newPassword
+        );
+      } else {
+        alert("Mật khẩu mới chưa trùng khớp");
+      }
+    } else {
+      alert("Mật khẩu mới không được trùng mật khẩu cũ");
+    }
+
+    if (response.data.statusCode === 200) {
+      alert(response.data.message);
+      navigate("/");
+    }
   };
 
   return (
@@ -35,7 +59,7 @@ const ChangePassword = () => {
                 htmlFor="password"
                 className="block text-sm font-semibold text-gray-800"
               >
-                Mật khẩu
+                Mật khẩu cũ
               </label>
               <input
                 type="password"
@@ -47,15 +71,37 @@ const ChangePassword = () => {
             </div>{" "}
             <div className="mb-2">
               <label
-                htmlFor="password"
+                htmlFor="newPassword"
                 className="block text-sm font-semibold text-gray-800"
               >
                 Mật khẩu mới
               </label>
               <input
                 type="password"
-                id="password"
+                id="newPassword"
                 {...register("newPassword")}
+                required
+                className="form__input block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-new-green focus:ring-new-green focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                htmlFor="confirmNewPassword"
+                className="block text-sm font-semibold text-gray-800"
+              >
+                Xác nhận mật khẩu mới
+                {!fieldsMatch12 || !field1Value ? (
+                  <span className="ml-2 font-light text-red">
+                    Không trùng khớp
+                  </span>
+                ) : (
+                  <span className="ml-2 font-light text-red">Trùng khớp</span>
+                )}
+              </label>
+              <input
+                type="password"
+                id="confirmNewPassword"
+                {...register("confirmNewPassword")}
                 required
                 className="form__input block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-new-green focus:ring-new-green focus:outline-none focus:ring focus:ring-opacity-40"
               />

@@ -1,6 +1,6 @@
-import { useSelector } from 'react-redux'
-import { NavLink, Outlet } from 'react-router-dom'
-import { Navigate } from 'react-router-dom'
+import { useSelector } from "react-redux";
+import { NavLink, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = () => {
   const { userInfo } = useSelector((state) => state.auth)
@@ -14,5 +14,4 @@ const ProtectedRoute = () => {
 
   return <Outlet />
 }
-
-export default ProtectedRoute
+export default ProtectedRoute;
