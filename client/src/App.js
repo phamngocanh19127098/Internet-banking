@@ -45,7 +45,7 @@ function App() {
                 <Route path="/customer" element={<HomeCustomer />} />
                 <Route path="/accounts" element={<Accounts />} />
                 <Route path="/loan" element={<Loan />} />
-                <Route path="unpaid-loan" element={<UnpaidLoan/>}/>
+                <Route path="unpaid-loan" element={<UnpaidLoan />} />
                 <Route path="/recipents" element={<Recipents />} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/contact" element={<Contact />} />

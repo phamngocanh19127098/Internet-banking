@@ -62,7 +62,7 @@ const ConfirmForgotPasswordOTP = (props) => {
           <button
             id="handleX"
             onClick={handleXClick}
-            className="-right-6 -top-6 absolute flex justify-end rounded-full px-4 py-4 ml-4 text-white font-bold bg-black"
+            className="-right-6 -top-6 absolute flex justify-end rounded-full px-4 py-4 ml-4 text-white font-bold bg-black cursor-pointer"
           >
             <svg
               className="pointer-events-none"
@@ -90,7 +90,7 @@ const ConfirmForgotPasswordOTP = (props) => {
         <button
           id="handleX"
           onClick={handleXClick}
-          className="-right-6 -top-6 absolute flex justify-end rounded-full px-4 py-4 ml-4 text-white font-bold bg-black"
+          className="-right-6 -top-6 absolute flex justify-end rounded-full px-4 py-4 ml-4 text-white font-bold bg-black cursor-pointer"
         >
           <svg
             className="pointer-events-none"
@@ -130,7 +130,7 @@ const ConfirmForgotPasswordOTP = (props) => {
           <button
             id="handlecancel"
             onClick={handleCancelClick}
-            className="rounded px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded bg-[#FFFFFF] hover:bg-[#F3F4F6] bg-white"
+            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded bg-[#FFFFFF] hover:bg-[#F3F4F6] bg-white"
           >
             Huỷ
           </button>
@@ -138,7 +138,7 @@ const ConfirmForgotPasswordOTP = (props) => {
             id="handleSave"
             onClick={handleSaveClick}
             disabled={isDisable}
-            className=" rounded px-4 py-2 ml-4 text-white  text-xs font-bold hover:bg-[#cf4a04] bg-[#EA580C] disabled:bg-[#edb395] "
+            className="cursor-pointer rounded px-4 py-2 ml-4 text-white  text-xs font-bold hover:bg-[#cf4a04] bg-[#EA580C] disabled:bg-[#edb395] "
           >
             Gửi OTP
           </button>

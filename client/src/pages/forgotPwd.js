@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetcherForgetPwd } from "../fetchers/authen";
-// import ConfirmForgotPasswordOTP from "../components/confirmForgotPasswordOTP";
+import ConfirmForgotPasswordOTP from "../components/confirmForgotPasswordOTP";
 
 const ForgotPassword = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -68,22 +68,22 @@ const ForgotPassword = () => {
                 </Link>
                 <button
                   type="submit"
-                  className="w-full px-4 py-2 mt-8 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] rounded-lg"
+                  className=" cursor-pointer w-full px-4 py-2 mt-8 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] rounded-lg"
                 >
                   Xác nhận
                 </button>
               </div>
             </div>
           </form>
-          {/*{showOTPModal && (*/}
-          {/*  <ConfirmForgotPasswordOTP*/}
-          {/*    onClose={() => {*/}
-          {/*      setShowOTPModal(false);*/}
-          {/*    }}*/}
-          {/*    visible={showOTPModal}*/}
-          {/*    username={username}*/}
-          {/*  />*/}
-          {/*)}*/}
+          {showOTPModal && (
+            <ConfirmForgotPasswordOTP
+              onClose={() => {
+                setShowOTPModal(false);
+              }}
+              visible={showOTPModal}
+              username={username}
+            />
+          )}
         </div>
       </div>
     </div>

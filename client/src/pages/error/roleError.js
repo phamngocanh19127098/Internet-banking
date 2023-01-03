@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const HomeScreen = () => {
     return <div
         className="
@@ -23,11 +25,10 @@ const HomeScreen = () => {
                     The page you’re looking htmlFor doesn’t exist.
                 </p>
 
-                <a
-                    href="#"
+                <Link
+                    to="#"
                     className="px-6 py-2 text-sm font-semibold text-blue-800 bg-blue-100"
-                >Go home</a
-                >
+                >Go home</Link>
             </div>
         </div>
     </div>

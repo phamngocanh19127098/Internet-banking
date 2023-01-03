@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../features/auth/authActions";
 import { useEffect, useState, useCallback } from "react";
@@ -86,17 +86,17 @@ const LoginScreen = () => {
               onChange={useCallback(() => setDisableSubmit(false))}
               sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // client key testing
             />
-            <a
-              href="/forgotpassword"
+            <Link
+              to="/forgotpassword"
               className="text-xs text-black hover:underline"
             >
               Quên mật khẩu?
-            </a>
+            </Link>
             <div className="mt-6">
               <button
                 type="submit"
                 disabled={disableSubmit}
-                className=" button w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] hover:from-[#076F32] hover:to-[#076F32] rounded-lg"
+                className=" button w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 bg-gradient-to-r from-[#076F32] to-[#41b06f] hover:from-[#076F32] hover:to-[#076F32] cursor-pointer rounded-lg"
               >
                 Đăng nhập
               </button>
