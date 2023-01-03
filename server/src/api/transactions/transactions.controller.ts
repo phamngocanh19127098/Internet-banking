@@ -1,4 +1,4 @@
-import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {Body, Controller, Delete, Get, Headers, Logger, Param, Patch, Post, Query,} from '@nestjs/common';
 import {TransactionsService} from './transactions.service';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
@@ -151,6 +151,7 @@ export class TransactionsController {
   // }
 
   @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   @ApiOperation({ description: 'Lấy thông tin giao dịch nhận tiền bằng số tài khoản' })
   @Get('list/received/:accountNumber')
   async getTransactionReceivedByAccountNumber(
@@ -168,6 +169,7 @@ export class TransactionsController {
   }
 
   @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   @ApiOperation({ description: 'Lấy thông tin giao dịch chuyển khoản bằng số tài khoản' })
   @Get('list/transfer/:accountNumber')
   async getTransactionTransferByAccountNumber(
@@ -185,6 +187,7 @@ export class TransactionsController {
   }
 
   @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   @ApiOperation({ description: 'Lấy thông tin giao dịch nhắc nợ bằng số tài khoản' })
   @Get('list/debtReminder/:accountNumber')
   async getTransactionDebtReminderByAccountNumber(

@@ -10,7 +10,7 @@ import {
 import { SavedBeneficiarysService } from './savedBeneficiarys.service';
 import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import { User } from '../../commons/decorator/user.decorator';
 import { Roles } from '../../commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
@@ -24,6 +24,7 @@ export class SavedBeneficiarysController {
 
   @Post()
   @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   async create(
     @User() user,
     @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryDto,
@@ -40,8 +41,9 @@ export class SavedBeneficiarysController {
     };
   }
 
-  @Roles(Role.CUSTOMER)
   @Get('list/:userId')
+  @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   async findAll(@Param('userId') userId: string) {
     const data = await this.savedBeneficiarysService.findAll(+userId);
     return {
@@ -52,6 +54,8 @@ export class SavedBeneficiarysController {
   }
 
   @Get(':id')
+  @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   async findOne(@Param('id') id: string) {
     const data = await this.savedBeneficiarysService.findOne(+id);
     return {
@@ -62,6 +66,7 @@ export class SavedBeneficiarysController {
   }
 
   @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -80,6 +85,7 @@ export class SavedBeneficiarysController {
   }
 
   @Roles(Role.CUSTOMER)
+  @ApiBearerAuth()
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const data = await this.savedBeneficiarysService.remove(+id);
