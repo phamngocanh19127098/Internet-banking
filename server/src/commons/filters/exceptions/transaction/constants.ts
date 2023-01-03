@@ -1,1 +1,1 @@
-export const UNEXISTED_TRANSACTION = 7_500;
+export const UNEXISTED_TRANSACTION = 7_400;
