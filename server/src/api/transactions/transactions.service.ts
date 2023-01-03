@@ -321,9 +321,9 @@ export class TransactionsService {
 
       let data = await this.transactionRepository
           .createQueryBuilder('transaction')
-          .leftJoin('transaction.accountDes', 'accountDes')
           .leftJoin('transaction.accountSrc', 'accountSrc')
-          .select('transaction')
+          .leftJoin('accountSrc.user', 'user')
+          .select(['transaction','accountSrc','user.name'])
           .where('transaction.transactionType =:type', {
             type,
           })
@@ -361,8 +361,8 @@ export class TransactionsService {
       let data = await this.transactionRepository
           .createQueryBuilder('transaction')
           .leftJoin('transaction.accountDes', 'accountDes')
-          .leftJoin('transaction.accountSrc', 'accountSrc')
-          .select('transaction')
+          .leftJoin('accountDes.user', 'user')
+          .select(['transaction','accountDes','user.name'])
           .where(
               'accountDes.accountNumber =:accountNumber', {
                 accountNumber,
@@ -397,9 +397,9 @@ export class TransactionsService {
 
       let data = await this.transactionRepository
           .createQueryBuilder('transaction')
-          .leftJoin('transaction.accountDes', 'accountDes')
           .leftJoin('transaction.accountSrc', 'accountSrc')
-          .select('transaction')
+          .leftJoin('accountSrc.user', 'user')
+          .select(['transaction','accountSrc','user.name'])
           .where('transaction.transactionType =:type', {
             type,
           })
