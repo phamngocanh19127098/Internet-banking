@@ -169,7 +169,7 @@ export class TransactionsService {
     dto: VerifyTransferInternalDto,
     authorization: string,
   ) {
-    try {
+
       const accessToken =
         this.userService.getAccessTokenFromClient(authorization);
       const decodedAccessToken = this.jwtService.decode(accessToken);
@@ -231,23 +231,22 @@ export class TransactionsService {
             amountWithFeeForSrc,
             TransactionType.TRANSFER,
           );
-          const infoTransaction =
-            {
-              transaction_id: transaction.id,                           // generate số ngẫu nhiên
-              src_account_number: transaction.accountSrcNumber,       // tài khoản người gửi
-              des_account_number: transaction.accountDesNumber,      // tài khoản người nhận
-              transaction_amount: transaction.amount,  	// số tiền
-              otp_code: dto.otpCode,   		// có thể gửi luôn cho bên đây nhận hoặc để chuỗi rỗng
-              transaction_message: transaction.description,
-              pay_transaction_fee: transaction.payTransactionFee,  	// hoặc là DES: người nhận trả phí,SRC: người gửi trả phí
-              is_success: 0,   // set ở đây là 0
-              transaction_created_at: transaction.createdAt,  // TIMESTAMP
-              transaction_type: 2,   		      // ở đây truyền 2 nha
-              user_id: user.id,                                         // info người gửi
-              full_name: user.name,             		 // info người gửi
-              email: user.email,      	//  info người gửi
-              phone: user.phone                        	// info người gửi
-            }
+          const infoTransaction = {
+            transaction_id:transaction.id,
+            src_account_number:transaction.accountSrcNumber,
+            des_account_number:transaction.accountDesNumber,
+            transaction_amount:transaction.amount,
+            otp_code:dto.otpCode,
+            transaction_message:transaction.description || '',
+            pay_transaction_fee:transaction.payTransactionFee,
+            is_success:0,
+            transaction_created_at:transaction.createdAt,
+            transaction_type:2,
+            user_id:user.id,
+            full_name:user.name,
+            email:user.email,
+            phone:user.phone || ''
+          }
             await SolarBankService.intertransaction(infoTransaction,linkedBank.publicKey)
 
         }
@@ -259,11 +258,11 @@ export class TransactionsService {
         statusCode: 200,
         message: `Thực hiện giao dịch chuyển khoản id= ${dto.transactionId} thành công.`,
       };
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Lỗi trong quá trình thực hiện xác thực giao dịch.',
-      );
-    }
+    // } catch (error) {
+    //   throw new InternalServerErrorException(
+    //     'Lỗi trong quá trình thực hiện xác thực giao dịch.',
+    //   );
+    // }
   }
 
   async findAll(fromDate: Date, toDate: Date, affiliatedBankId : number) {
