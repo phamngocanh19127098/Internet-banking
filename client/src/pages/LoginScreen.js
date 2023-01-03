@@ -3,15 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../features/auth/authActions";
 import { useEffect, useState, useCallback } from "react";
+import { useRef } from "react";
 import Error from "../components/Error";
 import Spinner from "../components/Spinner";
-import ReCAPTCHA from "react-google-recaptcha";
+import Reaptcha from 'reaptcha';
 import { useLocation } from "react-router-dom";
+import Loader from "../components/loading";
 
 const LoginScreen = () => {
+  const data = JSON.parse(localStorage.getItem("userInfomation"))
   const { loading, userInfo, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
   const { register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
@@ -36,12 +40,23 @@ const LoginScreen = () => {
   let recaptchaInstance;
 
   const submitForm = (data) => {
-    recaptchaInstance.reset();
     dispatch(userLogin(data));
   };
 
+  const verify = () => {
+    console.log("ABC")
+    captchaRef.current.getResponse().then(res => {
+      setCaptchaToken(res)
+      setDisableSubmit(false)
+    })
+
+  }
+  if (data) {
+    return <Loader />
+  }
+
   return (
-    <div>
+    (<div>
       <div
         className=" bg-cover w-full flex h-screen justify-center items-center"
         style={{ backgroundImage: `url('../loginbng.png')` }}
@@ -81,10 +96,10 @@ const LoginScreen = () => {
                 className="form__input block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-new-green focus:ring-new-green focus:outline-none focus:ring focus:ring-opacity-40"
               />
             </div>
-            <ReCAPTCHA
-              ref={(e) => (recaptchaInstance = e)}
-              onChange={useCallback(() => setDisableSubmit(false))}
+            <Reaptcha
               sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // client key testing
+              ref={captchaRef}
+              onVerify={verify}
             />
             <Link
               to="/forgotpassword"
@@ -105,7 +120,11 @@ const LoginScreen = () => {
         </div>
       </div>
     </div>
+    )
+
   );
+
+
 };
 
 export default LoginScreen;

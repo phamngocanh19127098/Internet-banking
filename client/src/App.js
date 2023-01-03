@@ -62,7 +62,7 @@ function App() {
               </Route>
             </Route>
           </Route>
-          {/* <Route path='*' element={<Navigate to='/customer' replace />} /> */}
+          <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
       </main>
     </Router>
