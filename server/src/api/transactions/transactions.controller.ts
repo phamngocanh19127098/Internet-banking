@@ -1,4 +1,4 @@
-import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
+import {ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {Body, Controller, Delete, Get, Headers, Logger, Param, Patch, Post, Query,} from '@nestjs/common';
 import {TransactionsService} from './transactions.service';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
@@ -117,36 +117,87 @@ export class TransactionsController {
     return this.transactionsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
-  ) {
-    return this.transactionsService.update(+id, updateTransactionDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateTransactionDto: UpdateTransactionDto,
+  // ) {
+  //   return this.transactionsService.update(+id, updateTransactionDto);
+  // }
+  //
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.transactionsService.remove(+id);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionsService.remove(+id);
-  }
+  // @Get('list/:accountNumber')
+  // // @ApiOperation({ description: 'Lấy thông tin giao dịch bằng số tài khoản' })
+  // @ApiQuery({ name: 'type', enum: TransactionType })
+  // //http://localhost:3001/transactions/list/12345?type=TRANSFER test
+  // async getTransactionByAccountNumber(
+  //   @Param('accountNumber') accountNumber: string,
+  //   @Query('type') type: TransactionType = TransactionType.TRANSFER,
+  //   // @Query() query,
+  // ) {
+  //   let data = await this.transactionsService.getTransactionByAccountNumber(
+  //     accountNumber,
+  //     type,
+  //   );
+  //   return {
+  //     data,
+  //     statusCode: 200,
+  //     message: 'Lấy thông tin giao dịch thành công.',
+  //   };
+  // }
 
-  @Get('list/:accountNumber')
-  // @ApiOperation({ description: 'Lấy thông tin giao dịch bằng số tài khoản' })
-  @ApiQuery({ name: 'type', enum: TransactionType })
-  //http://localhost:3001/transactions/list/12345?type=TRANSFER test
-  async getTransactionByAccountNumber(
-    @Param('accountNumber') accountNumber: string,
-    @Query('type') type: TransactionType = TransactionType.TRANSFER,
-    // @Query() query,
+  // @Roles(Role.CUSTOMER)
+  @ApiOperation({ description: 'Lấy thông tin giao dịch nhận tiền bằng số tài khoản' })
+  @Get('list/received/:accountNumber')
+  async getTransactionReceivedByAccountNumber(
+      @Param('accountNumber') accountNumber: string,
   ) {
-    let data = await this.transactionsService.getTransactionByAccountNumber(
-      accountNumber,
-      type,
+    let data = await this.transactionsService.getTransactionReceivedByAccountNumber(
+        accountNumber
     );
+
     return {
       data,
       statusCode: 200,
-      message: 'Lấy thông tin giao dịch thành công.',
+      message: 'Lấy thông tin giao dịch nhận tiền thành công.',
+    };
+  }
+
+  // @Roles(Role.CUSTOMER)
+  @ApiOperation({ description: 'Lấy thông tin giao dịch chuyển khoản bằng số tài khoản' })
+  @Get('list/transfer/:accountNumber')
+  async getTransactionTransferByAccountNumber(
+      @Param('accountNumber') accountNumber: string,
+  ) {
+    let data = await this.transactionsService.getTransactionTransferByAccountNumber(
+        accountNumber
+    );
+
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy thông tin giao dịch chuyển khoản thành công.',
+    };
+  }
+
+  // @Roles(Role.CUSTOMER)
+  @ApiOperation({ description: 'Lấy thông tin giao dịch nhắc nợ bằng số tài khoản' })
+  @Get('list/debtReminder/:accountNumber')
+  async getTransactionDebtReminderByAccountNumber(
+      @Param('accountNumber') accountNumber: string,
+  ) {
+    let data = await this.transactionsService.getTransactionDebtReminderByAccountNumber(
+        accountNumber
+    );
+
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy thông tin giao dịch nhắc nợ thành công.',
     };
   }
 

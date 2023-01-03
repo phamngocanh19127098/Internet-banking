@@ -252,18 +252,55 @@ export class TransactionsService {
     return this.transactionRepository.findOneBy({ id });
   }
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
+  // update(id: number, updateTransactionDto: UpdateTransactionDto) {
+  //   return `This action updates a #${id} transaction`;
+  // }
+  //
+  // remove(id: number) {
+  //   return `This action removes a #${id} transaction`;
+  // }
+
+  async getTransactionDebtReminderByAccountNumber(accountNumber: string) {
+    try {
+      let type = TransactionType.DEBT_REMINDERS_PAYMENT
+      let timeZone = new Date()
+      timeZone.setDate(timeZone.getDate() - 30);
+
+      let account: Account = await this.accountRepository.findOne({
+        where: {
+          accountNumber,
+        },
+      });
+
+      if (account == null) {
+        throw new BadRequestException('Không tồn tại tài khoản người dùng!');
+      }
+
+      let data = await this.transactionRepository
+          .createQueryBuilder('transaction')
+          .leftJoin('transaction.accountDes', 'accountDes')
+          .leftJoin('transaction.accountSrc', 'accountSrc')
+          .select('transaction')
+          .where('transaction.transactionType =:type', {
+            type,
+          })
+          .andWhere(
+              'accountSrc.accountNumber =:accountNumber', {
+                accountNumber,
+              }
+          ).andWhere('transaction.createdAt >:timeZone',{timeZone})
+          .orderBy('transaction.createdAt', 'DESC')
+          .getMany();
+
+      return data;
+    } catch (e) {
+      throw new InternalServerErrorException(
+          'Lỗi trong quá trình lấy giao dịch người dùng',
+      );
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
-  }
-
-  async getTransactionByAccountNumber(
-    accountNumber: string,
-    transactionType: string,
-  ) {
+  async getTransactionReceivedByAccountNumber(accountNumber: string) {
     try {
       let timeZone = new Date()
       timeZone.setDate(timeZone.getDate() - 30);
@@ -279,33 +316,112 @@ export class TransactionsService {
       }
 
       let data = await this.transactionRepository
-        .createQueryBuilder('transaction')
-        .leftJoin('transaction.accountDes', 'accountDes')
-        .leftJoin('transaction.accountSrc', 'accountSrc')
-        .select('transaction')
-        .where('transaction.transactionType =:transactionType', {
-          transactionType,
-        })
-        .andWhere(
-          new Brackets((qb) => {
-            qb.where('accountDes.accountNumber =:accountNumber', {
-              accountNumber,
-            });
-            qb.orWhere('accountSrc.accountNumber =:accountNumber', {
-              accountNumber,
-            });
-          }),
-        ).andWhere('transaction.createdAt >:timeZone',{timeZone})
-        .orderBy('transaction.createdAt', 'DESC')
-        .getMany();
+          .createQueryBuilder('transaction')
+          .leftJoin('transaction.accountDes', 'accountDes')
+          .leftJoin('transaction.accountSrc', 'accountSrc')
+          .select('transaction')
+          .where(
+              'accountDes.accountNumber =:accountNumber', {
+                accountNumber,
+              }
+          ).andWhere('transaction.createdAt >:timeZone',{timeZone})
+          .orderBy('transaction.createdAt', 'DESC')
+          .getMany();
 
       return data;
     } catch (e) {
       throw new InternalServerErrorException(
-        'Lỗi trong quá trình lấy giao dịch người dùng',
+          'Lỗi trong quá trình lấy giao dịch người dùng',
       );
     }
   }
+
+  async getTransactionTransferByAccountNumber(accountNumber: string) {
+    try {
+      let type = TransactionType.TRANSFER
+      let timeZone = new Date()
+      timeZone.setDate(timeZone.getDate() - 30);
+
+      let account: Account = await this.accountRepository.findOne({
+        where: {
+          accountNumber,
+        },
+      });
+
+      if (account == null) {
+        throw new BadRequestException('Không tồn tại tài khoản người dùng!');
+      }
+
+      let data = await this.transactionRepository
+          .createQueryBuilder('transaction')
+          .leftJoin('transaction.accountDes', 'accountDes')
+          .leftJoin('transaction.accountSrc', 'accountSrc')
+          .select('transaction')
+          .where('transaction.transactionType =:type', {
+            type,
+          })
+          .andWhere(
+              'accountSrc.accountNumber =:accountNumber', {
+                accountNumber,
+              }
+          ).andWhere('transaction.createdAt >:timeZone',{timeZone})
+          .orderBy('transaction.createdAt', 'DESC')
+          .getMany();
+
+      return data;
+    } catch (e) {
+      throw new InternalServerErrorException(
+          'Lỗi trong quá trình lấy giao dịch người dùng',
+      );
+    }
+  }
+
+  // async getTransactionByAccountNumber(
+  //   accountNumber: string,
+  //   transactionType: string,
+  // ) {
+  //   try {
+  //     let timeZone = new Date()
+  //     timeZone.setDate(timeZone.getDate() - 30);
+  //
+  //     let account: Account = await this.accountRepository.findOne({
+  //       where: {
+  //         accountNumber,
+  //       },
+  //     });
+  //
+  //     if (account == null) {
+  //       throw new BadRequestException('Không tồn tại tài khoản người dùng!');
+  //     }
+  //
+  //     let data = await this.transactionRepository
+  //       .createQueryBuilder('transaction')
+  //       .leftJoin('transaction.accountDes', 'accountDes')
+  //       .leftJoin('transaction.accountSrc', 'accountSrc')
+  //       .select('transaction')
+  //       .where('transaction.transactionType =:transactionType', {
+  //         transactionType,
+  //       })
+  //       .andWhere(
+  //         new Brackets((qb) => {
+  //           qb.where('accountDes.accountNumber =:accountNumber', {
+  //             accountNumber,
+  //           });
+  //           qb.orWhere('accountSrc.accountNumber =:accountNumber', {
+  //             accountNumber,
+  //           });
+  //         }),
+  //       ).andWhere('transaction.createdAt >:timeZone',{timeZone})
+  //       .orderBy('transaction.createdAt', 'DESC')
+  //       .getMany();
+  //
+  //     return data;
+  //   } catch (e) {
+  //     throw new InternalServerErrorException(
+  //       'Lỗi trong quá trình lấy giao dịch người dùng',
+  //     );
+  //   }
+  // }
 
   calculateTransaction (transactions : Transaction []) {
     let receivedAmount = 0;
