@@ -28,7 +28,6 @@ export class SavedBeneficiarysService {
         .getOne();
 
       if (infoAccount == null) {
-        console.log(infoAccount);
         throw new BadRequestException('Tài khoản không tồn tại');
       }
 
