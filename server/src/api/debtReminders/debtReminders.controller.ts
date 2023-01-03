@@ -28,10 +28,6 @@ export class DebtRemindersController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.debtRemindersService.findAll();
-  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -94,6 +90,10 @@ export class DebtRemindersController {
   }
 
   @Roles(Role.CUSTOMER)
+  @ApiOperation({description : 'Thanh toán nhắc nợ'})
+  @ApiOkResponse({
+    description: "Tạo giao dịch chuyển khoản thành công."
+  })
   @Post("/pay")
   async liquidateDebtReminder(
       @User() user,

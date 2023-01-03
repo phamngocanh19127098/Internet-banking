@@ -18,11 +18,4 @@ export class CreateDebtReminderDto {
     @ApiProperty({default: 1039})
     userId : string;
 
-    @IsString()
-    @ApiProperty({default: "12346"})
-    accountSrcNumber: string;
-
-    @IsString()
-    @ApiProperty({default: 1039})
-    receiverId : number;
 }

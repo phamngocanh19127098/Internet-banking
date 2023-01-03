@@ -8,6 +8,7 @@ import { CreateDebtReminderSocketDto } from './dto/create-debt-reminder-socket.d
 import { RemoveDebtReminderDto } from './dto/remove-debt-reminder.dto';
 import { UpdateDebtReminderSocketDto } from './dto/update-debt-reminder-socket.dto';
 import { BadRequestException, NotAcceptableException } from '@nestjs/common/exceptions';
+import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-reminder.dto";
 
 @Injectable()
 export class DebtReminderSocketService {
@@ -19,17 +20,17 @@ export class DebtReminderSocketService {
   ){
 
   }
-  create(createDebtReminderSocketDto: CreateDebtReminderSocketDto) {
-    return 'This action adds a new debtReminderSocket';
+  async create(createDebtReminderDto: CreateDebtReminderDto) {
+    return await this.debtReminderService.create(createDebtReminderDto);
   }
 
   async findAllCreatedDebtReminder(userId: string) {
-    return this.debtReminderService.getDebtReminderCreated(+userId);
+    return await this.debtReminderService.getDebtReminderCreated(+userId);
     // return `This action returns all debtReminderSocket`;
   }
 
   async findAllReceivedDebtReminder(userId: string) {
-    return this.debtReminderService.getDebtReminderReceived(+userId);
+    return await this.debtReminderService.getDebtReminderReceived(+userId);
     // return `This action returns all debtReminderSocket`;
   }
 

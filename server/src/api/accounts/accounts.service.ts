@@ -185,6 +185,7 @@ export class AccountsService {
   }
 
   async getAccountInfoByAccountNumber(accountNumber: string) {
+    console.log(accountNumber)
     try {
       let account: Account = await this.repos.findOne({
         where: {
@@ -280,6 +281,7 @@ export class AccountsService {
       return data;
     }
     catch (e) {
+      console.log(e.message)
       throw new InternalServerErrorException("Lỗi trong quá trình lấy danh sách account")
     }
 

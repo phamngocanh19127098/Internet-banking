@@ -5,9 +5,17 @@ import { DebtRemindersService } from 'src/api/debtReminders/debtReminders.servic
 import { DebtReminderSocketService } from './debt-reminder-socket.service';
 import { CreateDebtReminderSocketDto } from './dto/create-debt-reminder-socket.dto';
 import { UpdateDebtReminderSocketDto } from './dto/update-debt-reminder-socket.dto';
-import { findAllCreatedDebtReminder,  findAllReceivedDebtReminder, removeCreatedDebtReminder, removeReceivedDebtReminder } from 'src/constant';
+import {
+  createDebtReminderSocket,
+  findAllCreatedDebtReminder,
+  findAllDebtReminder,
+  findAllReceivedDebtReminder,
+  removeCreatedDebtReminder,
+  removeReceivedDebtReminder
+} from 'src/constant';
 import { ListDebtReminderDto } from './dto/list-debt-reminder.dto';
 import { RemoveDebtReminderDto } from './dto/remove-debt-reminder.dto';
+import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-reminder.dto";
 
 @WebSocketGateway({cors: {
   origin: '*'
@@ -19,9 +27,11 @@ export class DebtReminderSocketGateway {
     private readonly debtReminderSocketService: DebtReminderSocketService
   ) {}
 
-  @SubscribeMessage('createDebtReminderSocket')
-  create(@MessageBody() createDebtReminderSocketDto: CreateDebtReminderSocketDto) {
-    return this.debtReminderSocketService.create(createDebtReminderSocketDto);
+  @SubscribeMessage(createDebtReminderSocket)
+  async create(@MessageBody() createDebtReminderDto: CreateDebtReminderDto) {
+    console.log(createDebtReminderDto)
+    let data = await this.debtReminderSocketService.create(createDebtReminderDto);
+    return this.server.emit(createDebtReminderSocket, {receiverId: data.receiverId})
   }
 
   @SubscribeMessage(findAllCreatedDebtReminder)

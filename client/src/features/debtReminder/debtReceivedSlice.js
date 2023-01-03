@@ -2,13 +2,13 @@ import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     loading: false,
-    debtReminders: [],
+    debtReceived: [],
     error: null,
     success: false,
 }
 
-const debtReminderSlice = createSlice({
-    name: "debtReminder",
+const debtReceivedSlice = createSlice({
+    name: "debtReceived",
     initialState,
     reducers : {
         addNew: (state, action) => {
@@ -23,6 +23,6 @@ const debtReminderSlice = createSlice({
     }
 });
 
-export const {addNew, remove, onInit} = debtReminderSlice.actions;
+export const {addNew, remove, onInit} = debtReceivedSlice.actions;
 
-export default debtReminderSlice.reducer;
+export default debtReceivedSlice.reducer;

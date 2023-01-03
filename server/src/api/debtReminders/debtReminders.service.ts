@@ -24,24 +24,25 @@ export class DebtRemindersService {
   ) {}
   async create(createDebtReminderDto: CreateDebtReminderDto) {
     
-    let { accountDesNumber, amount, description, userId, accountSrcNumber, receiverId } =
+    let { accountDesNumber, amount, description, userId } =
       createDebtReminderDto;
 
-    let user = await this.userService.getUserById(+userId);
 
-    if (user == null) {
+    let accountUser = await this.accountService.getPaymentAccountByUserId(+userId);
+
+    if (accountUser == null) {
       throw new NotAcceptableException('Nguời chuyển không tồn tại')
     }
 
-    let receiver = await this.userService.getUserById(+receiverId);
+    let receiverAccount = await this.accountService.getAccountInfoByAccountNumber(accountDesNumber)
 
-    if (user == null) {
+    if (receiverAccount == null) {
       throw new NotAcceptableException('Nguời nhận không tồn tại')
     }
 
     let debtReminderDto = {
-      accountDesNumber: +accountDesNumber,
-      accountSrcNumber: +accountSrcNumber,
+      accountDesNumber: +receiverAccount.accountNumber,
+      accountSrcNumber: +accountUser.accountNumber,
       createdAt: new Date(),
       updatedAt: new Date(),
       amount: amount,
@@ -49,7 +50,7 @@ export class DebtRemindersService {
       paymentId: null,
       userId: +userId,
       paymentStatus: DebtReminderEnum.UNPAID,
-      receiverId
+      receiverId: receiverAccount.user.id
     };
 
     let debtReminder = this.repos.create(debtReminderDto);
@@ -59,8 +60,25 @@ export class DebtRemindersService {
     return debtReminder;
   }
 
-  findAll() {
-    return this.repos.find();
+  async findAll(id: number) {
+    let receivedDebtReminder = await this.repos.createQueryBuilder('debtReminder')
+        .leftJoin('debtReminder.user', 'user')
+        .leftJoin('debtReminder.receiver', 'receiver')
+        .select(['debtReminder',
+          'user.id', 'user.name','user.username', 'user.email', 'user.dob', 'user.phone', 'user.address',
+          'receiver.id', 'receiver.username', 'receiver.email', 'receiver.dob', 'receiver.phone', 'receiver.address'])
+        .where('debtReminder.userId = :id', {id})
+        .getMany();
+
+    let createdDebtReminder = await this.repos.createQueryBuilder('debtReminder')
+        .leftJoin('debtReminder.user', 'user')
+        .leftJoin('debtReminder.receiver', 'receiver')
+        .select(['debtReminder',
+          'user.id', 'user.name','user.username', 'user.email', 'user.dob', 'user.phone', 'user.address',
+          'receiver.id', 'receiver.username', 'receiver.email', 'receiver.dob', 'receiver.phone', 'receiver.address'])
+        .where('debtReminder.userId = :id', {id})
+        .getMany();
+    return  [...receivedDebtReminder, ...createdDebtReminder]
   }
 
   findOne(id: number) {
