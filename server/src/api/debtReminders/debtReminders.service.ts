@@ -56,7 +56,7 @@ export class DebtRemindersService {
     let debtReminder = this.repos.create(debtReminderDto);
 
     debtReminder = await this.repos.save(debtReminder);
-
+    debtReminder['createdName'] = accountUser.user.name;
     return debtReminder;
   }
 
@@ -137,7 +137,6 @@ export class DebtRemindersService {
       .where('debtReminder.receiverId = :id', {id})
       .andWhere('debtReminder.paymentStatus = :paymentStatus', {paymentStatus : DebtReminderEnum.UNPAID})
       .getMany();
-
     return debtReminder || [];
   }
 

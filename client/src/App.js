@@ -23,6 +23,7 @@ import Employee from "./pages/employee";
 import { ROLES } from "./routing/roles";
 import RequireAuth from "./routing/RequireAuth";
 import ForgotPassword from "./pages/forgotPwd";
+import UnpaidLoan from "./pages/unpaidLoan";
 function App() {
   return (
     <Router>
@@ -44,6 +45,7 @@ function App() {
                 <Route path="/customer" element={<HomeCustomer />} />
                 <Route path="/accounts" element={<Accounts />} />
                 <Route path="/loan" element={<Loan />} />
+                <Route path="unpaid-loan" element={<UnpaidLoan/>}/>
                 <Route path="/recipents" element={<Recipents />} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/contact" element={<Contact />} />

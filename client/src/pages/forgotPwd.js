@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetcherForgetPwd } from "../fetchers/authen";
-import ConfirmForgotPasswordOTP from "../components/confirmForgotPasswordOTP";
+// import ConfirmForgotPasswordOTP from "../components/confirmForgotPasswordOTP";
 
 const ForgotPassword = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -75,15 +75,15 @@ const ForgotPassword = () => {
               </div>
             </div>
           </form>
-          {showOTPModal && (
-            <ConfirmForgotPasswordOTP
-              onClose={() => {
-                setShowOTPModal(false);
-              }}
-              visible={showOTPModal}
-              username={username}
-            />
-          )}
+          {/*{showOTPModal && (*/}
+          {/*  <ConfirmForgotPasswordOTP*/}
+          {/*    onClose={() => {*/}
+          {/*      setShowOTPModal(false);*/}
+          {/*    }}*/}
+          {/*    visible={showOTPModal}*/}
+          {/*    username={username}*/}
+          {/*  />*/}
+          {/*)}*/}
         </div>
       </div>
     </div>

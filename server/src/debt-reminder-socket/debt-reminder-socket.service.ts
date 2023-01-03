@@ -63,8 +63,11 @@ export class DebtReminderSocketService {
       throw new NotAcceptableException('Không tồn tại người giao dịch');
     }
 
-    // await this.debtReminderRepository.delete(debtReminder);
-    return debtReminder.receiverId;
+    await this.debtReminderRepository.delete({
+      id : debtReminder.id
+    });
+    debtReminder['actionTakerName'] = user.name;
+    return debtReminder;
   }
 
   async removeReceivedDebtReminder(removeDebtReminderDto: RemoveDebtReminderDto) {
@@ -86,8 +89,15 @@ export class DebtReminderSocketService {
     if (debtReminder == null) {
       throw new NotAcceptableException('Không tồn tại lịch nhắc nợ');
     }
+    await this.debtReminderRepository.delete({
+      id : debtReminder.id
+    });
+    debtReminder['actionTakerName'] = user.name;
+    return debtReminder;
+  }
 
-  
-    return debtReminder.userId;
+  async findAllUnPaidDebtReminder(userId: string) {
+    return await this.debtReminderService.getUnPaidDebtReminder(+userId);
+    // return `This action returns all debtReminderSocket`;
   }
 }

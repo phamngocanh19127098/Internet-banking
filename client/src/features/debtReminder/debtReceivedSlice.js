@@ -14,15 +14,15 @@ const debtReceivedSlice = createSlice({
         addNew: (state, action) => {
 
         },
-        remove: (state, action) => {
-
+        removeReceivedDebt: (state, action) => {
+            state.debtReceived = state.debtReceived.filter((e) => e.id !== action.payload)
         },
-        onInit: (state, action) => {
-            state.debtReminders = action.payload
+        onInitReceivedDebt: (state, action) => {
+            state.debtReceived = action.payload
         }
     }
 });
 
-export const {addNew, remove, onInit} = debtReceivedSlice.actions;
+export const {addNew, removeReceivedDebt, onInitReceivedDebt} = debtReceivedSlice.actions;
 
 export default debtReceivedSlice.reducer;

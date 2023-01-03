@@ -14,8 +14,9 @@ const debtReminderSlice = createSlice({
         addNew: (state, action) => {
 
         },
-        remove: (state, action) => {
+        removeDebtReminder: (state, action) => {
 
+            state.debtReminders = state.debtReminders.filter((e) => e.id !== action.payload)
         },
         onInit: (state, action) => {
             state.debtReminders = action.payload
@@ -23,6 +24,6 @@ const debtReminderSlice = createSlice({
     }
 });
 
-export const {addNew, remove, onInit} = debtReminderSlice.actions;
+export const {addNew, removeDebtReminder, onInit} = debtReminderSlice.actions;
 
 export default debtReminderSlice.reducer;
