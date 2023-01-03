@@ -40,9 +40,6 @@ export class TransactionsService {
     private readonly debtReminderRepository : Repository<DebtReminder>,
     private affiliatedBanksService: AffiliatedBanksService
   ) {}
-  create(createTransactionDto: CreateTransactionDto) {
-    return 'This action adds a new transaction';
-  }
 
   async createTransferRecord(
     dto: CreateTransferDto,
