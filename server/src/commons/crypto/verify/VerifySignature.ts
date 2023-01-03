@@ -1,5 +1,6 @@
 import {CryptoType} from "../../../api/affiliatedBanks/entities/affiliatedBank.entity";
 import {InvalidSignatureException} from "../../filters/exceptions/sercurity/InvalidSignatureException";
+import {Logger} from "@nestjs/common";
 const crypto = require('crypto')
 
 export default function verifySignature (signature: string, publicKey: string, cryptoType: CryptoType, obj: any) {
@@ -8,6 +9,7 @@ export default function verifySignature (signature: string, publicKey: string, c
   verify.write(data);
   verify.end();
   // const res = verify.verify(publicKey, signature, 'hex');// truyen public key, chu ky vào để verify
+  Logger.log(publicKey)
   if (!verify.verify(publicKey, signature, 'hex'))
     throw new InvalidSignatureException()
 }

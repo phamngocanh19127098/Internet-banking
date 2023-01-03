@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {Allow, IsNotEmpty, IsNumber, IsString} from 'class-validator';
 
 export class CreateTransferInternalDto {
     @IsString()
@@ -22,6 +22,7 @@ export class CreateTransferInternalDto {
     required: false,
     example: 'Chuyển tiền nèe',
   })
+  @Allow()
   description: string;
 }
 

@@ -1,4 +1,4 @@
-import crypto from "crypto";
+const crypto = require("crypto");
 import RSAKey from "./getRSAKey";
 
 export default function createSignature (obj: any) {

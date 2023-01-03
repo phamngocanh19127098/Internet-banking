@@ -82,10 +82,13 @@ export class TransactionsController {
     const timestamp = (new  Date()).getTime();
     Logger.log(timestamp)
     let data = {
-      accountNumber: '59025838490',
-      slug: 'VIETCOMBANK'
+      "accountDesNumber": "23875338674",
+      "amount": 50000,
+      "description": "Transfer Money SLB",
+      "accountSrcNumber": "28069884",
+      "slug": "SLB"
     }
-    const testToken = testMsgToken(data,timestamp,"d59zceEqyC")
+    const testToken = testMsgToken(data,timestamp,"FwOhnqMkrv")
     const testSign = testSignature(data)
     return { testToken, testSign}
 
