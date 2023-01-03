@@ -134,7 +134,7 @@ const Payment = () => {
                             <div
                                 className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
                             >
-                                <div class="block mb-2 text-xl text-gray-900 dark:text-white font-bold">Thực hiện giao dịch chuyển khoản thành công</div>
+                                <div className="block mb-2 text-xl text-gray-900 dark:text-white font-bold">Thực hiện giao dịch chuyển khoản thành công</div>
                                 <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >Tên người chuyển khoản: {userInfo.name}</div>
                                 <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >Tên người người nhận: {name}</div>
                                 <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >STK người nhận: {accNum}</div>
@@ -159,8 +159,8 @@ const Payment = () => {
                         <div
                             className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
                         >
-                            <label for="accounts" class="block mb-2 text-sm text-gray-900 dark:text-white font-bold">Chọn tài khoản thanh toán nguồn</label>
-                            <select value={rootNum} onChange={handleChange} id="accounts" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <label htmlFor="accounts" className="block mb-2 text-sm text-gray-900 dark:text-white font-bold">Chọn tài khoản thanh toán nguồn</label>
+                            <select value={rootNum} onChange={handleChange} id="accounts" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 {listAccounts !== null ?
                                     listAccounts.map((account, index) => (
                                         <option value={account.accountNumber}>{account.accountNumber}</option>

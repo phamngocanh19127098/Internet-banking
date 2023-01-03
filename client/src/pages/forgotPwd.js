@@ -46,7 +46,7 @@ const ForgotPassword = () => {
           <form className="mt-6 form" onSubmit={handleSubmit(submitForm)}>
             <div className="mb-4">
               <label
-                for="username"
+                htmlFor="username"
                 className="block text-sm font-semibold text-gray-800"
               >
                 Tên đăng nhập

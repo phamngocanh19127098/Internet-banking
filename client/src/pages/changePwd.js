@@ -31,7 +31,7 @@ const ChangePassword = () => {
                     <form className="mt-6 form" onSubmit={handleSubmit(submitForm)}>
                         <div className="mb-2">
                             <label
-                                for="password"
+                                htmlFor="password"
                                 className="block text-sm font-semibold text-gray-800"
                             >
                                 Mật khẩu
@@ -45,7 +45,7 @@ const ChangePassword = () => {
                             />
                         </div>            <div className="mb-2">
                             <label
-                                for="password"
+                                htmlFor="password"
                                 className="block text-sm font-semibold text-gray-800"
                             >
                                 Mật khẩu mới

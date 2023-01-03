@@ -53,7 +53,7 @@ const LoginScreen = () => {
           <form className="mt-6 form" onSubmit={handleSubmit(submitForm)}>
             <div className="mb-2">
               <label
-                for="username"
+                htmlFor="username"
                 className="block text-sm font-semibold text-gray-800"
               >
                 Tên đăng nhập
@@ -68,7 +68,7 @@ const LoginScreen = () => {
             </div>
             <div className="mb-2">
               <label
-                for="password"
+                htmlFor="password"
                 className="block text-sm font-semibold text-gray-800"
               >
                 Mật khẩu

@@ -48,19 +48,19 @@ const HomeNavigation = (props) => {
                     Taixiu Bank
                 </h1>
             </div>
-            <div class="m-1  h-24 relative flex  items-center rounded-full  text-xl text-white">
-                <img src="../avatar.png" class="w-14 rounded-full" />
-                <div class="w-36 inline text-xl text-center m-2 mr-2"> {userInfo.name} </div>
+            <div className="m-1  h-24 relative flex  items-center rounded-full  text-xl text-white">
+                <img src="../avatar.png" className="w-14 rounded-full" />
+                <div className="w-36 inline text-xl text-center m-2 mr-2"> {userInfo.name} </div>
                 <svg width="30" height="30" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M28.5 12.6666C28.5 10.1471 27.4991 7.73071 25.7175 5.94911C23.9359 4.16752 21.5196 3.16663 19 3.16663C16.4804 3.16663 14.0641 4.16752 12.2825 5.94911C10.5009 7.73071 9.5 10.1471 9.5 12.6666C9.5 23.75 4.75 26.9166 4.75 26.9166H33.25C33.25 26.9166 28.5 23.75 28.5 12.6666Z" stroke="#FFFEFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M21.7392 33.25C21.4608 33.7299 21.0612 34.1282 20.5805 34.4051C20.0998 34.682 19.5548 34.8277 19 34.8277C18.4452 34.8277 17.9002 34.682 17.4195 34.4051C16.9387 34.1282 16.5392 33.7299 16.2608 33.25" stroke="#FFFEFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M28.5 12.6666C28.5 10.1471 27.4991 7.73071 25.7175 5.94911C23.9359 4.16752 21.5196 3.16663 19 3.16663C16.4804 3.16663 14.0641 4.16752 12.2825 5.94911C10.5009 7.73071 9.5 10.1471 9.5 12.6666C9.5 23.75 4.75 26.9166 4.75 26.9166H33.25C33.25 26.9166 28.5 23.75 28.5 12.6666Z" stroke="#FFFEFE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M21.7392 33.25C21.4608 33.7299 21.0612 34.1282 20.5805 34.4051C20.0998 34.682 19.5548 34.8277 19 34.8277C18.4452 34.8277 17.9002 34.682 17.4195 34.4051C16.9387 34.1282 16.5392 33.7299 16.2608 33.25" stroke="#FFFEFE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
 
 
             </div>
             <ul className="pt-6">
                 {Menus.map((Menu, index) => (
-                    <div className="p-2">
+                    <div className="p-2" key={index}>
                         <Link to={Menu.link}>
                             <button onClick={() => handlechange(index)} key={index} className={'w-full px-4 py-2 p-4 tracking-wide' + (Menu.current ? ' text-main-green transition-colors duration-200 bg-white rounded-lg' : ' rounded-lg text-white transition-colors duration-200  hover:text-main-green hover:bg-white ')}  >
                                 {Menu.title}

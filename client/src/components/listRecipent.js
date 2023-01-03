@@ -55,8 +55,8 @@ const ListRecipents = (props) => {
                 <div className="flex  text-lg  text-black font-bold pt-4 px-20 border-b-2 border-b-gray-100" >Thêm người nhận</div>
                 {listRecipents !== null ?
                     <div>
-                        <label for="accounts" class="block mb-2 text-sm text-gray-900 dark:text-white font-bold">Chọn tài khoản thanh toán nguồn</label>
-                        <select id="accounts" value={accNum} onChange={handleAccount} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <label htmlFor="accounts" className="block mb-2 text-sm text-gray-900 dark:text-white font-bold">Chọn tài khoản thanh toán nguồn</label>
+                        <select id="accounts" value={accNum} onChange={handleAccount} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             {listRecipents !== null ?
                                 listRecipents.map((account, index) => (
                                     <option value={account.beneficiaryAccountNumber}>{account.beneficiaryNickname}</option>
