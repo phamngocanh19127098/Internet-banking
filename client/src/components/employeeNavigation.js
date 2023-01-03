@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 const EmployeeNavigation = (props) => {
   const { userInfo } = useSelector((state) => state.auth);
   const [Menus, setMenus] = useState([
-    { id: 0, title: "Thêm người dùng mới", link: "/employee", current: false },
+    { id: 0, title: "Tổng quan", link: "/employee", current: false },
+    { id: 1, title: "Thêm người dùng mới", link: "/addAccount", current: false },
+    { id: 2, title: "Nạp tiền", link: "/putMoney", current: false },
   ]);
 
   useEffect(() => {

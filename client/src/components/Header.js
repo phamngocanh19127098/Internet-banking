@@ -62,12 +62,6 @@ const Header = () => {
           )}
         </div>
       </div>
-      <nav className="container navigation">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/login">Login</NavLink>
-        <NavLink to="/roleError">A</NavLink>
-        <NavLink to="/user-profile">Profile</NavLink>
-      </nav>
     </header>
   );
 };

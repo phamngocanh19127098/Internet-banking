@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import HomeNavigation from "../components/homeNavigation";
+import HomeNavigation from '../../components/homeNavigation';
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
 import {
@@ -8,12 +8,12 @@ import {
   findAllReceivedDebtReminder,
   removeCreatedDebtReminder,
   removeReceivedDebtReminder,
-} from "../constants/debtReminderConstants";
-import { onInit } from "../features/debtReminder/debtReminderSlice";
-import { onInitReceivedDebt } from "../features/debtReminder/debtReceivedSlice";
-import DebtReminderList from "../components/DebtReminderList";
-import AddDebtReminder from "../components/addDebtReminder";
-import { CREATED_DEBT, RECEIVED_DEBT } from "../constants/buttonType";
+} from "../../constants/debtReminderConstants";
+import { onInit } from "../../features/debtReminder/debtReminderSlice";
+import { onInitReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
+import DebtReminderList from "../../components/DebtReminderList";
+import AddDebtReminder from "../../components/addDebtReminder";
+import { CREATED_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
 const socket = io.connect("http://localhost:3001");
 
 const Loan = () => {

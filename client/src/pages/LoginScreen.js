@@ -58,7 +58,7 @@ const LoginScreen = () => {
   return (
     (<div>
       <div
-        className=" bg-cover w-full flex h-screen justify-center items-center"
+        className=" bg-cover w-screen flex h-screen justify-center items-center"
         style={{ backgroundImage: `url('../loginbng.png')` }}
       >
         <div className="p-6  m-auto bg-white rounded-md shadow-xl shadow-rose-600/40 ring ring-2 ring-main-green lg:max-w-xl lg:min-w-[25%] items-center justify-center">
