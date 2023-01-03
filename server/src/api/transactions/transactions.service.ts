@@ -291,34 +291,9 @@ export class TransactionsService {
 
   }
 
-  // async findOne(id: number) {
-
-  //   try {
-      
-  //     let data = await this.transactionRepository
-  //         .createQueryBuilder('transaction')
-  //         .leftJoin('transaction.accountDes', 'accountDes')
-  //         .leftJoin('accountDes.user', 'userDes')
-  //         .leftJoin('transaction.accountSrc', 'accountSrc')
-  //         .leftJoin('accountSrc.user', 'userSrc')
-  //         .select(['transaction','accountSrc','userSrc','accountDes','userDes'])
-  //         .where('transaction.id =:id', {
-  //           id,
-  //         })
-  //         .getMany()
-
-  //         console.log(data);
-  //         return this.transactionRepository.findOneBy({ id });
-  //         // return data
-
-  //   } catch (e) {
-  //     throw new InternalServerErrorException(
-  //       'Lỗi trong quá trình lấy giao dịch người dùng theo id',
-  //   );
-  //   }
-
-
-  // }
+  async findOne(id: number) {
+    return this.transactionRepository.findOneBy({ id });
+  }
 
   // update(id: number, updateTransactionDto: UpdateTransactionDto) {
   //   return `This action updates a #${id} transaction`;
