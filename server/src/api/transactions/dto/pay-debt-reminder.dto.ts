@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {Allow, IsNumber} from "class-validator";
+import {Allow, IsNumber, IsString} from "class-validator";
 
 export class PayDebtReminderDto{
     @ApiProperty({
@@ -17,4 +17,9 @@ export class PayDebtReminderDto{
     @Allow()
     @IsNumber()
     amount: number;
+
+    @Allow()
+    @IsString()
+    @ApiProperty({default: ""})
+    authorization : string;
 }

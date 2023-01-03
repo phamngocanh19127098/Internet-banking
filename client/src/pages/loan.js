@@ -79,9 +79,11 @@ const Loan = () => {
   }, [userInfo.id]);
 
   useEffect(() => {
+    console.log(debtReminder);
   },[debtReminder])
 
   useEffect(() => {
+    console.log(debtReceived);
   },[debtReceived])
   return (
     <div>

@@ -140,7 +140,7 @@ export class DebtRemindersService {
     return debtReminder || [];
   }
 
-  async payDebtReminder(user, payDebtReminderDto : PayDebtReminderDto, authorization: string){
+  async payDebtReminder(payDebtReminderDto : PayDebtReminderDto, authorization: string){
     console.log(payDebtReminderDto)
     let receiverAccount = await this.accountService.getPaymentAccountByUserId(payDebtReminderDto.toUserId);
     if (!receiverAccount) {

@@ -9,13 +9,14 @@ import {
   createDebtReminderSocket,
   findAllCreatedDebtReminder,
   findAllDebtReminder,
-  findAllReceivedDebtReminder, findAllUnPaidDebtReminder,
+  findAllReceivedDebtReminder, findAllUnPaidDebtReminder, payDebt,
   removeCreatedDebtReminder,
   removeReceivedDebtReminder
 } from 'src/constant';
 import { ListDebtReminderDto } from './dto/list-debt-reminder.dto';
 import { RemoveDebtReminderDto } from './dto/remove-debt-reminder.dto';
 import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-reminder.dto";
+import {PayDebtReminderDto} from "../api/transactions/dto/pay-debt-reminder.dto";
 
 @WebSocketGateway({cors: {
   origin: '*'
@@ -48,9 +49,6 @@ export class DebtReminderSocketGateway {
   @SubscribeMessage(removeCreatedDebtReminder)
   async remove(@MessageBody() removeDebtReminderDto: RemoveDebtReminderDto) {
     let data = await this.debtReminderSocketService.removeCreatedDebtReminder(removeDebtReminderDto);
-    // this.server.emit(findAllReceivedDebtReminder, data);
-    // let debtReminders = await this.debtReminderSocketService.findAllCreatedDebtReminder(removeDebtReminderDto.userId);
-    // return this.server.emit(findAllReceivedDebtReminder, debtReminders);
     return this.server.emit(removeCreatedDebtReminder, {...data})
   }
 
@@ -65,5 +63,11 @@ export class DebtReminderSocketGateway {
   async findAllUnPaidDebtReminder(@MessageBody() user: ListDebtReminderDto) {
     let data = await this.debtReminderSocketService.findAllUnPaidDebtReminder(user.userId);
     return this.server.emit(findAllUnPaidDebtReminder, {data, userId: user.userId});
+  }
+
+  @SubscribeMessage(payDebt)
+  async payDebt(@MessageBody() payDebtReminderDto: PayDebtReminderDto) {
+    let data = await this.debtReminderSocketService.payDebt(payDebtReminderDto, payDebtReminderDto.authorization);
+    return this.server.emit(payDebt, {...data})
   }
 }

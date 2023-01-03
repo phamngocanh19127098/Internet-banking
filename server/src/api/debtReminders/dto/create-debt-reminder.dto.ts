@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import {Allow, IsNumber, IsString} from "class-validator";
 
 export class CreateDebtReminderDto {
     @IsString()

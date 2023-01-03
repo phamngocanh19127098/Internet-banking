@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import HomeNavigation from '../components/homeNavigation';
 import {useDispatch, useSelector} from "react-redux";
 import io from "socket.io-client";
-import {findAllUnPaidDebtReminder} from "../constants/debtReminderConstants";
-import {onInitReceivedDebt} from "../features/debtReminder/debtReceivedSlice";
+import {findAllUnPaidDebtReminder, payDebt} from "../constants/debtReminderConstants";
 import {onInitUnpaidDebtReminder} from "../features/debtReminder/unpaidDebtReminder";
-import {PAY_DEBT, RECEIVED_DEBT} from "../constants/buttonType";
+import {PAY_DEBT} from "../constants/buttonType";
 import DebtReminderList from "../components/DebtReminderList";
 
 const socket = io.connect("http://localhost:3001");
@@ -32,6 +31,12 @@ const UnPaidLoan = () => {
 
         });
     }, [dispatch, userInfo.id]);
+
+    useEffect(()=> {
+        socket.on(payDebt, (response) => {
+            console.log(response)
+        });
+    },[])
 
 
     return (

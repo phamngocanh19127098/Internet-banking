@@ -116,7 +116,6 @@ export class DebtRemindersController {
     @Headers('authorization') authorization: string,
   ) {
     return this.debtRemindersService.payDebtReminder(
-      user,
       payDebtReminderDto,
       authorization,
     );

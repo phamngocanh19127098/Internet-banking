@@ -9,6 +9,7 @@ import { RemoveDebtReminderDto } from './dto/remove-debt-reminder.dto';
 import { UpdateDebtReminderSocketDto } from './dto/update-debt-reminder-socket.dto';
 import { BadRequestException, NotAcceptableException } from '@nestjs/common/exceptions';
 import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-reminder.dto";
+import {PayDebtReminderDto} from "../api/transactions/dto/pay-debt-reminder.dto";
 
 @Injectable()
 export class DebtReminderSocketService {
@@ -99,5 +100,9 @@ export class DebtReminderSocketService {
   async findAllUnPaidDebtReminder(userId: string) {
     return await this.debtReminderService.getUnPaidDebtReminder(+userId);
     // return `This action returns all debtReminderSocket`;
+  }
+
+  async payDebt(payDebtReminderDto: PayDebtReminderDto, authorization : string) {
+    return await this.debtReminderService.payDebtReminder(payDebtReminderDto, authorization);
   }
 }

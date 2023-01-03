@@ -1,13 +1,18 @@
 import {useDispatch, useSelector} from "react-redux";
 import {removeDebtReminder} from "../features/debtReminder/debtReminderSlice";
 import io from "socket.io-client";
-import {removeCreatedDebtReminder, removeReceivedDebtReminder} from "../constants/debtReminderConstants";
-import {CREATED_DEBT, RECEIVED_DEBT} from "../constants/buttonType";
+import {payDebt, removeCreatedDebtReminder, removeReceivedDebtReminder} from "../constants/debtReminderConstants";
+import {CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT} from "../constants/buttonType";
 const socket = io.connect("http://localhost:3001");
 
 const DebtReminderItem = (props) => {
+    const token = localStorage.getItem('userToken')
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state.auth)
+    const handlePayDebtAction = () => {
+        socket.emit(payDebt, { authorization : `Bearer ${token}`, toUserId: props.item.userId, amount: props.item.amount})
+    }
+
     return <article className="cart-item">
         <div className="flex items-center justify-between">
             <h4>{props.item.accountSrcNumber}</h4>
@@ -25,7 +30,8 @@ const DebtReminderItem = (props) => {
             }}>
                 remove
             </button>}
-            <button>Pay debt</button>
+
+            { props.type === PAY_DEBT && <button onClick={handlePayDebtAction}>Pay debt</button>}
         </div>
         <div>
 

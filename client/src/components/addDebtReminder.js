@@ -10,6 +10,7 @@ const socket = io.connect("http://localhost:3001");
 const AddDebtReminder = () => {
     const [accountDesNumber, setAccountDesNumber] = useState("");
     const [amount, setAmount] = useState("");
+    const [description, setDescription] = useState("");
     const { userInfo } = useSelector((state) => state.auth)
     const createDebtReminderHandler = (e) => {
         e.preventDefault()
@@ -18,7 +19,8 @@ const AddDebtReminder = () => {
             accountDesNumber : accountDesNumber,
             amount,
             userId : userInfo.id,
-            description: 'giup tui them field'}
+            description: description
+        }
         )
         setTimeout(() => {
             socket.emit(findAllCreatedDebtReminder, {userId : userInfo.id})
@@ -37,6 +39,10 @@ const AddDebtReminder = () => {
                 <div>
                     <label htmlFor="">so tien</label>
                     <input value={amount} onChange={(e) => {setAmount(e.target.value)}}/>
+                </div>
+                <div>
+                    <label htmlFor="">Nhập lời nhắn</label>
+                    <input value={description} onChange={(e) => {setDescription(e.target.value)}}/>
                 </div>
                 <button type="submit" className="rounded-sm ring-2 ring-grey">
                     tao nhac no
