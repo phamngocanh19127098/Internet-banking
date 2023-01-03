@@ -15,7 +15,7 @@ const Recipents = () => {
   const handleOnCloseEdit = () => setShowEditModal(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleOnCloseDelete = () => setShowDeleteModal(false);
-  const [listRecipents, setListRecipents] = useState([{}]);
+  const [listRecipents, setListRecipents] = useState([]);
   const [idDelete, setIdDelete] = useState();
   const [editInfo, setEditInfo] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,8 +28,8 @@ const Recipents = () => {
   }, [listRecipents]);
   useEffect(() => {
     setIsLoading(true);
+    getList();
     setTimeout(() => {
-      getList();
       setIsLoading(false);
     }, 300);
   }, []);
