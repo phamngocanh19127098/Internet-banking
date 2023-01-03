@@ -1,4 +1,11 @@
-import {ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags
+} from '@nestjs/swagger';
 import {Body, Controller, Delete, Get, Headers, Logger, Param, Patch, Post, Query,} from '@nestjs/common';
 import {TransactionsService} from './transactions.service';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
@@ -15,6 +22,7 @@ import testMsgToken from "../../commons/crypto/testMsgToken";
 import createSignature from "../../commons/crypto/createSignature";
 import {TransactionType} from "./entities/transaction.entity";
 import SolarBankService from "../../client/SolarBank/SolarBank.service";
+import {ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiUnauthorizedResponse} from "@nestjs/swagger/dist";
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -24,11 +32,18 @@ export class TransactionsController {
     private affiliatedBanksService: AffiliatedBanksService,
   ) {}
 
-  @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionsService.create(createTransactionDto);
-  }
-
+  @ApiOperation({description: 'Tạo giao dịch chuyển khoản'})
+  @ApiCreatedResponse({description: 'Tạo giao dịch chuyển khoản thành công'})
+  @ApiBadRequestResponse({description: 'Lỗi khi đang tìm kiếm người dùng'})
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi Tạo giao dịch chuyển khoản',
+  })
   @Roles(Role.CUSTOMER)
   @Post('/internal/transfer')
   createTransferInternal(
@@ -42,6 +57,18 @@ export class TransactionsController {
     );
   }
 
+  @ApiOperation({description: 'Verify giao dịch chuyển khoản'})
+  @ApiOkResponse({description: 'Thực hiện giao dịch chuyển khoản thành công'})
+  @ApiBadRequestResponse({description: 'Lỗi khi đang tìm kiếm người dùng'})
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi Verify giao dịch chuyển khoản',
+  })
   @Roles(Role.CUSTOMER)
   @Post('/internal/transfer/verify')
   verifyTransferInternal(
@@ -147,6 +174,8 @@ export class TransactionsController {
     );
   }
 
+
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.transactionsService.findOne(+id);
@@ -185,9 +214,22 @@ export class TransactionsController {
   //   };
   // }
 
+  @ApiOperation({ description: 'Lấy thông tin giao dịch nhận tiền bằng số tài khoản' })
+  @ApiOkResponse({ description: 'Lấy danh sách giao dịch nhận tiền thành công'})
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy thông tin chuyển khoản nhận tiền',
+  })
+  @ApiBadRequestResponse({
+    description: 'Account không tồn tại',
+  })
   @Roles(Role.CUSTOMER)
   @ApiBearerAuth()
-  @ApiOperation({ description: 'Lấy thông tin giao dịch nhận tiền bằng số tài khoản' })
   @Get('list/received/:accountNumber')
   async getTransactionReceivedByAccountNumber(
       @Param('accountNumber') accountNumber: string,
@@ -203,9 +245,22 @@ export class TransactionsController {
     };
   }
 
+  @ApiOperation({ description: 'Lấy thông tin giao dịch chuyển khoản bằng số tài khoản' })
+  @ApiOkResponse({ description: 'Lấy danh sách giao dịch chuyển khoản thành công'})
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy thông tin chuyển khoản chuyển khoản',
+  })
+  @ApiBadRequestResponse({
+    description: 'Account không tồn tại',
+  })
   @Roles(Role.CUSTOMER)
   @ApiBearerAuth()
-  @ApiOperation({ description: 'Lấy thông tin giao dịch chuyển khoản bằng số tài khoản' })
   @Get('list/transfer/:accountNumber')
   async getTransactionTransferByAccountNumber(
       @Param('accountNumber') accountNumber: string,
@@ -221,9 +276,23 @@ export class TransactionsController {
     };
   }
 
+
+  @ApiOperation({ description: 'Lấy thông tin giao dịch nhắc nợ bằng số tài khoản' })
+  @ApiOkResponse({ description: 'Lấy danh sách giao dịch nhắc nợ thành công'})
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy thông tin giao dịch nhắc nợ',
+  })
+  @ApiBadRequestResponse({
+    description: 'Account không tồn tại',
+  })
   @Roles(Role.CUSTOMER)
   @ApiBearerAuth()
-  @ApiOperation({ description: 'Lấy thông tin giao dịch nhắc nợ bằng số tài khoản' })
   @Get('list/debtReminder/:accountNumber')
   async getTransactionDebtReminderByAccountNumber(
       @Param('accountNumber') accountNumber: string,
