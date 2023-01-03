@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: ["dev_vypnt"]
+    branches: ["production"]
 
 jobs:
   deploy:
@@ -21,6 +21,6 @@ jobs:
     needs: deploy
     steps:
       - uses: actions/checkout@v3
-      - run: sudo docker pull 19127098/server:lastest
+      - run: sudo docker pull 19127098/server:latest
       - run: sudo docker rm -f server
       - run: sudo docker run -d -p 3001:3001 --name server 19127098/server

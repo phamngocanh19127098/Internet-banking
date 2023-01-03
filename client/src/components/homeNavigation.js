@@ -12,9 +12,10 @@ const HomeNavigation = (props) => {
         { id: 2, title: "Danh sách người nhận", link: "/recipents", current: false },
         { id: 3, title: "Chuyển khoản", link: "/payment", current: false },
         { id: 4, title: "Ghi nợ", link: "/loan", current: false },
-        { id: 5, title: "Các chức năng khác ", link: "/other", current: false },
-        { id: 6, title: "Liên hệ", link: "/contact", current: false },
-        { id: 7, title: "Lịch sử giao dịch", link: "/transactions", current: false },
+        { id: 5, title: "Danh sách nợ chưa thanh toán", link: "/unpaid-loan", current: false },
+        { id: 6, title: "Các chức năng khác ", link: "/other", current: false },
+        { id: 7, title: "Liên hệ", link: "/contact", current: false },
+        { id: 8, title: "Lịch sử giao dịch", link: "/transactions", current: false },
         //  { id: 8, title: "Nhan vien", link: "/employee", current: false },
     ])
 
