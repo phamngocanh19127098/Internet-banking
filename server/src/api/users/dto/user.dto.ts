@@ -8,6 +8,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
+    description: 'Tên tài khoản của tài khoản',
     required: true,
     example: 'user1000',
   })
@@ -16,6 +17,7 @@ export class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({
+    description: 'Email của tài khoản',
     required: true,
     example: 'user1000@gmail.com',
   })
@@ -23,6 +25,7 @@ export class CreateUserDto {
 
   @Allow()
   @ApiProperty({
+    description: 'Vai trò của tài khoản',
     required: true,
     example: 'admin',
   })
@@ -38,6 +41,7 @@ export class CreateUserDto {
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @Allow()
   @ApiProperty({
+    description: 'Tên của chủ tài khoản',
     required: false,
     example: 'ngocanh',
   })
@@ -48,6 +52,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @Allow()
   @ApiProperty({
+    description: 'Ngày sinh của chủ tài khoản',
     required: false,
     example: '2001-01-01',
   })
@@ -55,6 +60,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @Allow()
   @ApiProperty({
+    description: 'Số điện thoại của chủ tài khoản',
     required: false,
     example: '0908123321',
   })
@@ -62,6 +68,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @Allow()
   @ApiProperty({
+    description: 'Địa chỉ nơi ở của chủ tài khoản',
     required: false,
     example: 'Hoang Quoc Viet, Quan 7, TP HCM',
   })
@@ -69,6 +76,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @Allow()
   @ApiProperty({
+    description: 'Trạng thái của tài khoản',
     required: false,
     default: 0,
     example: 1,
@@ -76,12 +84,14 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   status: number;
 
   @ApiProperty({
+    description: 'Email của chủ tài khoản',
     required: false,
     example: 'user2@gmail.com',
   })
   email: string;
 
   @ApiProperty({
+    description: 'Vai trò của tài khoản',
     required: false,
     example: 'employee',
   })
@@ -92,6 +102,7 @@ export class LoginUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
+    description: 'Tên tài khoản của tài khoản',
     required: true,
     example: 'admin',
   })
@@ -100,6 +111,7 @@ export class LoginUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
+    description: 'Mật khẩu của chủ tài khoản',
     required: true,
     example: 'admin',
   })
@@ -108,12 +120,14 @@ export class LoginUserDto {
 
 export class ChangeUserPasswordDto extends PartialType(LoginUserDto) {
   @ApiProperty({
+    description: 'Tên tài khoản của tài khoản',
     required: true,
     example: 'admin',
   })
   username: string;
 
   @ApiProperty({
+    description: 'Mật khẩu cũ của tài khoản',
     required: true,
     example: 'admin',
   })
@@ -122,6 +136,7 @@ export class ChangeUserPasswordDto extends PartialType(LoginUserDto) {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
+    description: 'Mật khẩu mới của tài khoản',
     required: true,
     example: '123123',
   })

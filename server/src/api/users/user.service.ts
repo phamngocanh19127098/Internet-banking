@@ -109,8 +109,10 @@ export class UserService {
 
   async findAllEmployee() {
     try {
-      let employee = await this.userRepository.findBy({ role: Role.EMPLOYEE }); // ???
-      for (let e of employee) {
+      const employee = await this.userRepository.findBy({
+        role: Role.EMPLOYEE,
+      });
+      for (const e of employee) {
         delete e.password;
       }
       return employee;
@@ -121,11 +123,11 @@ export class UserService {
 
   async updateEmployee(id: number, updateUserDto: UpdateUserDto) {
     try {
-      const employee: User = await this.userRepository.findOneById(id);
+      const employee: User = await this.userRepository.findOneBy({ id });
       if (!employee) {
         throw new BadRequestException('Nhân viên không tồn tại');
       }
-      return await this.userRepository.update(id, updateUserDto);
+      return this.userRepository.update(id, updateUserDto);
     } catch (e) {
       throw new InternalServerErrorException(
         'Lỗi trong quá trình cập nhập nhân viên',
@@ -135,11 +137,11 @@ export class UserService {
 
   async removeEmployee(id: number) {
     try {
-      const employee: User = await this.userRepository.findOneById(id);
+      const employee: User = await this.userRepository.findOneBy({ id });
       if (!employee) {
         throw new BadRequestException('Nhân viên không tồn tại');
       }
-      return await this.userRepository.delete(id);
+      return this.userRepository.delete(id);
     } catch (e) {
       throw new InternalServerErrorException(
         'Lỗi trong quá trình xóa nhân viên',
@@ -147,42 +149,8 @@ export class UserService {
     }
   }
 
-  async findUserById(id: number) {
-    // let user : User = await this.userRepository.createQueryBuilder("user").where("user.id = :id", {id}).getOne();
-    // làm mẫu nha
-    try {
-      const result = await this.userRepository
-        .createQueryBuilder('user')
-        .leftJoin('user.transactions', 'transactions')
-        .select(['user.id', 'transactions'])
-        .where('user.id = :id', { id })
-        .getOne();
-
-      if (result == null) {
-        throw new BadRequestException('Nguời dùng không tồn tại!');
-      }
-
-      return {
-        data: {
-          result,
-        },
-        statusCode: 200,
-        message: 'Lấy thông tin người dùng thành công!',
-      };
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Lỗi khi đang tìm kiếm nguời dùng!',
-      );
-    }
-  }
-
-  async getUserById(id: number) {
-    const user: User = await this.userRepository.findOne({
-      where: {
-        id,
-      },
-    });
-    return user;
+  getUserById(id: number) {
+    return this.userRepository.findOneBy({ id });
   }
 
   getAccessTokenFromClient(authorization: string) {

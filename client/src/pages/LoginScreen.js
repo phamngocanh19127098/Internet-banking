@@ -21,7 +21,15 @@ const LoginScreen = () => {
   useEffect(() => {
     console.log(userInfo)
     if (userInfo) {
-      navigate("/")
+      if (userInfo.role === "customer") {
+        navigate("/customer")
+      }
+      if (userInfo.role === "employee") {
+        navigate("/employee")
+      }
+      if (userInfo.role === "admin") {
+        navigate("/admin")
+      }
     }
   }, [navigate, userInfo])
 
@@ -30,7 +38,6 @@ const LoginScreen = () => {
   const submitForm = (data) => {
     recaptchaInstance.reset();
     dispatch(userLogin(data))
-
   }
 
   return (

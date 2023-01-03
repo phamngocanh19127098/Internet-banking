@@ -1,12 +1,16 @@
-import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {CreateAccountDto} from './dto/CreateAccountDto';
-import {UpdateAccountDto} from './dto/UpdateAccountDto';
-import {Repository} from 'typeorm';
-import {Account, AccountStatus, AccountType} from './entities/account.entity';
-import {UserService} from '../users/user.service';
-import {Role, User} from '../users/entity/user.entity';
-import {TransactionType} from '../transactions/entities/transaction.entity';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateAccountDto } from './dto/CreateAccountDto';
+import { UpdateAccountDto } from './dto/UpdateAccountDto';
+import { Repository } from 'typeorm';
+import { Account, AccountStatus, AccountType } from './entities/account.entity';
+import { UserService } from '../users/user.service';
+import { Role, User } from '../users/entity/user.entity';
+import { TransactionType } from '../transactions/entities/transaction.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
 
@@ -187,7 +191,7 @@ export class AccountsService {
   async getAccountInfoByAccountNumber(accountNumber: string) {
     console.log(accountNumber)
     try {
-      let account: Account = await this.repos.findOne({
+      const account: Account = await this.repos.findOne({
         where: {
           accountNumber,
         },
@@ -197,7 +201,7 @@ export class AccountsService {
         throw new BadRequestException('Không tồn tại tài khoản người dùng!');
       }
 
-      let data = await this.repos
+      const data = await this.repos
         .createQueryBuilder('account')
         .leftJoin('account.user', 'user')
         .select([
@@ -226,11 +230,11 @@ export class AccountsService {
 
   async getAccountNameByAccountNumber(accountNumber: string) {
     try {
-      let account: Account = await this.repos.findOne({
+      const account: Account = await this.repos.findOne({
         where: {
           accountNumber: accountNumber,
           accountType: AccountType.PAYMENT_ACCOUNT,
-          status: AccountStatus.ACTIVE
+          status: AccountStatus.ACTIVE,
         },
       });
 
@@ -238,18 +242,13 @@ export class AccountsService {
         throw new BadRequestException('Không tồn tại tài khoản người dùng!');
       }
 
-
-      let data = await this.repos
+      const data = await this.repos
         .createQueryBuilder('account')
         .leftJoin('account.user', 'user')
-        .select([
-          'account.accountNumber',
-          'user.id',
-          'user.name',
-        ])
+        .select(['account.accountNumber', 'user.id', 'user.name'])
         .where('account.id =:id AND user.role =:role', {
           id: account.id,
-          role: Role.CUSTOMER
+          role: Role.CUSTOMER,
         })
         .getOne();
 
@@ -265,26 +264,26 @@ export class AccountsService {
     }
   }
 
-  async getPaymentAccountByUserId(userId : number) {
+  async getPaymentAccountByUserId(userId: number) {
     try {
-      let query = this.repos.createQueryBuilder('account')
-          .leftJoin('account.user', 'user')
-          .select(['account.accountNumber'])
-          .where('user.id = :userId', {userId})
-          .andWhere('account.accountType = :accountType', {accountType : AccountType.PAYMENT_ACCOUNT})
+      const query = this.repos
+        .createQueryBuilder('account')
+        .leftJoin('account.user', 'user')
+        .select(['account.accountNumber'])
+        .where('user.id = :userId', { userId })
+        .andWhere('account.accountType = :accountType', {
+          accountType: AccountType.PAYMENT_ACCOUNT,
+        });
 
-
-      let data = await query.getOne();
-      if (!data){
-        throw new BadRequestException("Không tồn tại tài khoản thanh toán")
+      const data = await query.getOne();
+      if (!data) {
+        throw new BadRequestException('Không tồn tại tài khoản thanh toán');
       }
       return data;
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Lỗi trong quá trình lấy danh sách account',
+      );
     }
-    catch (e) {
-      console.log(e.message)
-      throw new InternalServerErrorException("Lỗi trong quá trình lấy danh sách account")
-    }
-
-
   }
 }

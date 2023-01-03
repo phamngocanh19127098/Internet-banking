@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
 import { fetcherVerifyTransfer } from '../fetchers/fetcherCustomer';
+import Loader from './loading';
 const ConfirmOTP = (props) => {
     const [OTP, setOTP] = useState("")
     const [statuscode, setStatuscode] = useState(404)
     const [notification, setNotification] = useState('')
     const [isDisable, setIsDisable] = useState(true)
+    const [result, setResult] = useState()
     async function verifyOTP() {
         const info = await fetcherVerifyTransfer(props.transactionId, OTP)
         setStatuscode(info.data.statusCode)
+        setResult(info)
     }
 
     const handleXClick = (e) => {
@@ -17,24 +20,25 @@ const ConfirmOTP = (props) => {
     }
 
     useEffect(() => {
+        if (OTP !== null) {
+            setIsDisable(false)
+        }
+        else {
+            setIsDisable(true)
+        }
+    }, [OTP]);
+
+
+
+    useEffect(() => {
         if (statuscode === 200) {
-            if (OTP !== null) {
-                setNotification("Mã OTP chính xác")
-                setIsDisable(false)
-            }
-            else {
-                setNotification("")
-                setIsDisable(true)
-            }
-        } else {
-            if (OTP !== "") {
-                setNotification("OTP chưa chính xác")
-                setIsDisable(true)
-            }
-            else {
-                setNotification("")
-                setIsDisable(true)
-            }
+            props.handleSuccess(true)
+            props.infoSuccess(result.data)
+            props.onClose()
+        }
+        else {
+            setIsLoading(false)
+            setNotification("Mã OTP chưa chính xác")
         }
     }, [statuscode]);
 
@@ -43,11 +47,30 @@ const ConfirmOTP = (props) => {
         props.onClose()
     }
 
+
+    const [isLoading, setIsLoading] = useState(false)
     const handleSaveClick = (e) => {
         //     props.handleChange()
-
-        props.onClose()
+        verifyOTP()
+        setIsLoading(true)
     }
+
+    if (isLoading) return (
+        <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
+            <div className="border-t-8 border-t-black relative flex-col justify-center bg-white rounded-xl w-2/5 ">
+                <button id="handleX" onClick={handleXClick} className="-right-6 -top-6 absolute flex justify-end rounded-full px-4 py-4 ml-4 text-white font-bold bg-black" >
+                    <svg className="pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="10 10 50 50" overflow="visible" stroke="white" strokeWidth="5" strokeLinecap="round">
+                        <line x2="70" y2="70" />
+                        <line x1="70" y2="70" />
+                    </svg>
+                </button>
+                <Loader />
+            </div>
+        </div>
+
+    );
+
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
             <div className="border-t-8 border-t-black relative flex-col justify-center bg-white rounded-xl w-2/5 ">

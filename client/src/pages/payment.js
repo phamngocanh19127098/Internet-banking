@@ -29,6 +29,11 @@ const Payment = () => {
     const [transactionId, setTransactionId] = useState()
 
     const [response, setResponse] = useState()
+
+    const [infoSuccess, setInfoSuccess] = useState()
+
+    const [isSuccess, setIsSuccess] = useState(false)
+
     async function getName() {
         const info = await fetcherReceiver(accNum)
         setStatuscode(info.status)
@@ -108,7 +113,6 @@ const Payment = () => {
                 setShowOTPModal(true)
             }
         }
-        // console.log(result.data.id)
     }, [result]);
 
     const handleTransfer = () => {
@@ -118,6 +122,32 @@ const Payment = () => {
         console.log(money)
         console.log(description)
         sendReqTransfer()
+    }
+
+    if (isSuccess == true) {
+        return (
+            <div>
+                <div>
+                    <div className=' bg-cover w-screen flex h-screen bg-[#F0F2FF] '>
+                        <HomeNavigation id={3} />
+                        <div className="h-screen flex-auto">
+                            <div
+                                className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
+                            >
+                                <div class="block mb-2 text-xl text-gray-900 dark:text-white font-bold">Thực hiện giao dịch chuyển khoản thành công</div>
+                                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >Tên người chuyển khoản: {userInfo.name}</div>
+                                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >Tên người người nhận: {name}</div>
+                                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >STK người nhận: {accNum}</div>
+                                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >Số tiền: {money}</div>
+                                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 " >Nội dung: {description}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        );
     }
 
     return (
@@ -190,7 +220,8 @@ const Payment = () => {
                     </div>
                     {showAddModal && <ListRecipents onClose={handleOnCloseAdd} visible={showAddModal} handleAccNum={setAccNum} />
                     }
-                    {showOTPModal && <ConfirmOTP onClose={handleOnCloseOTP} visible={showOTPModal} transactionId={transactionId} />
+                    {showOTPModal && <ConfirmOTP onClose={handleOnCloseOTP} visible={showOTPModal} transactionId={transactionId} handleSuccess={setIsSuccess}
+                        infoSuccess={setInfoSuccess} />
                     }
 
                 </div>
