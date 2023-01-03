@@ -24,6 +24,7 @@ import { ROLES } from "./routing/roles";
 import RequireAuth from "./routing/RequireAuth";
 import ForgotPassword from "./pages/forgotPwd";
 import UnpaidLoan from "./pages/unpaidLoan";
+import RoleError from "./pages/error/roleError";
 function App() {
   return (
     <Router>
@@ -40,7 +41,9 @@ function App() {
             >
               <Route path="/user-profile" element={<ProfileScreen />} />
               <Route path="/changepwd" element={<ChangePassword />} />
+              <Route path="/roleError" element={<RoleError />} />
               <Route element={<RequireAuth allowedRoles={ROLES.Customer} />}>
+
                 <Route path="/" element={<HomeCustomer />} />
                 <Route path="/customer" element={<HomeCustomer />} />
                 <Route path="/accounts" element={<Accounts />} />

@@ -40,7 +40,6 @@ const Transaction = () => {
 
     useEffect(() => {
         getListAcc()
-
     }, []);
     useEffect(() => {
         console.log(listTransactions)
@@ -54,13 +53,36 @@ const Transaction = () => {
                         <div
                             className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
                         >
-                            <h1>Transaction</h1>
+
+                            {listTransactions !== null ?
+                                listTransactions.map((transaction) =>
+                                    <div>
+                                        {transaction.transactionType === "TRANSFER" && <div
+                                            className="shadow appearance-none border rounded  p-3 shadow rounded bg-red text-sm font-medium leading-none text-gray-800  items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
+                                        >
+                                            <div className="text-xs block  text-black font-bold mb-2 mt-2 px-4 " >Chuyển đến số tài khoản: {transaction.accountDesNumber}</div>
+                                            <div className="text-xs  text-black font-bold mb-2 mt-2 px-4 " >Số tiền: {transaction.amount}</div>
+                                            <div className="text-xs  text-black font-bold mb-2 mt-2 px-4 " >Nội dung: {transaction.description}</div>
+                                        </div>}
+
+                                        {transaction.transactionType === "RECEIVE" && <div
+                                            className="shadow appearance-none border rounded  p-3 shadow rounded bg-green text-sm font-medium leading-none text-gray-800  items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
+                                        >
+                                            <div className="text-xs block  text-black font-bold mb-2 mt-2 px-4 " >Nhận từ số tài khoản: {transaction.accountDesNumber}</div>
+                                            <div className="text-xs  text-black font-bold mb-2 mt-2 px-4 " >Số tiền: {transaction.amount}</div>
+                                            <div className="text-xs  text-black font-bold mb-2 mt-2 px-4 " >Nội dung: {transaction.description}</div>
+                                        </div>}
+
+                                    </div>
+                                )
+
+                                : null}
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
+        </div >
 
     );
 }

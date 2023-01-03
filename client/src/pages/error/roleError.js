@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-const HomeScreen = () => {
+const RoleError = () => {
     return <div
         className="
       flex
@@ -26,7 +26,7 @@ const HomeScreen = () => {
                 </p>
 
                 <Link
-                    to="#"
+                    to="/"
                     className="px-6 py-2 text-sm font-semibold text-blue-800 bg-blue-100"
                 >Go home</Link>
             </div>
@@ -34,4 +34,4 @@ const HomeScreen = () => {
     </div>
 }
 
-export default HomeScreen
+export default RoleError

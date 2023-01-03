@@ -37,8 +37,8 @@ const Header = () => {
           {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
-            ? `Logged in as ${userInfo.email}`
-            : "You're not logged in"}
+              ? `Logged in as ${userInfo.email}`
+              : "You're not logged in"}
           {/* {userInfo && `Logged in as ${userInfo.email}`}
           {userInfo === null && "You're not logged in"} */}
         </span>
@@ -65,6 +65,7 @@ const Header = () => {
       <nav className="container navigation">
         <NavLink to="/">Home</NavLink>
         <NavLink to="/login">Login</NavLink>
+        <NavLink to="/roleError">A</NavLink>
         <NavLink to="/user-profile">Profile</NavLink>
       </nav>
     </header>

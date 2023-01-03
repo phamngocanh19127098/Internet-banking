@@ -4,20 +4,20 @@ import { Navigate } from 'react-router-dom'
 
 const ProtectedRoute = () => {
   const { userInfo } = useSelector((state) => state.auth)
-  const check = localStorage.getItem('userToken')
-
+  const data = JSON.parse(localStorage.getItem("userInfomation"))
   // show unauthorized screen if no user is found in redux store
-  if (check === null) {
-    console.log(1)
+  if (!userInfo && !data) {
     return (
       <Navigate to='/login' />
     )
   }
-  if (check !== null) {
-    console.log(2)
-    return <Outlet />
+  const role = data.role
+  if (!userInfo && data) {
+    return (
+      <Navigate to={`/${role}`} />
+    )
   }
-
+  return <Outlet />
 }
 
 export default ProtectedRoute

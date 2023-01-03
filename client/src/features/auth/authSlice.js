@@ -21,6 +21,7 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem('userToken') // delete token from storage
       localStorage.removeItem('refreshToken')
+      localStorage.removeItem('userInfomation')
       state.loading = false
       state.userInfo = null
       state.userToken = null
