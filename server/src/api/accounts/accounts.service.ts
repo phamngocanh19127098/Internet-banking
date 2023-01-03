@@ -270,7 +270,7 @@ export class AccountsService {
       const query = this.repos
         .createQueryBuilder('account')
         .leftJoin('account.user', 'user')
-        .select(['account.accountNumber'])
+        .select(['account.accountNumber','user.name'])
         .where('user.id = :userId', { userId })
         .andWhere('account.accountType = :accountType', {
           accountType: AccountType.PAYMENT_ACCOUNT,

@@ -1,0 +1,53 @@
+import React, {useEffect, useState} from "react";
+import HomeNavigation from '../components/homeNavigation';
+import {useDispatch, useSelector} from "react-redux";
+import io from "socket.io-client";
+import {findAllUnPaidDebtReminder} from "../constants/debtReminderConstants";
+import {onInitReceivedDebt} from "../features/debtReminder/debtReceivedSlice";
+import {onInitUnpaidDebtReminder} from "../features/debtReminder/unpaidDebtReminder";
+import {PAY_DEBT, RECEIVED_DEBT} from "../constants/buttonType";
+import DebtReminderList from "../components/DebtReminderList";
+
+const socket = io.connect("http://localhost:3001");
+
+const UnPaidLoan = () => {
+    const { userInfo } = useSelector((state) => state.auth)
+
+    const unpaidDebt = useSelector((state) => state.unpaidDebtReminder)
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        socket.emit(findAllUnPaidDebtReminder, {userId : userInfo.id})
+    }, [userInfo.id])
+
+    useEffect(()=> {
+        console.log(unpaidDebt.unpaidDebtReminders)
+    },[unpaidDebt])
+
+    useEffect(() => {
+        socket.on(findAllUnPaidDebtReminder, (response) => {
+            if (response.userId === userInfo.id) {
+                dispatch(onInitUnpaidDebtReminder(response.data))
+            }
+
+        });
+    }, [dispatch, userInfo.id]);
+
+
+    return (
+        <div>
+            <div>
+                <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
+                    <HomeNavigation id={4} />
+                    <div className="h-screen flex-auto">
+                        <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
+                            <DebtReminderList debtReminders = {unpaidDebt.unpaidDebtReminders} type = {PAY_DEBT}/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default UnPaidLoan;

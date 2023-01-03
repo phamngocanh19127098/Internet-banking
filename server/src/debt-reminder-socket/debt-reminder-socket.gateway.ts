@@ -9,7 +9,7 @@ import {
   createDebtReminderSocket,
   findAllCreatedDebtReminder,
   findAllDebtReminder,
-  findAllReceivedDebtReminder,
+  findAllReceivedDebtReminder, findAllUnPaidDebtReminder,
   removeCreatedDebtReminder,
   removeReceivedDebtReminder
 } from 'src/constant';
@@ -29,36 +29,41 @@ export class DebtReminderSocketGateway {
 
   @SubscribeMessage(createDebtReminderSocket)
   async create(@MessageBody() createDebtReminderDto: CreateDebtReminderDto) {
-    console.log(createDebtReminderDto)
     let data = await this.debtReminderSocketService.create(createDebtReminderDto);
-    return this.server.emit(createDebtReminderSocket, {receiverId: data.receiverId})
+    return this.server.emit(createDebtReminderSocket, {...data})
   }
 
   @SubscribeMessage(findAllCreatedDebtReminder)
   async findAllCreatedDebtReminder(@MessageBody() user: ListDebtReminderDto) {
-    console.log(user);
     let data = await this.debtReminderSocketService.findAllCreatedDebtReminder(user.userId);
-    return this.server.emit(findAllCreatedDebtReminder, data);
+    return this.server.emit(findAllCreatedDebtReminder, {data, userId: user.userId});
   }
 
   @SubscribeMessage(findAllReceivedDebtReminder)
   async findAllReceivedDebtReminder(@MessageBody() user: ListDebtReminderDto) {
-    console.log(user);
     let data = await this.debtReminderSocketService.findAllReceivedDebtReminder(user.userId);
-    return this.server.emit(findAllReceivedDebtReminder, data);
+    return this.server.emit(findAllReceivedDebtReminder, {data, userId: user.userId});
   }
 
   @SubscribeMessage(removeCreatedDebtReminder)
   async remove(@MessageBody() removeDebtReminderDto: RemoveDebtReminderDto) {
     let data = await this.debtReminderSocketService.removeCreatedDebtReminder(removeDebtReminderDto);
-    this.server.emit(findAllReceivedDebtReminder, data);
-    return this.server.emit(removeCreatedDebtReminder, {receiverId: data})
+    // this.server.emit(findAllReceivedDebtReminder, data);
+    // let debtReminders = await this.debtReminderSocketService.findAllCreatedDebtReminder(removeDebtReminderDto.userId);
+    // return this.server.emit(findAllReceivedDebtReminder, debtReminders);
+    return this.server.emit(removeCreatedDebtReminder, {...data})
   }
 
   @SubscribeMessage(removeReceivedDebtReminder)
   async removeReceivedDebtReminder(@MessageBody() removeDebtReminderDto: RemoveDebtReminderDto) {
     let data = await this.debtReminderSocketService.removeReceivedDebtReminder(removeDebtReminderDto);
-    this.server.emit(findAllReceivedDebtReminder, data);
-    return this.server.emit(removeReceivedDebtReminder, {userId: data})
+    // this.server.emit(findAllReceivedDebtReminder, data);
+    return this.server.emit(removeReceivedDebtReminder, {...data})
+  }
+
+  @SubscribeMessage(findAllUnPaidDebtReminder)
+  async findAllUnPaidDebtReminder(@MessageBody() user: ListDebtReminderDto) {
+    let data = await this.debtReminderSocketService.findAllUnPaidDebtReminder(user.userId);
+    return this.server.emit(findAllUnPaidDebtReminder, {data, userId: user.userId});
   }
 }
