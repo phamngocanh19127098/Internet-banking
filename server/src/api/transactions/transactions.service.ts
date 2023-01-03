@@ -1,10 +1,9 @@
-import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
+import {BadRequestException, Injectable, InternalServerErrorException, Logger,} from '@nestjs/common';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
-import {UpdateTransactionDto} from './dto/update-transaction.dto';
-import {Transaction, TransactionStatus, TransactionType,} from './entities/transaction.entity';
-import {Brackets, Repository} from 'typeorm';
+import {PayTransactionFeeType, Transaction, TransactionStatus, TransactionType,} from './entities/transaction.entity';
+import {Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
-import {CreateTransferInternalDto, VerifyTransferInternalDto,} from './dto/transaction.dto';
+import {CreateTransferDto, VerifyTransferInternalDto,} from './dto/transaction.dto';
 import {UserService} from '../users/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {AccountsService} from '../accounts/accounts.service';
@@ -21,6 +20,10 @@ import {
 } from '../../commons/filters/exceptions/transaction/UnExistedTransactionException';
 import {sendMail} from '../../commons/mailing/nodemailer';
 import {DebtReminder} from "../debtReminders/entities/debtReminders.entity";
+import {AffiliatedBanksService} from "../affiliatedBanks/affiliatedBanks.service";
+import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
+import SolarBankService, {SOLAR_BANK_CODE} from "../../client/SolarBank/SolarBank.service";
+import {InvalidAmountException} from "../../commons/filters/exceptions/transaction/InvalidAmountException";
 
 @Injectable()
 export class TransactionsService {
@@ -34,31 +37,34 @@ export class TransactionsService {
     private accountService: AccountsService,
     private otpService: OtpService,
     @InjectRepository(DebtReminder)
-    private readonly debtReminderRepository : Repository<DebtReminder>
+    private readonly debtReminderRepository : Repository<DebtReminder>,
+    private affiliatedBanksService: AffiliatedBanksService
   ) {}
   create(createTransactionDto: CreateTransactionDto) {
     return 'This action adds a new transaction';
   }
 
-  async createTransferInternalRecord(
-    dto: CreateTransferInternalDto,
+  async createTransferRecord(
+    dto: CreateTransferDto,
     authorization: string,
     transactionType : TransactionType
   ) {
-    try {
+
       const accessToken =
         this.userService.getAccessTokenFromClient(authorization);
       const decodedAccessToken = this.jwtService.decode(accessToken);
 
       const username = Object(decodedAccessToken).username;
       const user: User = await this.userService.getByUsername(username);
-      const des: Account[] =
-        await this.accountService.getActivePaymentAccountByAccountNumber(
-          dto.accountDesNumber,
-        );
+      if(!dto.bankDesId) {
+        const des: Account[] =
+          await this.accountService.getActivePaymentAccountByAccountNumber(
+            dto.accountDesNumber,
+          );
 
-      if (des.length === 0) {
-        throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
+        if (des.length === 0) {
+          throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
+        }
       }
 
       if (user == null) {
@@ -72,6 +78,9 @@ export class TransactionsService {
       }
 
       const paymentAccount = accounts[0];
+      const amountWithFee = (dto.payTransactionFee === PayTransactionFeeType.SRC)? dto.amount + Number(process.env.EXTERNAL_FEE) : dto.amount
+      if (amountWithFee > paymentAccount.currentBalance )
+        throw new InvalidAmountException()
 
       const record: Transaction = await this.transactionRepository.save({
         ...dto,
@@ -109,15 +118,11 @@ export class TransactionsService {
         statusCode: 200,
         message: 'Tạo giao dịch chuyển khoản thành công.',
       };
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Lỗi trong quá trình tạo thông tin giao dịch.',
-      );
-    }
+
   }
 
   async createTransferExternalRecord(
-    dto: CreateTransferInternalDto,accountSrcNumber: string, bankId: number
+    dto: CreateTransferDto, accountSrcNumber: string, bankId: number
   ) {
     try {
       const des: Account[] =
@@ -129,9 +134,11 @@ export class TransactionsService {
         throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
       }
 
+      const amountWithFee = (dto.payTransactionFee === PayTransactionFeeType.DES)? dto.amount - Number(process.env.EXTERNAL_FEE) : dto.amount
+
       await this.accountService.updateBalanceByAccountNumber(
         dto.accountDesNumber,
-        dto.amount,
+        amountWithFee,
         TransactionType.RECEIVE,
       );
 
@@ -151,13 +158,14 @@ export class TransactionsService {
         message: 'Tạo giao dịch chuyển khoản thành công.',
       };
     } catch (error) {
+      Logger.log(error)
       throw new InternalServerErrorException(
         'Lỗi trong quá trình tạo thông tin giao dịch.',
       );
     }
   }
 
-  async verifyTransferInternalOtp(
+  async verifyTransferOtp(
     dto: VerifyTransferInternalDto,
     authorization: string,
   ) {
@@ -196,16 +204,55 @@ export class TransactionsService {
       }
       transaction.status = TransactionStatus.SUCCESS;
 
-      await this.accountService.updateBalanceByAccountNumber(
-        transaction.accountSrcNumber,
-        transaction.amount,
-        TransactionType.TRANSFER,
-      );
-      await this.accountService.updateBalanceByAccountNumber(
-        transaction.accountDesNumber,
-        transaction.amount,
-        TransactionType.RECEIVE,
-      );
+
+      if (!transaction.bankDesId) {
+        const amountWithFeeForSrc = (transaction.payTransactionFee === PayTransactionFeeType.SRC)? transaction.amount + Number(process.env.INTERNAL_FEE) : transaction.amount
+        await this.accountService.updateBalanceByAccountNumber(
+          transaction.accountSrcNumber,
+          amountWithFeeForSrc,
+          TransactionType.TRANSFER,
+        );
+        const amountWithFeeForDes = (transaction.payTransactionFee === PayTransactionFeeType.DES)? transaction.amount - Number(process.env.INTERNAL_FEE) : transaction.amount
+        await this.accountService.updateBalanceByAccountNumber(
+          transaction.accountDesNumber,
+          amountWithFeeForDes,
+          TransactionType.RECEIVE,
+        );
+      }
+      else {
+        const linkedBank = await this.affiliatedBanksService.findOne(
+          transaction.bankDesId,
+        );
+        if (!linkedBank) throw new NotConnectBankInfoException();
+        if (linkedBank.slug === SOLAR_BANK_CODE) {
+          const amountWithFeeForSrc = (transaction.payTransactionFee === PayTransactionFeeType.SRC)? transaction.amount + Number(process.env.EXTERNAL_FEE) : transaction.amount
+          await this.accountService.updateBalanceByAccountNumber(
+            transaction.accountSrcNumber,
+            amountWithFeeForSrc,
+            TransactionType.TRANSFER,
+          );
+          const infoTransaction =
+            {
+              transaction_id: transaction.id,                           // generate số ngẫu nhiên
+              src_account_number: transaction.accountSrcNumber,       // tài khoản người gửi
+              des_account_number: transaction.accountDesNumber,      // tài khoản người nhận
+              transaction_amount: transaction.amount,  	// số tiền
+              otp_code: dto.otpCode,   		// có thể gửi luôn cho bên đây nhận hoặc để chuỗi rỗng
+              transaction_message: transaction.description,
+              pay_transaction_fee: transaction.payTransactionFee,  	// hoặc là DES: người nhận trả phí,SRC: người gửi trả phí
+              is_success: 0,   // set ở đây là 0
+              transaction_created_at: transaction.createdAt,  // TIMESTAMP
+              transaction_type: 2,   		      // ở đây truyền 2 nha
+              user_id: user.id,                                         // info người gửi
+              full_name: user.name,             		 // info người gửi
+              email: user.email,      	//  info người gửi
+              phone: user.phone                        	// info người gửi
+            }
+            await SolarBankService.intertransaction(infoTransaction,linkedBank.publicKey)
+
+        }
+      }
+
       const res = await this.transactionRepository.save(transaction);
       return {
         data: res,

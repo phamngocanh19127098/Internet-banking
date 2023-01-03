@@ -3,7 +3,7 @@ import {Body, Controller, Delete, Get, Headers, Logger, Param, Patch, Post, Quer
 import {TransactionsService} from './transactions.service';
 import {CreateTransactionDto} from './dto/create-transaction.dto';
 import {UpdateTransactionDto} from './dto/update-transaction.dto';
-import {CreateTransferExternalDto, CreateTransferInternalDto, VerifyTransferInternalDto,} from './dto/transaction.dto';
+import {CreateTransferExternalDto, CreateTransferDto, VerifyTransferInternalDto,} from './dto/transaction.dto';
 import {Roles} from '../../commons/decorator/roles.decorator';
 import {Role} from '../users/entity/user.entity';
 import {NotConnectBankInfoException} from "../../commons/filters/exceptions/sercurity/NotConnectBankInfoException";
@@ -14,6 +14,7 @@ import testSignature from "../../commons/crypto/testSign";
 import testMsgToken from "../../commons/crypto/testMsgToken";
 import createSignature from "../../commons/crypto/createSignature";
 import {TransactionType} from "./entities/transaction.entity";
+import SolarBankService from "../../client/SolarBank/SolarBank.service";
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -31,10 +32,10 @@ export class TransactionsController {
   @Roles(Role.CUSTOMER)
   @Post('/internal/transfer')
   createTransferInternal(
-    @Body() createTransferInternalDto: CreateTransferInternalDto,
+    @Body() createTransferInternalDto: CreateTransferDto,
     @Headers('authorization') authorization: string,
   ) {
-    return this.transactionsService.createTransferInternalRecord(
+    return this.transactionsService.createTransferRecord(
       createTransferInternalDto,
       authorization,
       TransactionType.TRANSFER
@@ -47,7 +48,7 @@ export class TransactionsController {
     @Body() verifyTransferInternalDto: VerifyTransferInternalDto,
     @Headers('authorization') authorization: string,
   ) {
-    return this.transactionsService.verifyTransferInternalOtp(
+    return this.transactionsService.verifyTransferOtp(
       verifyTransferInternalDto,
       authorization,
     );
@@ -67,12 +68,12 @@ export class TransactionsController {
     verifyMessage(dto.msgToken,data,dto.timestamp,linkedBank.secretKey)
     verifySignature(dto.signature,linkedBank.publicKey,linkedBank.cryptoType,data)
     const newTrans = await this.transactionsService.createTransferExternalRecord(dto.transactionInfo,dto.accountNumber,linkedBank.id)
-    const newTransInfor = {
+    const newTransInfo = {
       ...newTrans.data
     }
     return {
       ...newTrans,
-      signature: createSignature(newTransInfor)
+      signature: createSignature(newTransInfo)
     }
   }
 
@@ -91,6 +92,37 @@ export class TransactionsController {
     const testToken = testMsgToken(data,timestamp,"FwOhnqMkrv")
     const testSign = testSignature(data)
     return { testToken, testSign}
+
+  }
+
+  @Get('/external/test-api-intertransaction')
+  async testExternalApiIntertransaction
+  (
+  ) {
+    const timestamp = (new  Date()).getTime();
+    Logger.log(timestamp)
+    const linkedBank = await this.affiliatedBanksService.findOneBySlug(
+      'SLB',
+    );
+    if (!linkedBank) throw new NotConnectBankInfoException();
+    const infoTransaction = {
+      transaction_id:1,
+      src_account_number:"60000",
+      des_account_number:"01325183",
+      transaction_amount:30000,
+      otp_code:"345676",
+      transaction_message:"Transfer Money",
+      pay_transaction_fee:"DES",
+      is_success:0,
+      transaction_created_at:'2022-12-30T11:16:00.000Z',
+      transaction_type:2,
+      user_id:1,
+      full_name:"Le Van A",
+      email:"vana@gmail.com",
+      phone:"0943095594"
+    }
+    return SolarBankService.intertransaction(infoTransaction,linkedBank.publicKey)
+
 
   }
 

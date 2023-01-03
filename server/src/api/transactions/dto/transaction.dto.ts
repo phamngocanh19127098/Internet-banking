@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {Allow, IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import {PayTransactionFeeType} from "../entities/transaction.entity";
 
-export class CreateTransferInternalDto {
+export class CreateTransferDto {
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -9,6 +10,14 @@ export class CreateTransferInternalDto {
         example: 1000000002,
     })
     accountDesNumber: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    required: true,
+    example: 1000000002,
+  })
+  payTransactionFee: PayTransactionFeeType;
 
   @IsNumber()
   @IsNotEmpty()
@@ -24,6 +33,11 @@ export class CreateTransferInternalDto {
   })
   @Allow()
   description: string;
+
+  @Allow()
+  bankDesId: number;
+
+
 }
 
 export class CreateTransferExternalDto
@@ -33,7 +47,7 @@ export class CreateTransferExternalDto
   accountNumber: string;
 
   @IsNotEmpty()
-  transactionInfo: CreateTransferInternalDto;
+  transactionInfo: CreateTransferDto;
 
   @IsString()
   @IsNotEmpty()
