@@ -8,7 +8,7 @@ import {DebtReminderEnum} from './enum/debtReminder.enum';
 import {UserService} from '../users/user.service';
 import {BadRequestException, NotAcceptableException} from '@nestjs/common/exceptions';
 import {AccountsService} from "../accounts/accounts.service";
-import {CreateTransferInternalDto} from "../transactions/dto/transaction.dto";
+import {CreateTransferDto} from "../transactions/dto/transaction.dto";
 import {PayDebtReminderDto} from "../transactions/dto/pay-debt-reminder.dto";
 import {TransactionsService} from "../transactions/transactions.service";
 import {TransactionType} from "../transactions/entities/transaction.entity";
@@ -146,12 +146,16 @@ export class DebtRemindersService {
     if (!receiverAccount) {
       throw new BadRequestException("Không tồn tại tài khoản nhận")
     }
-    let createTransferInternalDto: CreateTransferInternalDto = {
+    let createTransferDto: CreateTransferDto = {
       accountDesNumber: receiverAccount.accountNumber,
       amount: payDebtReminderDto.amount,
-      description: ''
+      description: payDebtReminderDto.description,
+      bankDesId: null,
+      payTransactionFee: payDebtReminderDto.payTransactionFee
     }
 
-    return await this.transactionService.createTransferInternalRecord(createTransferInternalDto,authorization ,TransactionType.DEBT_REMINDERS_PAYMENT);
+
+
+    return await this.transactionService.createTransferRecord(createTransferDto,authorization ,TransactionType.DEBT_REMINDERS_PAYMENT);
   }
 }

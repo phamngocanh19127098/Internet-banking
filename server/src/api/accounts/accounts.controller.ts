@@ -169,8 +169,7 @@ export class AccountsController {
       if (!linkedBank) throw new NotConnectBankInfoException();
       if (linkedBank.slug === SOLAR_BANK_CODE) {
         return SolarBankService.getAccountInfo(
-          dto.accountNumber,
-          process.env.RSA_PRIVATE_KEY,
+          dto.accountNumber
         );
       }
     }

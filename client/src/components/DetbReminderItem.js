@@ -3,6 +3,8 @@ import {removeDebtReminder} from "../features/debtReminder/debtReminderSlice";
 import io from "socket.io-client";
 import {payDebt, removeCreatedDebtReminder, removeReceivedDebtReminder} from "../constants/debtReminderConstants";
 import {CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT} from "../constants/buttonType";
+import {SRC} from "../constants/payTransactionFee";
+import {useEffect} from "react";
 const socket = io.connect("http://localhost:3001");
 
 const DebtReminderItem = (props) => {
@@ -10,8 +12,18 @@ const DebtReminderItem = (props) => {
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state.auth)
     const handlePayDebtAction = () => {
-        socket.emit(payDebt, { authorization : `Bearer ${token}`, toUserId: props.item.userId, amount: props.item.amount})
+        socket.emit(
+            payDebt,
+            {
+                authorization : `Bearer ${token}`,
+                toUserId: props.item.userId,
+                amount: props.item.amount,
+                description: "Thanh toán nợ",
+                payTransactionFee : SRC
+            }
+        )
     }
+
 
     return <article className="cart-item">
         <div className="flex items-center justify-between">

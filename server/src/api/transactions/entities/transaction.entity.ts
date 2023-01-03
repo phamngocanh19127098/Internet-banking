@@ -14,6 +14,11 @@ export enum TransactionStatus {
   UN_SUCCESS = 0,
 }
 
+export enum PayTransactionFeeType {
+  SRC = 'SRC',
+  DES = 'DES',
+}
+
 @Entity({name : 'transaction'})
 export class Transaction {
   @PrimaryGeneratedColumn()
@@ -30,6 +35,9 @@ export class Transaction {
 
   @Column({ name: 'bank_des_id' })
   bankDesId: number;
+
+  @Column({ name: 'pay_transaction_fee' })
+  payTransactionFee: PayTransactionFeeType;
 
   @Column()
   description: string;
