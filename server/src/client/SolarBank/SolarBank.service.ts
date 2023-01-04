@@ -23,7 +23,7 @@ class AccountService {
     Logger.log({...data})
     return axios({
       url:`${BASE_URL}/desaccount`,
-      method: 'get',
+      method: 'post',
       data: data,
       headers: {
         'Content-Type': "application/json"
@@ -60,7 +60,7 @@ class AccountService {
     Logger.log({...data})
     const verifyToken = await axios({
       url:`${BASE_URL}/intertransaction`,
-      method: 'get',
+      method: 'post',
       data: data,
       headers: {
         'Content-Type': "application/json"
@@ -80,8 +80,8 @@ class AccountService {
       // Logger.log(error.response.data)
       throw new BadRequestException(error.response.data.message)
     });
-    // if(verifyToken.payload.user_id !== infoTransaction.user_id)
-    //   throw new InvalidSignatureException("Thông tin chuyển khoản liên ngân hàng không được xác thực.")
+    if(verifyToken.payload.des_account_number !== infoTransaction.des_account_number)
+      throw new InvalidSignatureException("Thông tin chuyển khoản liên ngân hàng không được xác thực.")
   }
 
   createToken(payload:any) {

@@ -186,10 +186,15 @@ export class TransactionsController {
       email: 'vana@gmail.com',
       phone: '0943095594',
     };
-    return SolarBankService.intertransaction(
+    await SolarBankService.intertransaction(
       infoTransaction,
       linkedBank.publicKey,
     );
+    return {
+      data: true,
+      statusCode: 200,
+      message: 'Lấy thông tin giao dịch thành công.',
+    };
   }
 
   @ApiOperation({
