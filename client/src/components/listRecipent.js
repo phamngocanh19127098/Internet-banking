@@ -1,12 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import HomeNavigation from "../components/homeNavigation";
-import AddRecipent from "../components/addRecipent";
 import { fetcherListReceivers } from "../fetchers/fetcherCustomer";
-import DeleteRecipent from "../components/deleteRecipent";
-import EditRecipent from "../components/editRecipent";
-import Loader from "../components/loading";
+
 const ListRecipents = (props) => {
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -95,7 +91,7 @@ const ListRecipents = (props) => {
           <button
             id="handlecancel"
             onClick={handleCancelClick}
-            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded bg-[#FFFFFF] hover:bg-[#F3F4F6] bg-white"
+            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-[#F3F4F6] bg-white"
           >
             Cancel
           </button>

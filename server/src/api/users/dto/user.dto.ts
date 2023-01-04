@@ -27,7 +27,7 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Vai trò của tài khoản',
     required: true,
-    example: 'admin',
+    example: 'customer',
   })
   role: Role;
 

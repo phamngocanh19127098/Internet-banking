@@ -122,7 +122,7 @@ const Payment = () => {
     sendReqTransfer();
   };
 
-  if (isSuccess == true) {
+  if (isSuccess === true) {
     return (
       <div>
         <div>
@@ -177,10 +177,10 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                    <option value={account.accountNumber}>
-                      {account.accountNumber}
-                    </option>
-                  ))
+                      <option value={account.accountNumber}>
+                        {account.accountNumber}
+                      </option>
+                    ))
                   : null}
               </select>
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
@@ -188,7 +188,7 @@ const Payment = () => {
               </div>
               <div className="flex flex-col mb-4 px-8">
                 <input
-                  className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
+                  className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
                   id="accNum"
                   type="tel"
                   required
@@ -214,9 +214,9 @@ const Payment = () => {
               </div>
               <div className="flex flex-col mb-4 px-8">
                 {!name ? (
-                  <div className="shadow appearance-none border rounded flex p-5 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"></div>
+                  <div className=" appearance-none p-5 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"></div>
                 ) : (
-                  <div className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline">
+                  <div className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline">
                     {name}
                   </div>
                 )}
@@ -226,10 +226,10 @@ const Payment = () => {
               </div>
               <div className="flex flex-col mb-4 px-8">
                 <CurrencyInput
-                  className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
+                  className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
                   id="input-example"
                   name="input-name"
-                  placeholder="Please enter a number"
+                  placeholder="Nhập số tiền cần chuyển"
                   //  defaultValue={1000}
                   decimalsLimit={2}
                   suffix=" VND"
@@ -244,7 +244,7 @@ const Payment = () => {
               </div>
               <div className="flex flex-col mb-4 px-8">
                 <input
-                  className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
+                  className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
                   id="description"
                   type="text"
                   required

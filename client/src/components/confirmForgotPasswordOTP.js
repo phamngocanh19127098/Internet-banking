@@ -115,7 +115,7 @@ const ConfirmForgotPasswordOTP = (props) => {
         </div>
         <div className="flex flex-col mb-4 px-8">
           <input
-            className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
+            className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
             id="OTP"
             type="tel"
             required
@@ -130,7 +130,7 @@ const ConfirmForgotPasswordOTP = (props) => {
           <button
             id="handlecancel"
             onClick={handleCancelClick}
-            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded bg-[#FFFFFF] hover:bg-[#F3F4F6] bg-white"
+            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] roundedhover:bg-[#F3F4F6] bg-white"
           >
             Huỷ
           </button>

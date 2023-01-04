@@ -5,7 +5,7 @@ import { useGetDetailsQuery } from "../app/services/auth/authService";
 import { logout, setCredentials } from "../features/auth/authSlice";
 import "../styles/header.css";
 import { fetcherAccessToken } from "../fetchers/token";
-import useAuth from "../routing/useAuth";
+
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -37,8 +37,8 @@ const Header = () => {
           {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
-              ? `Logged in as ${userInfo.email}`
-              : "You're not logged in"}
+            ? `Logged in as ${userInfo.email}`
+            : "You're not logged in"}
           {/* {userInfo && `Logged in as ${userInfo.email}`}
           {userInfo === null && "You're not logged in"} */}
         </span>
