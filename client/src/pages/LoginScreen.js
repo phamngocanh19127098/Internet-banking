@@ -2,17 +2,14 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../features/auth/authActions";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
-import Error from "../components/Error";
-import Spinner from "../components/Spinner";
-import Reaptcha from 'reaptcha';
-import { useLocation } from "react-router-dom";
+import Reaptcha from "reaptcha";
 import Loader from "../components/loading";
 
 const LoginScreen = () => {
-  const data = JSON.parse(localStorage.getItem("userInfomation"))
-  const { loading, userInfo, error } = useSelector((state) => state.auth);
+  const data = JSON.parse(localStorage.getItem("userInfomation"));
+  const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [captchaToken, setCaptchaToken] = useState(null);
   const captchaRef = useRef(null);
@@ -20,7 +17,7 @@ const LoginScreen = () => {
 
   const navigate = useNavigate();
   const [disableSubmit, setDisableSubmit] = useState(true);
-  const location = useLocation();
+
   // redirect authenticated user to profile screen
   useEffect(() => {
     console.log(userInfo);
@@ -37,31 +34,28 @@ const LoginScreen = () => {
     }
   }, [navigate, userInfo]);
 
-  let recaptchaInstance;
-
   const submitForm = (data) => {
     dispatch(userLogin(data));
   };
 
   const verify = () => {
-    console.log("ABC")
-    captchaRef.current.getResponse().then(res => {
-      setCaptchaToken(res)
-      setDisableSubmit(false)
-    })
-
-  }
+    console.log("ABC");
+    captchaRef.current.getResponse().then((res) => {
+      setCaptchaToken(res);
+      setDisableSubmit(false);
+    });
+  };
   if (data) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
-    (<div>
+    <div>
       <div
         className=" bg-cover w-screen flex h-screen justify-center items-center"
         style={{ backgroundImage: `url('../loginbng.png')` }}
       >
-        <div className="p-6  m-auto bg-white rounded-md shadow-xl shadow-rose-600/40 ring ring-2 ring-main-green lg:max-w-xl lg:min-w-[25%] items-center justify-center">
+        <div className="p-6  m-auto bg-white rounded-md shadow-xl shadow-rose-600/40 ring-2 ring-main-green lg:max-w-xl lg:min-w-[25%] items-center justify-center">
           <h1 className="text-3xl font-semibold text-center text-black uppercase decoration-wavy">
             Đăng nhập
           </h1>
@@ -120,11 +114,7 @@ const LoginScreen = () => {
         </div>
       </div>
     </div>
-    )
-
   );
-
-
 };
 
 export default LoginScreen;

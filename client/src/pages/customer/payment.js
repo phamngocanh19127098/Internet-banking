@@ -165,7 +165,7 @@ const Payment = () => {
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
               <label
                 htmlFor="accounts"
-                className="block mb-2 text-sm text-gray-900 dark:text-white font-bold"
+                className="block mb-2 text-sm text-gray-900 font-bold"
               >
                 Chọn tài khoản thanh toán nguồn
               </label>
@@ -208,7 +208,7 @@ const Payment = () => {
                 onClick={() => {
                   setShowAddModal(true);
                 }}
-                className=" text-xs  text-main-green inline font-bold mb-2 mt-4 px-8 "
+                className=" text-xs  text-main-green inline font-bold mb-2 mt-4 px-8 hover:cursor-pointer hover:underline"
               >
                 Chọn trong danh sách có sẵn
               </div>
