@@ -1,10 +1,26 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post,} from '@nestjs/common';
-import {ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
-import {AffiliatedBanksService} from './affiliatedBanks.service';
-import {CreateAffiliatedBankDto} from './dto/create-affiliated-bank.dto';
-import {UpdateAffiliatedBankDto} from './dto/update-affiliated-bank.dto';
-import {Roles} from "../../commons/decorator/roles.decorator";
-import {Role} from "../users/entity/user.entity";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { AffiliatedBanksService } from './affiliatedBanks.service';
+import { CreateAffiliatedBankDto } from './dto/create-affiliated-bank.dto';
+import { UpdateAffiliatedBankDto } from './dto/update-affiliated-bank.dto';
+import { Roles } from '../../commons/decorator/roles.decorator';
+import { Role } from '../users/entity/user.entity';
 
 @ApiTags('affiliatedBanks')
 @Controller('affiliatedBanks')
@@ -18,21 +34,30 @@ export class AffiliatedBanksController {
     return this.affiliatedBanksService.create(createAffiliatedBankDto);
   }
 
-  @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
   @Get()
   @ApiOperation({
-    description: "Lấy danh sách ngân hàng đã liên kết"
+    description:
+      'Lấy danh sách ngân hàng đã liên kết. Vai trò nào cũng dùng được.',
   })
   @ApiOkResponse({
-    description: "Lấy danh sách ngân hàng đã liên kết thành công"
+    description: 'Lấy danh sách ngân hàng đã liên kết thành công',
   })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy danh sách ngân hàng đã liên kết',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
   async findAll() {
-    let data = await this.affiliatedBanksService.findAll();
+    const data = await this.affiliatedBanksService.findAll();
     return {
       statusCode: 200,
-      message: "Lấy danh sách ngân hàng liên kết thành công",
-      data
-    }
+      message: 'Lấy danh sách ngân hàng liên kết thành công',
+      data,
+    };
   }
 
   @Get(':id')

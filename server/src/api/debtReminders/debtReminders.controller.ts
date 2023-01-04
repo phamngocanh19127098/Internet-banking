@@ -8,7 +8,15 @@ import {
   Delete,
   Headers,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Roles } from 'src/commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import { DebtRemindersService } from './debtReminders.service';
@@ -24,18 +32,17 @@ export class DebtRemindersController {
 
   @Post()
   @ApiOkResponse({
-    description: 'Tạo nhắc nợ thành công',
+    description: 'Tạo nhắc nợ thành công. Customer mới dùng được.',
   })
   @Roles(Role.CUSTOMER)
   async create(@Body() createDebtReminderDto: CreateDebtReminderDto) {
-    let data = await this.debtRemindersService.create(createDebtReminderDto);
+    const data = await this.debtRemindersService.create(createDebtReminderDto);
 
     return {
       statusCode: 201,
       message: 'Tạo nhắc nợ thành công',
     };
   }
-
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -55,14 +62,26 @@ export class DebtRemindersController {
     return this.debtRemindersService.remove(+id);
   }
 
-  @Get('/list/created/:userId')
-  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    description:
+      'Lấy danh sách nợ được tạo do bản thân tạo. Customer mới dùng được.',
+  })
   @ApiOkResponse({
     description: 'Lấy thông tin danh sách nợ do bản thân tạo thành công',
   })
-  @ApiOperation({ description: 'Lấy danh sách nợ được tạo do bản thân tạo' })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách nợ được tạo do bản thân tạo',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Get('/list/created/:userId')
   async getAllDebtReminderCreated(@Param('userId') userId: string) {
-    let result = await this.debtRemindersService.getDebtReminderCreated(
+    const result = await this.debtRemindersService.getDebtReminderCreated(
       +userId,
     );
     return {
@@ -72,14 +91,26 @@ export class DebtRemindersController {
     };
   }
 
-  @Get('/list/received/:userId')
-  @Roles(Role.CUSTOMER)
+  @ApiOperation({
+    description:
+      'Lấy danh sách nợ được tạo do người khác gửi. Customer mới dùng được.',
+  })
   @ApiOkResponse({
     description: 'Lấy thông tin danh sách nợ do người khác gửi thành công',
   })
-  @ApiOperation({ description: 'Lấy danh sách nợ được tạo do người khác gửi' })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách nợ được tạo do người khác gửi',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Get('/list/received/:userId')
   async getAllDebtReminderReceived(@Param('userId') userId: string) {
-    let result = await this.debtRemindersService.getDebtReminderReceived(
+    const result = await this.debtRemindersService.getDebtReminderReceived(
       +userId,
     );
     return {
@@ -89,14 +120,28 @@ export class DebtRemindersController {
     };
   }
 
+  @ApiOperation({
+    description:
+      'Lấy thông tin danh sách nợ chưa thanh toán. Customer mới dùng được.',
+  })
   @ApiOkResponse({
     description: 'Lấy thông tin danh sách nợ chưa thanh toán thành công',
   })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy thông tin danh sách nợ chưa thanh toán',
+  })
+  @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
-  @ApiOperation({ description: 'Lấy thông tin danh sách nợ chưa thanh toán' })
   @Get('/list/unpaid/:userId')
   async getUnPaidDebt(@Param('userId') userId: string) {
-    let result = await this.debtRemindersService.getUnPaidDebtReminder(+userId);
+    const result = await this.debtRemindersService.getUnPaidDebtReminder(
+      +userId,
+    );
     return {
       statusCode: 200,
       data: result,
@@ -104,12 +149,20 @@ export class DebtRemindersController {
     };
   }
 
-  @Roles(Role.CUSTOMER)
-  @ApiOperation({description : 'Thanh toán nhắc nợ'})
+  @ApiOperation({ description: 'Thanh toán nhắc nợ. Customer mới dùng được.' })
   @ApiOkResponse({
-    description: "Tạo giao dịch chuyển khoản thành công."
+    description: 'Tạo giao dịch chuyển khoản thành công.',
   })
-  @Post("/pay")
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi thanh toán nhắc nợ',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Post('/pay')
   async liquidateDebtReminder(
     @User() user,
     @Body() payDebtReminderDto: PayDebtReminderDto,

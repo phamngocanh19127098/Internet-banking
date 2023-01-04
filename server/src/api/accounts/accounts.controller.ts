@@ -57,7 +57,9 @@ export class AccountsController {
     return this.accountsService.findAll();
   }
 
-  @ApiOperation({ description: 'Nạp tiền vào tài khoản' })
+  @ApiOperation({
+    description: 'Nạp tiền vào tài khoản. Employee mới dùng được.',
+  })
   @ApiOkResponse({ description: 'Nạp tiền vào tài khoản thành công' })
   @ApiBadRequestResponse({
     description: 'Sai username hoặc sai số tài khoản hoặc sai kiểu dữ liệu',
@@ -99,7 +101,8 @@ export class AccountsController {
   // }
 
   @ApiOperation({
-    description: 'Lấy danh sách tài khoản ngân hàng bằng userId',
+    description:
+      'Lấy danh sách tài khoản ngân hàng bằng userId. Customer mới dùng được.',
   })
   @ApiOkResponse({
     description: 'Lấy danh sách tài khoản ngân hàng bằng userId thành công',
@@ -155,8 +158,15 @@ export class AccountsController {
   }
 
   // Api documentation
-  @Post('/get-info')
   @ApiOperation({ description: 'Lấy thông tin người dùng bằng số tài khoản' })
+  @ApiOkResponse({
+    description: 'Lấy thông tin người dùng bằng số tài khoản thành công.',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy thông tin tài khoản bằng số tài khoản',
+  })
+  @Post('/get-info')
   async getAccountNameByAccountNumber(@Body() dto: GetAccountInfoDto) {
     if (!dto.bankDesId) {
       return this.accountsService.getAccountNameByAccountNumber(
@@ -168,15 +178,23 @@ export class AccountsController {
       );
       if (!linkedBank) throw new NotConnectBankInfoException();
       if (linkedBank.slug === SOLAR_BANK_CODE) {
-        return SolarBankService.getAccountInfo(
-          dto.accountNumber
-        );
+        return SolarBankService.getAccountInfo(dto.accountNumber);
       }
     }
   }
 
+  @ApiOperation({
+    description: 'Lấy thông tin người dùng bằng số tài khoản liên ngân hàng',
+  })
+  @ApiOkResponse({
+    description:
+      'Lấy thông tin người dùng bằng số tài khoản liên ngân hàng thành công.',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy thông tin tài khoản bằng số tài khoản liên ngân hàng',
+  })
   @Post('/external/get-info')
-  @ApiOperation({ description: 'Lấy thông tin người dùng bằng số tài khoản' })
   async getAccountInfoExternalByAccountNumber(
     @Body() dto: GetAccountInfoExternalDto,
   ) {

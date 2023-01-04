@@ -29,7 +29,7 @@ import { Roles } from '../../commons/decorator/roles.decorator';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @ApiOperation({ description: 'Tạo người dùng' })
+  @ApiOperation({ description: 'Tạo người dùng. Employee mới dùng được.' })
   @ApiCreatedResponse({
     description: 'Tạo người dùng thành công',
   })
@@ -52,7 +52,9 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @ApiOperation({ description: 'Lấy danh sách nhân viên' })
+  @ApiOperation({
+    description: 'Lấy danh sách nhân viên. Admin mới dùng được.',
+  })
   @ApiOkResponse({
     description: 'Lấy danh sách nhân viên thành công',
   })
@@ -77,7 +79,9 @@ export class UserController {
     };
   }
 
-  @ApiOperation({ description: 'Cập nhập thông tin nhân viên' })
+  @ApiOperation({
+    description: 'Cập nhập thông tin nhân viên. Admin mới dùng được.',
+  })
   @ApiOkResponse({
     description: 'Cập nhập thông tin nhân viên thành công',
   })
@@ -107,7 +111,7 @@ export class UserController {
     };
   }
 
-  @ApiOperation({ description: 'Xóa nhân viên' })
+  @ApiOperation({ description: 'Xóa nhân viên. Admin mới dùng được.' })
   @ApiOkResponse({
     description: 'Xóa nhân viên thành công',
   })
@@ -134,7 +138,9 @@ export class UserController {
     };
   }
 
-  @ApiOperation({ description: 'Tìm kiếm người dùng bằng ID' })
+  @ApiOperation({
+    description: 'Tìm kiếm người dùng bằng ID. Vai trò nào cũng dùng được.',
+  })
   @ApiOkResponse({
     description: 'Tìm kiếm người dùng bằng ID thành công',
   })
@@ -151,7 +157,7 @@ export class UserController {
     description: 'Xảy ra lỗi từ server khi tìm kiếm người dùng bằng ID',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER, Role.ADMIN, Role.EMPLOYEE)
   @Get('/:id')
   async findUserById(@Param('id') id: string) {
     const user = await this.userService.getUserById(+id);

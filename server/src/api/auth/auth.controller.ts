@@ -35,7 +35,9 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
-  @ApiOperation({ description: 'Đăng ký tài khoản' })
+  @ApiOperation({
+    description: 'Đăng ký tài khoản. Admin và Employee mới dùng được.',
+  })
   @ApiCreatedResponse({
     description: 'Tạo tài khoản thành công',
   })
@@ -71,7 +73,9 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
-  @ApiOperation({ description: 'Đổi mật khẩu tài khoản' })
+  @ApiOperation({
+    description: 'Đổi mật khẩu tài khoản. Vai trò nào cũng dùng được.',
+  })
   @ApiOkResponse({ description: 'Đổi mật khẩu thành công' })
   @ApiBadRequestResponse({
     description:
@@ -93,7 +97,9 @@ export class AuthController {
     return this.authService.changePassword(dto);
   }
 
-  @ApiOperation({ description: 'Đăng xuất tài khoản' })
+  @ApiOperation({
+    description: 'Đăng xuất tài khoản. Vai trò nào cũng dùng được.',
+  })
   @ApiOkResponse({ description: 'Đăng xuất thành công' })
   @ApiForbiddenResponse({
     description: 'Vai trò của bạn không thể dùng tính năng này',
@@ -114,7 +120,9 @@ export class AuthController {
     };
   }
 
-  @ApiOperation({ description: 'Lấy thông tin người dùng' })
+  @ApiOperation({
+    description: 'Lấy thông tin người dùng. Vai trò nào cũng dùng được.',
+  })
   @ApiOkResponse({ description: 'Lấy profile thành công' })
   @ApiForbiddenResponse({
     description: 'Vai trò của bạn không thể dùng tính năng này',
