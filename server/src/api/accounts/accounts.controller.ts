@@ -184,15 +184,15 @@ export class AccountsController {
   }
 
   @ApiOperation({
-    description: 'Lấy thông tin người dùng bằng số tài khoản liên ngân hàng',
+    description: 'Truy vấn thông tin tài khoản từ liên ngân hàng',
   })
   @ApiOkResponse({
     description:
-      'Lấy thông tin người dùng bằng số tài khoản liên ngân hàng thành công.',
+      'Lấy thông tin tài khoản thành công.',
   })
   @ApiInternalServerErrorResponse({
     description:
-      'Xảy ra lỗi từ server khi lấy thông tin tài khoản bằng số tài khoản liên ngân hàng',
+      'Lỗi trong quá trình lấy thông tin người dùng',
   })
   @Post('/external/get-info')
   async getAccountInfoExternalByAccountNumber(

@@ -67,7 +67,7 @@ export class TransactionsController {
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
-  @Post('/internal/transfer')
+  @Post('/transfer')
   createTransferInternal(
     @Body() createTransferInternalDto: CreateTransferDto,
     @Headers('authorization') authorization: string,
@@ -95,7 +95,7 @@ export class TransactionsController {
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
-  @Post('/internal/transfer/verify')
+  @Post('/transfer/verify')
   verifyTransferInternal(
     @Body() verifyTransferInternalDto: VerifyTransferInternalDto,
     @Headers('authorization') authorization: string,
@@ -106,6 +106,14 @@ export class TransactionsController {
     );
   }
 
+  @ApiOperation({
+    description: 'Nộp tiền vào tài khoản từ liên ngân hàng',
+  })
+  @ApiOkResponse({ description: 'Tạo giao dịch chuyển khoản thành công.' })
+  @ApiBadRequestResponse({ description: 'Lỗi khi đang tìm kiếm người dùng' })
+  @ApiInternalServerErrorResponse({
+    description: 'Lỗi trong quá trình tạo thông tin giao dịch.',
+  })
   @Post('/external/order-for-payment')
   async createTransferExternal(@Body() dto: CreateTransferExternalDto) {
     const linkedBank = await this.affiliatedBanksService.findOneBySlug(
@@ -143,13 +151,14 @@ export class TransactionsController {
   async testExternalApi() {
     const timestamp = new Date().getTime();
     Logger.log(timestamp);
-    const data = {
-      accountDesNumber: '23875338674',
+    let data = {
+      accountDesNumber: "23875338674",
       amount: 50000,
-      description: 'Transfer Money SLB',
-      accountSrcNumber: '28069884',
-      slug: 'SLB',
-    };
+      description: "Transfer Money SLB",
+      payTransactionFee: "SRC",
+      accountSrcNumber: "28069884",
+      slug: "SLB"
+    }
     const testToken = testMsgToken(data, timestamp, 'FwOhnqMkrv');
     const testSign = testSignature(data);
     return { testToken, testSign };

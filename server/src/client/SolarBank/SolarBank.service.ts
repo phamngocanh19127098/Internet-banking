@@ -1,5 +1,6 @@
 import axios from "axios";
 import {BadRequestException, Logger} from "@nestjs/common";
+import {InvalidSignatureException} from "../../commons/filters/exceptions/sercurity/InvalidSignatureException";
 const jwt = require('jsonwebtoken')
 export const SOLAR_BANK_CODE = 'SLB'
 const BANK_CODE = 'TXB'
@@ -57,7 +58,7 @@ class AccountService {
       bank_code: BANK_CODE
     }
     Logger.log({...data})
-    return axios({
+    const verifyToken = await axios({
       url:`${BASE_URL}/intertransaction`,
       method: 'get',
       data: data,
@@ -79,6 +80,8 @@ class AccountService {
       // Logger.log(error.response.data)
       throw new BadRequestException(error.response.data.message)
     });
+    // if(verifyToken.payload.user_id !== infoTransaction.user_id)
+    //   throw new InvalidSignatureException("Thông tin chuyển khoản liên ngân hàng không được xác thực.")
   }
 
   createToken(payload:any) {

@@ -78,7 +78,7 @@ export class TransactionsService {
       const amountWithFee = (dto.payTransactionFee === PayTransactionFeeType.SRC)? dto.amount + Number(process.env.EXTERNAL_FEE) : dto.amount
       if (amountWithFee > paymentAccount.currentBalance )
         throw new InvalidAmountException()
-
+    try {
       const record: Transaction = await this.transactionRepository.save({
         ...dto,
         status: TransactionStatus.UN_SUCCESS,
@@ -115,13 +115,19 @@ export class TransactionsService {
         statusCode: 200,
         message: 'Tạo giao dịch chuyển khoản thành công.',
       };
+  } catch (error) {
+    Logger.log(error)
+    throw new InternalServerErrorException(
+      'Lỗi trong quá trình tạo thông tin giao dịch.',
+    );
+  }
 
   }
 
   async createTransferExternalRecord(
     dto: CreateTransferDto, accountSrcNumber: string, bankId: number
   ) {
-    try {
+
       const des: Account[] =
         await this.accountService.getActivePaymentAccountByAccountNumber(
           dto.accountDesNumber,
@@ -130,7 +136,7 @@ export class TransactionsService {
       if (des.length === 0) {
         throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
       }
-
+    try {
       const amountWithFee = (dto.payTransactionFee === PayTransactionFeeType.DES)? dto.amount - Number(process.env.EXTERNAL_FEE) : dto.amount
 
       await this.accountService.updateBalanceByAccountNumber(
@@ -222,12 +228,7 @@ export class TransactionsService {
         );
         if (!linkedBank) throw new NotConnectBankInfoException();
         if (linkedBank.slug === SOLAR_BANK_CODE) {
-          const amountWithFeeForSrc = (transaction.payTransactionFee === PayTransactionFeeType.SRC)? transaction.amount + Number(process.env.EXTERNAL_FEE) : transaction.amount
-          await this.accountService.updateBalanceByAccountNumber(
-            transaction.accountSrcNumber,
-            amountWithFeeForSrc,
-            TransactionType.TRANSFER,
-          );
+
           const infoTransaction = {
             transaction_id:transaction.id,
             src_account_number:transaction.accountSrcNumber,
@@ -244,10 +245,16 @@ export class TransactionsService {
             email:user.email,
             phone:user.phone || ''
           }
-            await SolarBankService.intertransaction(infoTransaction,linkedBank.publicKey)
-
+          await SolarBankService.intertransaction(infoTransaction,linkedBank.publicKey)
+          const amountWithFeeForSrc = (transaction.payTransactionFee === PayTransactionFeeType.SRC)? transaction.amount + Number(process.env.EXTERNAL_FEE) : transaction.amount
+          await this.accountService.updateBalanceByAccountNumber(
+            transaction.accountSrcNumber,
+            amountWithFeeForSrc,
+            TransactionType.TRANSFER,
+          );
         }
       }
+    try {
 
       const res = await this.transactionRepository.save(transaction);
       return {
@@ -255,11 +262,11 @@ export class TransactionsService {
         statusCode: 200,
         message: `Thực hiện giao dịch chuyển khoản id= ${dto.transactionId} thành công.`,
       };
-    // } catch (error) {
-    //   throw new InternalServerErrorException(
-    //     'Lỗi trong quá trình thực hiện xác thực giao dịch.',
-    //   );
-    // }
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Lỗi trong quá trình thực hiện xác thực giao dịch.',
+      );
+    }
   }
 
   async findAll(fromDate: Date, toDate: Date, affiliatedBankId : number) {
