@@ -36,6 +36,12 @@ export class CreateUserDto {
     example: 'Anh Pham',
   })
   name: string;
+
+  @IsString()
+  @ApiProperty({
+    example: '0908123321',
+  })
+  phone: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
