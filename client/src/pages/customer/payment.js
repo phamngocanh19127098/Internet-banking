@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import HomeNavigation from "../components/homeNavigation";
+import HomeNavigation from "../../components/homeNavigation";
 import { useSelector } from "react-redux";
-import { fetcherAccounts } from "../fetchers/fetcherCustomer";
-import { fetcherReceiver } from "../fetchers/fetcherCustomer";
+import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
+import { fetcherReceiver } from "../../fetchers/fetcherCustomer";
 import CurrencyInput from "react-currency-input-field";
-import ListRecipents from "../components/listRecipent";
-import { fetcherSendTransfer } from "../fetchers/fetcherCustomer";
-import ConfirmOTP from "../components/confirmOTP";
+import ListRecipents from "../../components/listRecipent";
+import { fetcherSendTransfer } from "../../fetchers/fetcherCustomer";
+import ConfirmOTP from "../../components/confirmOTP";
 
 const Payment = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -177,10 +177,10 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                      <option value={account.accountNumber}>
-                        {account.accountNumber}
-                      </option>
-                    ))
+                    <option value={account.accountNumber}>
+                      {account.accountNumber}
+                    </option>
+                  ))
                   : null}
               </select>
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">

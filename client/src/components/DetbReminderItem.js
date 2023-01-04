@@ -4,7 +4,6 @@ import io from "socket.io-client";
 import {payDebt, removeCreatedDebtReminder, removeReceivedDebtReminder} from "../constants/debtReminderConstants";
 import {CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT} from "../constants/buttonType";
 import {SRC} from "../constants/payTransactionFee";
-import {useEffect} from "react";
 const socket = io.connect("http://localhost:3001");
 
 const DebtReminderItem = (props) => {
@@ -25,7 +24,7 @@ const DebtReminderItem = (props) => {
     }
 
 
-    return <article className="cart-item">
+    return <article id={props.item.id} className="cart-item">
         <div className="flex items-center justify-between">
             <h4>{props.item.accountSrcNumber}</h4>
             <h4>{props.item.accountDesNumber}</h4>

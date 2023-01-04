@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux'
-import HomeNavigation from '../components/homeNavigation';
+import HomeNavigation from '../../components/homeNavigation';
 import { useState } from 'react';
-import Loader from '../components/loading';
-import { fetcherListTransactions } from '../fetchers/fetcherCustomer';
-import { fetcherAccounts } from '../fetchers/fetcherCustomer';
+import Loader from '../../components/loading';
+import { fetcherListTransactions } from '../../fetchers/fetcherCustomer';
+import { fetcherAccounts } from '../../fetchers/fetcherCustomer';
 const Transaction = () => {
     const { userInfo } = useSelector((state) => state.auth)
     const [listTransactions, setListTransactions] = useState([])
@@ -48,13 +48,13 @@ const Transaction = () => {
         <div>
             <div>
                 <div className=' bg-cover w-screen flex h-screen bg-[#F0F2FF] '>
-                    <HomeNavigation id={7} />
+                    <HomeNavigation id={8} />
                     <div className="h-screen flex-auto">
                         <div
                             className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
                         >
 
-                            {listTransactions !== null ?
+                            {/* {listTransactions !== null ?
                                 listTransactions.map((transaction) =>
                                     <div>
                                         {transaction.transactionType === "TRANSFER" && <div
@@ -76,7 +76,7 @@ const Transaction = () => {
                                     </div>
                                 )
 
-                                : null}
+                                : null} */}
                         </div>
                     </div>
                 </div>

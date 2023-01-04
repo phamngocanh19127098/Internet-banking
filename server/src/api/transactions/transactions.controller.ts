@@ -176,10 +176,10 @@ export class TransactionsController {
 
 
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionsService.findOne(+id);
-  }
+  // @Get(':id')
+  // async findOne(@Param('id') id: string) {
+  //   return await this.transactionsService.findOne(+id);
+  // }
 
   // @Patch(':id')
   // update(
@@ -213,6 +213,22 @@ export class TransactionsController {
   //     message: 'Lấy thông tin giao dịch thành công.',
   //   };
   // }
+
+
+  @Get('list/:accountNumber')
+  async getAllTransactions(
+    @Param('accountNumber') accountNumber: string,
+  ) {
+    let data = await this.transactionsService.getTransactionByAccountNumber(
+      accountNumber
+  );
+
+  return {
+    data,
+    statusCode: 200,
+    message: 'Lấy tất cả giao dịch thành công.',
+  };
+  }
 
   @ApiOperation({ description: 'Lấy thông tin giao dịch nhận tiền bằng số tài khoản' })
   @ApiOkResponse({ description: 'Lấy danh sách giao dịch nhận tiền thành công'})

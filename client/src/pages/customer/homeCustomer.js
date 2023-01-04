@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeNavigation from '../components/homeNavigation';
+import HomeNavigation from '../../components/homeNavigation';
 import { useSelector } from 'react-redux'
 const HomeCustomer = () => {
     const { userInfo } = useSelector((state) => state.auth)

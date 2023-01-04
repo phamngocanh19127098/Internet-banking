@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DebtReminder } from 'src/api/debtReminders/entities/debtReminders.entity';
 import { DebtRemindersModule } from 'src/api/debtReminders/debtReminders.module';
 import { UserModule } from 'src/api/users/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DebtReminder]), DebtRemindersModule, UserModule],
+  imports: [TypeOrmModule.forFeature([DebtReminder]), DebtRemindersModule, UserModule, JwtModule],
   providers: [DebtReminderSocketGateway, DebtReminderSocketService],
 })
 export class DebtReminderSocketModule {}

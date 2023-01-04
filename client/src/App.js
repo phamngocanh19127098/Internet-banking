@@ -10,21 +10,23 @@ import RegisterScreen from "./pages/RegisterScreen";
 import ProfileScreen from "./pages/ProfileScreen";
 import HomeScreen from "./pages/home";
 import ProtectedRoute from "./routing/ProtectedRoute";
-import HomeCustomer from "./pages/homeCustomer";
-import Loan from "./pages/loan";
-import Recipents from "./pages/recipients";
-import Contact from "./pages/contact";
-import Other from "./pages/other";
-import Accounts from "./pages/accounts";
-import Payment from "./pages/payment";
+import HomeCustomer from "./pages/customer/homeCustomer";
+import Loan from "./pages/customer/loan";
+import Recipents from "./pages/customer/recipients";
+import Contact from "./pages/customer/contact";
+import Other from "./pages/customer/other";
+import Accounts from "./pages/customer/accounts";
+import Payment from "./pages/customer/payment";
 import ChangePassword from "./pages/changePwd";
-import Transaction from "./pages/transactions";
-import Employee from "./pages/employee";
+import Transaction from "./pages/customer/transactions";
+import Employee from "./pages/employee/employee";
 import { ROLES } from "./routing/roles";
 import RequireAuth from "./routing/RequireAuth";
 import ForgotPassword from "./pages/forgotPwd";
-import UnpaidLoan from "./pages/unpaidLoan";
+import UnpaidLoan from "./pages/customer/unpaidLoan";
 import RoleError from "./pages/error/roleError";
+import AddAccount from "./pages/employee/addAccount";
+import PutMoney from "./pages/employee/putMoney";
 function App() {
   return (
     <Router>
@@ -58,11 +60,13 @@ function App() {
               <Route element={<RequireAuth allowedRoles={ROLES.Employee} />}>
                 <Route path="/" element={<Employee />} />
                 <Route path="/employee" element={<Employee />} />
+                <Route path="/addAccount" element={<AddAccount />} />
+                <Route path="/putMoney" element={<PutMoney />} />
                 {/* <Route path='/employee' element={<Employee />} /> */}
               </Route>
             </Route>
           </Route>
-          {/* <Route path='*' element={<Navigate to='/customer' replace />} /> */}
+          <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
       </main>
     </Router>

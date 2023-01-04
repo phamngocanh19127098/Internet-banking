@@ -1,12 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import HomeNavigation from "../components/homeNavigation";
-import AddRecipent from "../components/addRecipent";
-import { fetcherListReceivers } from "../fetchers/fetcherCustomer";
-import DeleteRecipent from "../components/deleteRecipent";
-import EditRecipent from "../components/editRecipent";
-import Loader from "../components/loading";
+import HomeNavigation from "../../components/homeNavigation";
+import AddRecipent from "../../components/addRecipent";
+import { fetcherListReceivers } from "../../fetchers/fetcherCustomer";
+import DeleteRecipent from "../../components/deleteRecipent";
+import EditRecipent from "../../components/editRecipent";
+import Loader from "../../components/loading";
 const Recipents = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -15,7 +15,7 @@ const Recipents = () => {
   const handleOnCloseEdit = () => setShowEditModal(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleOnCloseDelete = () => setShowDeleteModal(false);
-  const [listRecipents, setListRecipents] = useState([{}]);
+  const [listRecipents, setListRecipents] = useState([]);
   const [idDelete, setIdDelete] = useState();
   const [editInfo, setEditInfo] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,8 +28,8 @@ const Recipents = () => {
   }, [listRecipents]);
   useEffect(() => {
     setIsLoading(true);
+    getList();
     setTimeout(() => {
-      getList();
       setIsLoading(false);
     }, 300);
   }, []);

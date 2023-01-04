@@ -1,27 +1,47 @@
-import React, { useEffect, useState } from "react";
-import HomeNavigation from "../components/homeNavigation";
+import React, { useEffect } from "react";
+import HomeNavigation from '../../components/homeNavigation';
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
 import {
   createDebtReminderSocket,
   findAllCreatedDebtReminder,
   findAllReceivedDebtReminder,
+  payDebt,
   removeCreatedDebtReminder,
   removeReceivedDebtReminder,
-} from "../constants/debtReminderConstants";
-import { onInit } from "../features/debtReminder/debtReminderSlice";
-import { onInitReceivedDebt } from "../features/debtReminder/debtReceivedSlice";
-import DebtReminderList from "../components/DebtReminderList";
-import AddDebtReminder from "../components/addDebtReminder";
-import { CREATED_DEBT, RECEIVED_DEBT } from "../constants/buttonType";
+} from "../../constants/debtReminderConstants";
+import { onInit } from "../../features/debtReminder/debtReminderSlice";
+import { onInitReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
+import DebtReminderList from "../../components/DebtReminderList";
+import AddDebtReminder from "../../components/addDebtReminder";
+import { CREATED_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
+import { closeNotification, newNotification, updateCurrentDebt } from "../../features/notification/notificationSlice";
+import { SRC } from "../../constants/payTransactionFee";
 const socket = io.connect("http://localhost:3001");
 
 const Loan = () => {
+  const token = localStorage.getItem('userToken')
   const { userInfo } = useSelector((state) => state.auth);
   const debtReminder = useSelector((state) => state.debtReminder);
   const debtReceived = useSelector((state) => state.debtReceived);
   const dispatch = useDispatch();
-  const [notification, setNotification] = useState("");
+  // const [notification, setNotification] = useState("");
+
+  const notification = useSelector((state) => state.notification)
+
+  const handlePayDebt = () => {
+    console.log(notification.currentPaymentDebt);
+    socket.emit(
+      payDebt,
+      {
+          authorization : `Bearer ${token}`,
+          toUserId: notification.currentPaymentDebt.userId,
+          amount: notification.currentPaymentDebt.amount,
+          description: "Thanh toán nợ",
+          payTransactionFee : SRC
+      }
+  )
+  }
 
   useEffect(() => {
     socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
@@ -38,13 +58,14 @@ const Loan = () => {
   useEffect(() => {
     socket.on(createDebtReminderSocket, (data) => {
       if (userInfo.id === data.receiverId) {
-        setNotification(
-          `Một yêu cầu thanh toán nợ ${data.amount} VND đã được tạo bởi ${data.createdName} với lời nhắn là ${data.description}`
-        );
+        console.log(data);
+        let message = `Một yêu cầu thanh toán nợ ${data.amount} VND đã được tạo bởi ${data.createdName} với lời nhắn là ${data.description}`;
+        dispatch(newNotification(message))
         socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
+        dispatch(updateCurrentDebt(data))
       }
     });
-  }, [userInfo.id]);
+  }, [userInfo.id, dispatch]);
 
   useEffect(() => {
     socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
@@ -61,34 +82,35 @@ const Loan = () => {
   useEffect(() => {
     socket.on(removeCreatedDebtReminder, (data) => {
       if (userInfo.id === data.receiverId) {
-        setNotification(
-          `Một yêu cầu thanh toán nợ ${data.amount} VND vừa được xóa bởi bởi ${data.actionTakerName}`
-        );
+
+        let message = `Một yêu cầu thanh toán nợ ${data.amount} VND vừa được xóa bởi bởi ${data.actionTakerName}`
+        dispatch(newNotification(message))
         socket.emit(findAllReceivedDebtReminder, { userId: data.receiverId });
         socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
       }
     });
-  }, [userInfo.id]);
+  }, [userInfo.id, dispatch]);
 
   useEffect(() => {
     socket.on(removeReceivedDebtReminder, (data) => {
       if (userInfo.id === data.userId) {
-        setNotification(
-          `Một yêu cầu thanh toán nợ ${data.amount} VND vừa được xóa bởi bởi ${data.actionTakerName}`
-        );
+        let message = `Một yêu cầu thanh toán nợ ${data.amount} VND vừa được xóa bởi bởi ${data.actionTakerName}`;
+        dispatch(newNotification(message))
         socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
         socket.emit(findAllReceivedDebtReminder, { userId: data.receiverId });
       }
     });
-  }, [userInfo.id]);
-
+  }, [userInfo.id, dispatch]);
+ 
   useEffect(() => {
-    console.log(debtReminder);
-  }, [debtReminder]);
+    socket.on(payDebt, (response) => {
+        if (userInfo.id === response.userId){
+            dispatch(closeNotification())
+        }
+        
+    });
+}, [userInfo.id, dispatch])
 
-  useEffect(() => {
-    console.log(debtReceived);
-  }, [debtReceived]);
   return (
     <div>
       <div>
@@ -115,14 +137,14 @@ const Loan = () => {
               </div>
               <div>
                 <div> Thong bao nhac no </div>
-                <p>{notification}</p>
+                <p>{notification.message}</p>
                 <button
                   className="cursor-pointer"
-                  onClick={() => setNotification("")}
+                  onClick={() => dispatch(closeNotification())}
                 >
                   Ok
                 </button>
-                <button className="cursor-pointer">Xem</button>
+                {!notification.isOpen && <button className="cursor-pointer" onClick={handlePayDebt}>Trả ngay</button>}
               </div>
             </div>
           </div>
