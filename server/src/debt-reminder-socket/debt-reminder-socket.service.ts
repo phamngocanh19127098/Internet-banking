@@ -10,6 +10,8 @@ import { UpdateDebtReminderSocketDto } from './dto/update-debt-reminder-socket.d
 import { BadRequestException, NotAcceptableException } from '@nestjs/common/exceptions';
 import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-reminder.dto";
 import {PayDebtReminderDto} from "../api/transactions/dto/pay-debt-reminder.dto";
+import { User } from 'src/api/users/entity/user.entity';
+import {JwtService} from '@nestjs/jwt';
 
 @Injectable()
 export class DebtReminderSocketService {
@@ -18,6 +20,7 @@ export class DebtReminderSocketService {
     private readonly debtReminderRepository : Repository<DebtReminder>,
     private readonly debtReminderService : DebtRemindersService,
     private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ){
 
   }
@@ -103,6 +106,14 @@ export class DebtReminderSocketService {
   }
 
   async payDebt(payDebtReminderDto: PayDebtReminderDto, authorization : string) {
-    return await this.debtReminderService.payDebtReminder(payDebtReminderDto, authorization);
+    const accessToken =
+        this.userService.getAccessTokenFromClient(authorization);
+      const decodedAccessToken = this.jwtService.decode(accessToken);
+
+      const username = Object(decodedAccessToken).username;
+      const user: User = await this.userService.getByUsername(username);
+    let result = await this.debtReminderService.payDebtReminder(payDebtReminderDto, authorization);
+    result['userId'] = user.id
+    return result;
   }
 }

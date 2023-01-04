@@ -19,9 +19,6 @@ const UnPaidLoan = () => {
         socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id })
     }, [userInfo.id])
 
-    useEffect(() => {
-        console.log(unpaidDebt.unpaidDebtReminders)
-    }, [unpaidDebt])
 
     useEffect(() => {
         socket.on(findAllUnPaidDebtReminder, (response) => {
@@ -32,11 +29,6 @@ const UnPaidLoan = () => {
         });
     }, [dispatch, userInfo.id]);
 
-    useEffect(() => {
-        socket.on(payDebt, (response) => {
-            console.log(response)
-        });
-    }, [])
 
 
     return (
