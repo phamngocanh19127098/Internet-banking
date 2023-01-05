@@ -55,6 +55,7 @@ const Loan = () => {
     });
   }, [dispatch, userInfo.id]);
 
+  // Thông báo cho người khác khi user hiện tại tạo nhắc nợ
   useEffect(() => {
     socket.on(createDebtReminderSocket, (data) => {
       if (userInfo.id === data.receiverId) {
@@ -79,6 +80,7 @@ const Loan = () => {
     });
   }, [dispatch, userInfo.id]);
 
+  // Thông báo cho người khác khi user hiện tại xóa nợ do mình tạo
   useEffect(() => {
     socket.on(removeCreatedDebtReminder, (data) => {
       if (userInfo.id === data.receiverId) {
@@ -91,6 +93,7 @@ const Loan = () => {
     });
   }, [userInfo.id, dispatch]);
 
+    // Thông báo cho user hiện tại khi người khác xóa thông báo nhắc nợ  
   useEffect(() => {
     socket.on(removeReceivedDebtReminder, (data) => {
       if (userInfo.id === data.userId) {
