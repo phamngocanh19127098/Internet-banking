@@ -9,6 +9,9 @@ export const fetcherAccessToken = async () => {
             "refreshToken": localStorage.getItem('refreshToken')
         }
     });
+    console.log({
+        "refreshToken": localStorage.getItem('refreshToken')
+    })
     return { data, status }
 }
 
