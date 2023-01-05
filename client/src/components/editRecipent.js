@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { fetcherEditReceiver } from "../fetchers/fetcherCustomer";
 const EditRecipent = (props) => {
   const [nickname, setNickName] = useState("");
-
-  const [result, setResult] = useState();
-  async function getName() {}
 
   async function editRecipent() {
     const info = await fetcherEditReceiver(
@@ -61,7 +58,7 @@ const EditRecipent = (props) => {
           Tên người sở hữu tài khoản
         </div>
         <div className="flex flex-col mb-4 px-8">
-          <div className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline">
+          <div className="appearance-none p-3 shadow rounded bg-white text-sm font-medium text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline">
             {props.editInfo.name}
           </div>
         </div>
@@ -70,7 +67,7 @@ const EditRecipent = (props) => {
         </div>
         <div className="flex flex-col mb-4 px-8">
           <input
-            className="shadow appearance-none border rounded flex p-3 shadow rounded bg-white text-sm font-medium leading-none text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none p-3 shadow rounded bg-white text-sm font-medium text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
             id="nickname"
             type="text"
             defaultValue={props.editInfo.nickname}
@@ -82,16 +79,16 @@ const EditRecipent = (props) => {
           <button
             id="handlecancel"
             onClick={handleCancelClick}
-            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded bg-[#FFFFFF] hover:bg-[#F3F4F6] bg-white"
+            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-[#F3F4F6] bg-white"
           >
-            Cancel
+            Huỷ
           </button>
           <button
             id="handleSave"
             onClick={handleSaveClick}
             className="cursor-pointer rounded px-4 py-2 ml-4 text-white  text-xs font-bold hover:bg-[#cf4a04] bg-[#EA580C] disabled:bg-[#edb395] "
           >
-            Save
+            Lưu
           </button>
         </div>
       </div>

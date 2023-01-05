@@ -26,6 +26,7 @@ const Recipents = () => {
   useEffect(() => {
     console.log(listRecipents);
   }, [listRecipents]);
+
   useEffect(() => {
     setIsLoading(true);
     getList();
@@ -65,10 +66,10 @@ const Recipents = () => {
           <HomeNavigation id={2} />
           <div className="h-screen flex-auto">
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
-              {listRecipents !== null ? (
+              {listRecipents.length !== 0 ? (
                 <div className=" flex  py-2 -my-2 col-start-3 col-span-8 mt-6 place-items-start overflow-y-auto overflow-x-auto row-start-4 row-span-4">
                   <div className="border-b border-gray-200 shadow px-4 py-4  items-center min-w-full justify-center">
-                    <table className=" table-fixed border-0 border-b border-gray-300 min-w-full">
+                    <table className=" table-fixed border-0 min-w-full">
                       <thead className=" border-0 border-b border-b-black">
                         <tr>
                           <th className="px-4 py-3 pr-20 text-sm font-bold leading-4 tracking-wider text-left text-black ">
@@ -85,9 +86,9 @@ const Recipents = () => {
                           </th>
                         </tr>
                       </thead>
-                      <tbody className=" ">
+                      <tbody>
                         {listRecipents.map((account, index) => (
-                          <tr key={index}>
+                          <tr key={index} className="border-b border-gray-300">
                             <td className="px-4 py-2">
                               <div className="text-sm font-bold text-black-900">
                                 {account.beneficiaryNickname}
@@ -113,7 +114,7 @@ const Recipents = () => {
                                   }}
                                   className="cursor-pointer px-12 py-2 text-sm font-bold text-white bg-green rounded-full hover:bg-[#1bc46e]"
                                 >
-                                  Edit
+                                  Chỉnh sửa
                                 </button>
                               </div>
                             </td>
@@ -126,7 +127,7 @@ const Recipents = () => {
                                   }}
                                   className="cursor-pointer px-10 py-2 text-sm font-bold text-white text-center bg-medium-pink-red rounded-full hover:bg-[#870e2b] disabled:bg-[#edb395] "
                                 >
-                                  Remove
+                                  Xoá
                                 </button>
                               </div>
                             </td>
@@ -136,8 +137,12 @@ const Recipents = () => {
                     </table>
                   </div>
                 </div>
-              ) : null}
-              <div className=" row-start-2 row-span-1 flex justify-end place-items-end col-start-7 col-span-2 ">
+              ) : (
+                <div className=" text-lg font-semibold border-b border-gray-300">
+                  Không có người nhận
+                </div>
+              )}
+              <div className=" row-start-2 row-span-1 flex justify-end place-items-end col-start-7 col-span-2 mt-6">
                 <button
                   type="button"
                   onClick={() => {

@@ -1,12 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import HomeNavigation from "../components/homeNavigation";
-import AddRecipent from "../components/addRecipent";
 import { fetcherListReceivers } from "../fetchers/fetcherCustomer";
-import DeleteRecipent from "../components/deleteRecipent";
-import EditRecipent from "../components/editRecipent";
-import Loader from "../components/loading";
+
 const ListRecipents = (props) => {
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -67,11 +63,11 @@ const ListRecipents = (props) => {
         <div className="flex  text-lg  text-black font-bold pt-4 px-20 border-b-2 border-b-gray-100">
           Thêm người nhận
         </div>
-        {listRecipents !== null ? (
-          <div>
+        {listRecipents.length !== 0 ? (
+          <div className="px-4 mt-4">
             <label
               htmlFor="accounts"
-              className="block mb-2 text-sm text-gray-900 dark:text-white font-bold"
+              className="block mb-2 text-sm text-gray-900 font-bold"
             >
               Chọn tài khoản thanh toán nguồn
             </label>
@@ -81,7 +77,7 @@ const ListRecipents = (props) => {
               onChange={handleAccount}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              {listRecipents !== null
+              {listRecipents.length !== 0
                 ? listRecipents.map((account, index) => (
                     <option value={account.beneficiaryAccountNumber}>
                       {account.beneficiaryNickname}
@@ -90,21 +86,25 @@ const ListRecipents = (props) => {
                 : null}
             </select>
           </div>
-        ) : null}
-        <div className="flex justify-end pb-4 px-8">
+        ) : (
+          <div className="p-4 font-semibold">
+            Không có người nhận nào trong danh sách đã lưu
+          </div>
+        )}
+        <div className="flex justify-end pb-4 px-8 mt-6">
           <button
             id="handlecancel"
             onClick={handleCancelClick}
-            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded bg-[#FFFFFF] hover:bg-[#F3F4F6] bg-white"
+            className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-[#F3F4F6] bg-white"
           >
-            Cancel
+            Huỷ
           </button>
           <button
             id="handleSave"
             onClick={handleSaveClick}
             className="cursor-pointer rounded px-4 py-2 ml-4 text-white  text-xs font-bold hover:bg-[#cf4a04] bg-[#EA580C] disabled:bg-[#edb395] "
           >
-            Save
+            Lưu
           </button>
         </div>
       </div>

@@ -5,7 +5,7 @@ import { useGetDetailsQuery } from "../app/services/auth/authService";
 import { logout, setCredentials } from "../features/auth/authSlice";
 import "../styles/header.css";
 import { fetcherAccessToken } from "../fetchers/token";
-import useAuth from "../routing/useAuth";
+
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -22,6 +22,8 @@ const Header = () => {
   useEffect(() => {
     getTest();
   }, []);
+
+
   useEffect(() => {
     if (token !== "") localStorage.setItem("userToken", token);
   }, [token]);

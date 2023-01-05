@@ -1,13 +1,12 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import useAuth from "../routing/useAuth";
 
 const HomeNavigation = (props) => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const [Menus, setMenus] = useState([
-    { id: 0, title: "Tổng quan", link: "/customer", current: false },
+    { id: 0, title: "Trang chủ", link: "/customer", current: false },
     { id: 1, title: "Danh sách tài khoản", link: "/accounts", current: false },
     {
       id: 2,
@@ -57,7 +56,7 @@ const HomeNavigation = (props) => {
         </h1>
       </div>
       <div className="m-1  h-24 relative flex  items-center rounded-full  text-xl text-white">
-        <img src="../avatar.png" className="w-14 rounded-full" />
+        <img src="../avatar.png" className="w-14 rounded-full" alt="avatar" />
         <div className="w-36 inline text-xl text-center m-2 mr-2">
           {" "}
           {userInfo.name}{" "}
