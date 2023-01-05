@@ -190,17 +190,19 @@ export class UserController {
   // @Roles( Role.ADMIN, Role.EMPLOYEE)
   @Get('/get-customer/:username')
   async findUserByUsername(@Param('username') username: string) {
-    const data = await this.userService.getUserByUsername(username);
+    const user = await this.userService.getUserByUsername(username);
 
-    if (!data)
+    if (!user)
       throw new BadRequestException('Không tìm thấy khách hàng này');
-    delete data.password;
-    delete data.refreshToken
+    delete user.password;
+    delete user.refreshToken
 
     return {
       statusCode: 200,
       message: 'Tìm kiếm người dùng bằng username thành công',
-      data,
+      data: {
+        user: user
+      },
     };
   }
 }
