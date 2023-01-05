@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -165,5 +166,41 @@ export class UserController {
     delete user.password;
 
     return user;
+  }
+
+  @ApiOperation({
+    description: 'Tìm kiếm người dùng bằng Username. Vai trò : employee, admin',
+  })
+  @ApiOkResponse({
+    description: 'Tìm kiếm người dùng bằng username thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Không tìm thấy khách hàng này',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi tìm kiếm người dùng bằng Username',
+  })
+  @ApiBearerAuth()
+  // @Roles( Role.ADMIN, Role.EMPLOYEE)
+  @Get('/get-customer/:username')
+  async findUserByUsername(@Param('username') username: string) {
+    const data = await this.userService.getUserByUsername(username);
+
+    if (!data)
+      throw new BadRequestException('Không tìm thấy khách hàng này');
+    delete data.password;
+    delete data.refreshToken
+
+    return {
+      statusCode: 200,
+      message: 'Tìm kiếm người dùng bằng username thành công',
+      data,
+    };
   }
 }

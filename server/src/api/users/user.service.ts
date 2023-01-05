@@ -1,28 +1,20 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { Repository, UpdateResult } from 'typeorm';
-import { hash, compareSync } from 'bcrypt';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const randomstring = require('randomstring');
-
-import { InvalidCredentialsException } from 'src/commons/filters/exceptions/auth/InvalidCredentialsException';
-import {
-  FailLoginException,
-  InvalidTokenException,
-} from 'src/commons/filters/exceptions/auth';
-import { sendMail } from 'src/commons/mailing/nodemailer';
+import {InjectRepository} from '@nestjs/typeorm';
+import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
+import {Repository, UpdateResult} from 'typeorm';
+import {compareSync, hash} from 'bcrypt';
+import {InvalidCredentialsException} from 'src/commons/filters/exceptions/auth/InvalidCredentialsException';
+import {FailLoginException, InvalidTokenException,} from 'src/commons/filters/exceptions/auth';
+import {sendMail} from 'src/commons/mailing/nodemailer';
 import {
   EmailExistedException,
   UsernameExistedException,
   UserUnexistingException,
 } from 'src/commons/filters/exceptions/users';
 
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
-import { Role, User } from './entity/user.entity';
+import {CreateUserDto, LoginUserDto, UpdateUserDto} from './dto/user.dto';
+import {Role, User} from './entity/user.entity';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const randomstring = require('randomstring');
 
 @Injectable()
 export class UserService {
@@ -151,6 +143,20 @@ export class UserService {
 
   getUserById(id: number) {
     return this.userRepository.findOneBy({ id });
+  }
+
+  getUserByUsername(username: string) {
+    try {
+      return this.userRepository.findOneBy({
+        username,
+        role: Role.CUSTOMER
+      });
+    } catch (e) {
+    throw new InternalServerErrorException(
+      'Xảy ra lỗi từ server khi tìm kiếm người dùng bằng Username',
+    );
+  }
+
   }
 
   getAccessTokenFromClient(authorization: string) {
