@@ -8,7 +8,12 @@ export interface IToken {
 }
 
 export interface IResponseData {
-  data: User;
+  data:
+    | User
+    | {
+        user: User;
+        accountNumber: any;
+      };
   metadata?: IToken;
   statusCode: number;
   message: string;
