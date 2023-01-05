@@ -27,6 +27,7 @@ import UnpaidLoan from "./pages/customer/unpaidLoan";
 import RoleError from "./pages/error/roleError";
 import AddAccount from "./pages/employee/addAccount";
 import PutMoney from "./pages/employee/putMoney";
+import SeeTransactions from "./pages/employee/transactionAcc";
 function App() {
   return (
     <Router>
@@ -62,6 +63,7 @@ function App() {
                 <Route path="/employee" element={<Employee />} />
                 <Route path="/addAccount" element={<AddAccount />} />
                 <Route path="/putMoney" element={<PutMoney />} />
+                <Route path="/seeTransaction" element={<SeeTransactions />} />
                 {/* <Route path='/employee' element={<Employee />} /> */}
               </Route>
             </Route>

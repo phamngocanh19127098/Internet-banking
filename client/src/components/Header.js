@@ -22,13 +22,14 @@ const Header = () => {
   useEffect(() => {
     getTest();
   }, []);
+
+
   useEffect(() => {
     if (token !== "") localStorage.setItem("userToken", token);
   }, [token]);
 
   useEffect(() => {
     if (data) dispatch(setCredentials(data.data));
-    if (!data) dispatch(logout())
   }, [data, dispatch]);
 
   return (
