@@ -28,6 +28,7 @@ import { OtpService } from '../otp/otp.service';
 import { sendMail } from 'src/commons/mailing/nodemailer';
 import { InvalidOtpException } from 'src/commons/filters/exceptions/otp/InvalidOtpException';
 import { OtpExpiredTimeException } from 'src/commons/filters/exceptions/otp/OtpExpiredTimeException';
+import { Account } from '../accounts/entities/account.entity';
 
 @Injectable()
 export class AuthService {
@@ -42,10 +43,12 @@ export class AuthService {
   async signup(dto: CreateUserDto, client): Promise<IResponseData> {
     const user = await this.userService.create(dto);
 
+    let account: Account;
+
     if (dto.role === Role.CUSTOMER) {
       const employeeId = client.id;
 
-      this.accountService.create({
+      account = await this.accountService.create({
         customerId: user.id,
         currentBalance: 0,
         createdBy: employeeId,
@@ -55,7 +58,7 @@ export class AuthService {
     delete user.password;
 
     return {
-      data: user,
+      data: { ...user, accountNumber: account.accountNumber },
       statusCode: 200,
       message: 'Đăng ký người dùng thành công.',
     };

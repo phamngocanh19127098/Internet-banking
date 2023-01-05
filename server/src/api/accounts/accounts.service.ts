@@ -167,14 +167,16 @@ export class AccountsService {
     updateType: TransactionType,
   ) {
     try {
-      const accounts = await this.getActivePaymentAccountByAccountNumber(accountNumber);
+      const accounts = await this.getActivePaymentAccountByAccountNumber(
+        accountNumber,
+      );
 
       if (!accounts) {
         throw new BadRequestException(
           'Không tìm thấy account khi thực hiện giao dịch',
         );
       }
-      const account = accounts[0]
+      const account = accounts[0];
 
       if (updateType === TransactionType.TRANSFER) {
         account.currentBalance -= amount;
@@ -190,7 +192,7 @@ export class AccountsService {
   }
 
   async getAccountInfoByAccountNumber(accountNumber: string) {
-    console.log(accountNumber)
+    console.log(accountNumber);
     try {
       const account: Account = await this.repos.findOne({
         where: {
@@ -246,7 +248,13 @@ export class AccountsService {
       const data = await this.repos
         .createQueryBuilder('account')
         .leftJoin('account.user', 'user')
-        .select(['account.accountNumber', 'user.id', 'user.name', 'user.username', 'user.phone'])
+        .select([
+          'account.accountNumber',
+          'user.id',
+          'user.name',
+          'user.username',
+          'user.phone',
+        ])
         .where('account.id =:id AND user.role =:role', {
           id: account.id,
           role: Role.CUSTOMER,
@@ -270,7 +278,7 @@ export class AccountsService {
       const query = this.repos
         .createQueryBuilder('account')
         .leftJoin('account.user', 'user')
-        .select(['account.accountNumber','user.name'])
+        .select(['account.accountNumber', 'user.name'])
         .where('user.id = :userId', { userId })
         .andWhere('account.accountType = :accountType', {
           accountType: AccountType.PAYMENT_ACCOUNT,
