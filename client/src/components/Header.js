@@ -28,6 +28,7 @@ const Header = () => {
 
   useEffect(() => {
     if (data) dispatch(setCredentials(data.data));
+    if (!data) dispatch(logout())
   }, [data, dispatch]);
 
   return (
@@ -37,8 +38,8 @@ const Header = () => {
           {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
-            ? `Logged in as ${userInfo.email}`
-            : "You're not logged in"}
+              ? `Logged in as ${userInfo.email}`
+              : "You're not logged in"}
           {/* {userInfo && `Logged in as ${userInfo.email}`}
           {userInfo === null && "You're not logged in"} */}
         </span>
