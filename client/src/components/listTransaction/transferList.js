@@ -1,5 +1,5 @@
 import moment from "moment/moment";
-const AllListTransaction = (props) => {
+const TransferListTransaction = (props) => {
     return (
         <div>
             {props.allList !== null && props.allList !== undefined ? (
@@ -29,19 +29,18 @@ const AllListTransaction = (props) => {
                                 {props.allList.map((transaction, index) => (
                                     <tr key={index} class=" bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {transaction.accountSrcNumber === props.accNum && <div className="text-red"> Chuyển tiền từ</div>}
-                                            {transaction.accountDesNumber === props.accNum && <div className="text-green">Nhận tiền từ</div>}
+                                            <div className="text-red"> Chuyển tiền từ</div>
                                         </th>
                                         <td class="px-6 py-4">
-                                            {transaction.accountSrcNumber === props.accNum && <div> {transaction.accountDesNumber}</div>}
-                                            {transaction.accountDesNumber === props.accNum && <div>{transaction.accountSrcNumber}</div>}
+                                            <div> {transaction.accountDesNumber}</div>
+
                                         </td>
                                         <td class="px-6 py-4">
                                             $2999
                                         </td>
                                         <td class="px-8 py-4">
-                                            {transaction.accountSrcNumber === props.accNum && <div className="text-red text-base font-bold"> -{transaction.amount}</div>}
-                                            {transaction.accountDesNumber === props.accNum && <div className="text-green text-base font-bold">+{transaction.amount}</div>}
+                                            <div className="text-red text-base font-bold"> -{transaction.amount}</div>
+
                                         </td>
                                         <td class="px-8 py-4">
                                             {moment(transaction.updatedAt).format('hh:mm:ss DD MMM, YYYY')}
@@ -58,4 +57,4 @@ const AllListTransaction = (props) => {
     );
 }
 
-export default AllListTransaction
+export default TransferListTransaction

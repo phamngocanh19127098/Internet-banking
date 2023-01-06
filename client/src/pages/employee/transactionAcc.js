@@ -5,6 +5,7 @@ import { fetcherReceiver } from '../../fetchers/fetcherCustomer';
 import { fetcherAllList, fetcherDebtList, fetcherReceivedList, fetcherTransferList } from '../../fetchers/fetcherEmployee';
 import EmployeeNavigation from '../../components/employeeNavigation';
 import AllListTransaction from '../../components/listTransaction/allList';
+import TransferListTransaction from '../../components/listTransaction/transferList';
 const SeeTransactions = () => {
     const [allList, setAllList] = useState([])
     const [receivedList, setReceivedList] = useState([])
@@ -26,9 +27,12 @@ const SeeTransactions = () => {
         const info = await fetcherAllList(accNum);
         setAllList(info.data.data);
     }
-    useEffect(() => {
-        console.log(allList);
-    }, [allList]);
+
+    async function getTransferList() {
+        const info = await fetcherTransferList(accNum);
+        setTransferList(info.data.data);
+    }
+
 
     useEffect(() => {
         console.log(accNum);
@@ -64,6 +68,7 @@ const SeeTransactions = () => {
     const submitForm = () => {
         console.log(accNum)
         getAllList()
+        getTransferList()
     };
     const [openTab, setOpenTab] = useState(1);
     return (
@@ -153,7 +158,7 @@ const SeeTransactions = () => {
                                                 <AllListTransaction allList={allList} accNum={accNum} />
                                             </div>
                                             <div className={openTab === 2 ? "block" : "hidden"}>
-                                                <AllListTransaction allList={allList} accNum={accNum} />
+                                                <TransferListTransaction allList={transferList} />
                                             </div>
                                             <div className={openTab === 3 ? "block" : "hidden"}>
                                                 <AllListTransaction allList={allList} accNum={accNum} />
