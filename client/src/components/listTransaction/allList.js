@@ -3,9 +3,9 @@ const AllListTransaction = (props) => {
     return (
         <div>
             {props.allList !== null && props.allList !== undefined ? (
-                <div class="flex flex-col h-64 xl:h-150 lg:h-150 md:h-128 w-48 lg:w-150 xl:w-150 md:w-96">
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-auto  ">
-                        <table class=" table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+                <div class="flex flex-col h-64 xl:h-150 lg:h-150 md:h-128 w-48 lg:w-150 xl:w-150 md:w-96 ">
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-auto ">
+                        <table class="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
                             <thead class="relative w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                                 <tr className="">
                                     <th scope="col" class="sticky px-6 py-3">
