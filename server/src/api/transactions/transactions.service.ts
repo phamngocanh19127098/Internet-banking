@@ -357,6 +357,9 @@ export class TransactionsService {
       let timeZone = new Date()
       timeZone.setDate(timeZone.getDate() - 30);
 
+      let status = 1
+
+
       let account: Account = await this.accountRepository.findOne({
         where: {
           accountNumber,
@@ -380,6 +383,7 @@ export class TransactionsService {
                 accountNumber,
               }
           ).andWhere('transaction.createdAt >:timeZone',{timeZone})
+          .andWhere('transaction.status =:status',{status})
           .orderBy('transaction.createdAt', 'DESC')
           .getMany();
 
@@ -395,6 +399,9 @@ export class TransactionsService {
     try {
       let timeZone = new Date()
       timeZone.setDate(timeZone.getDate() - 30);
+
+      let status = 1
+
 
       let account: Account = await this.accountRepository.findOne({
         where: {
@@ -416,6 +423,7 @@ export class TransactionsService {
                 accountNumber,
               }
           ).andWhere('transaction.createdAt >:timeZone',{timeZone})
+          .andWhere('transaction.status =:status',{status})
           .orderBy('transaction.createdAt', 'DESC')
           .getMany();
 
@@ -432,6 +440,9 @@ export class TransactionsService {
       let type = TransactionType.TRANSFER
       let timeZone = new Date()
       timeZone.setDate(timeZone.getDate() - 30);
+
+      let status = 1
+
 
       let account: Account = await this.accountRepository.findOne({
         where: {
@@ -456,6 +467,7 @@ export class TransactionsService {
                 accountNumber,
               }
           ).andWhere('transaction.createdAt >:timeZone',{timeZone})
+          .andWhere('transaction.status =:status',{status})
           .orderBy('transaction.createdAt', 'DESC')
           .getMany();
 
@@ -506,10 +518,7 @@ export class TransactionsService {
         .andWhere('transaction.status =:status',{status})
         .orderBy('transaction.createdAt', 'DESC')
         .getMany();
-        
-        console.log(data);
-        
-  
+                
       return data;
     } catch (e) {
       throw new InternalServerErrorException(
