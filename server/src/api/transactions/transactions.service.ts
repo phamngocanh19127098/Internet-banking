@@ -75,7 +75,7 @@ export class TransactionsService {
       }
 
       const paymentAccount = accounts[0];
-      const amountWithFee = (dto.payTransactionFee === PayTransactionFeeType.SRC)? +dto.amount + Number(process.env.EXTERNAL_FEE) : dto.amount
+      const amountWithFee = (dto.payTransactionFee === PayTransactionFeeType.SRC)? +dto.amount + Number(process.env.EXTERNAL_FEE) : +dto.amount
       if (amountWithFee > paymentAccount.currentBalance )
         throw new InvalidAmountException()
     try {

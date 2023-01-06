@@ -108,6 +108,7 @@ const Loan = () => {
   useEffect(() => {
     socket.on(payDebt, (response) => {
         if (userInfo.id === response.userId){
+          console.log(response);
             dispatch(closeNotification())
         }
         
