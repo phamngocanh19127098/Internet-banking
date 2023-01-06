@@ -268,6 +268,28 @@ export class TransactionsController {
   //   };
   // }
 
+
+
+  @ApiOperation({
+    description:
+      'Lấy thông tin giao dịch bằng số tài khoản. Customer mới dùng được.',
+  })
+  @ApiOkResponse({ description: 'Lấy danh sách giao dịch thành công' })
+  @ApiBadRequestResponse({
+    description: 'Account không tồn tại',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy thông tin giao dịch bằng số tài khoản',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
   @Get('list/:accountNumber')
   async getAllTransactions(@Param('accountNumber') accountNumber: string) {
     const data = await this.transactionsService.getTransactionByAccountNumber(
@@ -355,6 +377,7 @@ export class TransactionsController {
       message: 'Lấy thông tin giao dịch chuyển khoản thành công.',
     };
   }
+
 
   @ApiOperation({
     description:
