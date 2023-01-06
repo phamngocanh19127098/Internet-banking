@@ -372,9 +372,11 @@ export class TransactionsService {
 
       let data = await this.transactionRepository
           .createQueryBuilder('transaction')
+          .leftJoin('transaction.accountDes', 'accountDes')
+          .leftJoin('accountDes.user', 'userDes')
           .leftJoin('transaction.accountSrc', 'accountSrc')
-          .leftJoin('accountSrc.user', 'user')
-          .select(['transaction','accountSrc','user.name'])
+          .leftJoin('accountSrc.user', 'userSrc')
+          .select(['transaction','accountSrc','userSrc.name','accountDes','userDes.name'])
           .where('transaction.transactionType =:type', {
             type,
           })
@@ -416,8 +418,10 @@ export class TransactionsService {
       let data = await this.transactionRepository
           .createQueryBuilder('transaction')
           .leftJoin('transaction.accountDes', 'accountDes')
-          .leftJoin('accountDes.user', 'user')
-          .select(['transaction','accountDes','user.name'])
+          .leftJoin('accountDes.user', 'userDes')
+          .leftJoin('transaction.accountSrc', 'accountSrc')
+          .leftJoin('accountSrc.user', 'userSrc')
+          .select(['transaction','accountSrc','userSrc.name','accountDes','userDes.name'])
           .where(
               'accountDes.accountNumber =:accountNumber', {
                 accountNumber,
@@ -456,9 +460,11 @@ export class TransactionsService {
 
       let data = await this.transactionRepository
           .createQueryBuilder('transaction')
+          .leftJoin('transaction.accountDes', 'accountDes')
+          .leftJoin('accountDes.user', 'userDes')
           .leftJoin('transaction.accountSrc', 'accountSrc')
-          .leftJoin('accountSrc.user', 'user')
-          .select(['transaction','accountSrc','user.name'])
+          .leftJoin('accountSrc.user', 'userSrc')
+          .select(['transaction','accountSrc','userSrc.name','accountDes','userDes.name'])
           .where('transaction.transactionType =:type', {
             type,
           })
