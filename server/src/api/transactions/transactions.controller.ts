@@ -289,7 +289,7 @@ export class TransactionsController {
       'Xảy ra lỗi từ server khi lấy thông tin giao dịch bằng số tài khoản',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER,Role.EMPLOYEE)
   @Get('list/:accountNumber')
   async getAllTransactions(@Param('accountNumber') accountNumber: string) {
     const data = await this.transactionsService.getTransactionByAccountNumber(
@@ -324,7 +324,7 @@ export class TransactionsController {
       'Xảy ra lỗi từ server khi lấy thông tin giao dịch nhận tiền bằng số tài khoản',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER,Role.EMPLOYEE)
   @Get('list/received/:accountNumber')
   async getTransactionReceivedByAccountNumber(
     @Param('accountNumber') accountNumber: string,
@@ -361,7 +361,7 @@ export class TransactionsController {
       'Xảy ra lỗi từ server khi lấy thông tin giao dịch chuyển khoản bằng số tài khoản',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER,Role.EMPLOYEE)
   @Get('list/transfer/:accountNumber')
   async getTransactionTransferByAccountNumber(
     @Param('accountNumber') accountNumber: string,
@@ -398,7 +398,7 @@ export class TransactionsController {
       'Xảy ra lỗi từ server khi lấy thông tin giao dịch nhắc nợ bằng số tài khoản',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER,Role.EMPLOYEE)
   @Get('list/debtReminder/:accountNumber')
   async getTransactionDebtReminderByAccountNumber(
     @Param('accountNumber') accountNumber: string,
