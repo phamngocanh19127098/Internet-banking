@@ -376,7 +376,7 @@ export class TransactionsService {
           .leftJoin('accountDes.user', 'userDes')
           .leftJoin('transaction.accountSrc', 'accountSrc')
           .leftJoin('accountSrc.user', 'userSrc')
-          .select(['transaction','accountSrc','userSrc.name','accountDes','userDes.name'])
+          .select(['transaction','accountSrc.id','userSrc.name','accountDes.id','userDes.name'])
           .where('transaction.transactionType =:type', {
             type,
           })
@@ -421,7 +421,7 @@ export class TransactionsService {
           .leftJoin('accountDes.user', 'userDes')
           .leftJoin('transaction.accountSrc', 'accountSrc')
           .leftJoin('accountSrc.user', 'userSrc')
-          .select(['transaction','accountSrc','userSrc.name','accountDes','userDes.name'])
+          .select(['transaction','accountSrc.id','userSrc.name','accountDes.id','userDes.name'])
           .where(
               'accountDes.accountNumber =:accountNumber', {
                 accountNumber,
@@ -464,7 +464,7 @@ export class TransactionsService {
           .leftJoin('accountDes.user', 'userDes')
           .leftJoin('transaction.accountSrc', 'accountSrc')
           .leftJoin('accountSrc.user', 'userSrc')
-          .select(['transaction','accountSrc','userSrc.name','accountDes','userDes.name'])
+          .select(['transaction','accountSrc.id','userSrc.name','accountDes.id','userDes.name'])
           .where('transaction.transactionType =:type', {
             type,
           })
@@ -510,7 +510,7 @@ export class TransactionsService {
         .leftJoin('accountDes.user', 'userDes')
         .leftJoin('transaction.accountSrc', 'accountSrc')
         .leftJoin('accountSrc.user', 'userSrc')
-        .select(['transaction','accountSrc','userSrc.name','accountDes','userDes.name'])
+        .select(['transaction','accountSrc.id','userSrc.name','accountDes.id','userDes.name'])
         .where(
           new Brackets((qb) => {
             qb.where('accountDes.accountNumber =:accountNumber', {
