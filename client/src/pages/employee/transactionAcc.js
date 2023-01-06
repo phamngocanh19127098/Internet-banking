@@ -113,31 +113,31 @@ const SeeTransactions = () => {
                                                 <div
 
                                                     onClick={() => setOpenTab(1)}
-                                                    className={` ${openTab === 1 ? "bg-purple-600 text-white" : ""} inline-block px-4 py-2 text-gray-600 bg-white rounded shadow`}
+                                                    className={` ${openTab === 1 ? "bg-main-green text-white " : "text-gray-600 bg-white"} inline-block px-4 py-2 rounded shadow`}
                                                 >
-                                                    React Tabs 1
+                                                    Tất cả giao dịch
                                                 </div>
                                             </li>
                                             <li>
                                                 <div
 
                                                     onClick={() => setOpenTab(2)}
-                                                    className={` ${openTab === 2 ? "bg-purple-600 text-white" : ""} inline-block px-4 py-2 text-gray-600 bg-white rounded shadow`}
+                                                    className={` ${openTab === 2 ? "bg-main-green text-white " : " text-gray-600 bg-white "} inline-block px-4 py-2  rounded shadow`}
 
 
                                                 >
-                                                    React Tabs 2
+                                                    Chuyển tiền
                                                 </div>
                                             </li>
                                             <li>
                                                 <div
 
                                                     onClick={() => setOpenTab(3)}
-                                                    className={` ${openTab === 3 ? "bg-purple-600 text-white" : ""} inline-block px-4 py-2 text-gray-600 bg-white rounded shadow`}
+                                                    className={` ${openTab === 3 ? "bg-main-green text-white" : " text-gray-600 bg-white "} inline-block px-4 py-2  rounded shadow`}
 
 
                                                 >
-                                                    React Tabs 3
+                                                    Nhận tiền
                                                 </div>
                                             </li>
 
@@ -145,11 +145,11 @@ const SeeTransactions = () => {
                                                 <div
 
                                                     onClick={() => setOpenTab(4)}
-                                                    className={` ${openTab === 4 ? "bg-purple-600 text-white" : ""} inline-block px-4 py-2 text-gray-600 bg-white rounded shadow`}
+                                                    className={` ${openTab === 4 ? "bg-main-green text-white" : " text-gray-600 bg-white "} inline-block px-4 py-2 rounded shadow`}
 
 
                                                 >
-                                                    React Tabs 4
+                                                    Trả nợ
                                                 </div>
                                             </li>
                                         </ul>

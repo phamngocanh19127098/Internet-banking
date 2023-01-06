@@ -112,7 +112,6 @@ export const fetcherTransferList = async (accountNumber) => {
 
 export const fetcherDebtList = async (accountNumber) => {
     const url = `http://localhost:3001/transactions/list/debtReminder/${accountNumber}`
-
     try {
         const { data, status } = await axios({
             method: 'get',
