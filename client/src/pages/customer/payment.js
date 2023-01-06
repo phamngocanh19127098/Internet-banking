@@ -63,9 +63,7 @@ const Payment = () => {
     getList();
   }, []);
 
-  useEffect(() => {
-    console.log(rootNum);
-  }, rootNum);
+
 
   useEffect(() => {
     if (listAccounts !== [{}]) {
@@ -177,10 +175,10 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                      <option value={account.accountNumber}>
-                        {account.accountNumber}
-                      </option>
-                    ))
+                    <option value={account.accountNumber}>
+                      {account.accountNumber}
+                    </option>
+                  ))
                   : null}
               </select>
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">

@@ -51,3 +51,78 @@ export const fetcherUsername = async (username) => {
         return { data, status }
     }
 }
+
+
+export const fetcherAllList = async (accountNumber) => {
+    const url = `http://localhost:3001/transactions/list/${accountNumber}`
+
+    try {
+        const { data, status } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
+
+export const fetcherReceivedList = async (accountNumber) => {
+    const url = `http://localhost:3001/transactions/list/received/${accountNumber}`
+
+    try {
+        const { data, status } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
+
+export const fetcherTransferList = async (accountNumber) => {
+    const url = `http://localhost:3001/transactions/list/debtReminder/${accountNumber}`
+
+    try {
+        const { data, status } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
+
+export const fetcherDebtList = async (accountNumber) => {
+    const url = `http://localhost:3001/transactions/list/${accountNumber}`
+
+    try {
+        const { data, status } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
