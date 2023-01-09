@@ -101,13 +101,13 @@ export const fetcherListReceivers = async (userId) => {
 }
 
 
-export const fetcherSendTransfer = async (accountDesNumber, amount, description) => {
+export const fetcherSendTransfer = async (accountDesNumber, amount, description, fee) => {
     const url = `http://localhost:3001/transactions/internal/transfer`
     try {
         const { data, statusCode } = await axios({
             method: 'post',
             url, data: {
-                "accountDesNumber": accountDesNumber, "amount": amount, "description": description
+                "accountDesNumber": accountDesNumber, "amount": amount, "description": description, "payTransactionFee": fee
             }, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
         });
         return { data, statusCode }

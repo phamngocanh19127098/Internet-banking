@@ -34,6 +34,16 @@ const Payment = () => {
 
   const [isSuccess, setIsSuccess] = useState(false);
 
+
+  const [fee, setFee] = React.useState('DES');
+
+  const handleChangeFee = (event) => {
+    setFee(event.target.value)
+    console.log(event.target.value)
+  }
+
+
+
   async function getName() {
     const info = await fetcherReceiver(accNum);
     setStatuscode(info.status);
@@ -44,7 +54,7 @@ const Payment = () => {
     const info = await fetcherSendTransfer(
       accNum,
       parseInt(money),
-      description
+      description, fee
     );
     setResult(info.data);
   }
@@ -235,6 +245,24 @@ const Payment = () => {
                   //onChange={event => setMoney(event.target, value)}
                   onValueChange={(money) => setMoney(money)}
                 />
+              </div>
+              <div className="flex flex-col mb-4 px-8">
+                <div>
+                  <input
+                    type="radio"
+                    value="DES"
+                    checked={fee === 'DES'}
+                    onChange={handleChangeFee}
+                  /> Người chuyển khoản chịu phí
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    value="SRC"
+                    checked={fee === 'SRC'}
+                    onChange={handleChangeFee}
+                  /> Người nhận chịu phí
+                </div>
               </div>
 
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
