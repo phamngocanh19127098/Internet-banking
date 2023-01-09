@@ -4,13 +4,20 @@ import { useEffect, useState } from "react";
 import AdminNavigation from '../../components/adminNavigation';
 import { fetcherGetManagement, fetcherDeleteManagement, fetcherEditManagement } from '../../fetchers/fetcherAdmin';
 import EditUser from '../../components/management/editUser';
+import DeleteUser from '../../components/management/deleteUser';
 const Management = () => {
     const [listEmployees, setListEmployees] = useState([])
 
     const [editData, setEditData] = useState()
 
+    const [deleteData, setDeleteData] = useState()
+
     const [showEditUser, setShowEditUser] = useState(false);
     const handleOnCloseEdit = () => setShowEditUser(false)
+
+    const [showDeleteUser, setShowDeleteUser] = useState(false);
+    const handleOnCloseDelete = () => setShowDeleteUser(false)
+
     async function getList() {
         const list = await fetcherGetManagement();
         setListEmployees(list.data.data);
@@ -100,7 +107,9 @@ const Management = () => {
                                                     <td className="px-6 py-2">
                                                         <div>
                                                             <div>
-                                                                <button
+                                                                <button onClick={() => {
+                                                                    setShowDeleteUser(true); setDeleteData(person.id)
+                                                                }}
                                                                     className="px-10 py-2 text-sm font-bold text-white text-center bg-medium-pink-red rounded-full hover:bg-[#870e2b] disabled:bg-[#edb395] ">Xóa</button>
                                                             </div>
                                                         </div>
@@ -126,6 +135,8 @@ const Management = () => {
                     </div>
                 </div>
                 {showEditUser && <EditUser onClose={handleOnCloseEdit} visible={showEditUser} info={editData} handleChange={handleChange} />
+                }
+                {showDeleteUser && <DeleteUser onClose={handleOnCloseDelete} visible={showDeleteUser} id={deleteData} handleChange={handleChange} />
                 }
             </div>
         </div>
