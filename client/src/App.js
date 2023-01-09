@@ -28,6 +28,8 @@ import RoleError from "./pages/error/roleError";
 import AddAccount from "./pages/employee/addAccount";
 import PutMoney from "./pages/employee/putMoney";
 import SeeTransactions from "./pages/employee/transactionAcc";
+import Admin from "./pages/admin/adminHome";
+import Management from "./pages/admin/management";
 function App() {
   return (
     <Router>
@@ -64,6 +66,12 @@ function App() {
                 <Route path="/addAccount" element={<AddAccount />} />
                 <Route path="/putMoney" element={<PutMoney />} />
                 <Route path="/seeTransaction" element={<SeeTransactions />} />
+                {/* <Route path='/employee' element={<Employee />} /> */}
+              </Route>
+              <Route element={<RequireAuth allowedRoles={ROLES.Admin} />}>
+                <Route path="/" element={<Admin />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/management" element={<Management />} />
                 {/* <Route path='/employee' element={<Employee />} /> */}
               </Route>
             </Route>

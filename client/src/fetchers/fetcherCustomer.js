@@ -102,7 +102,7 @@ export const fetcherListReceivers = async (userId) => {
 
 
 export const fetcherSendTransfer = async (accountDesNumber, amount, description, fee) => {
-    const url = `http://localhost:3001/transactions/internal/transfer`
+    const url = `http://localhost:3001/transactions/transfer`
     try {
         const { data, statusCode } = await axios({
             method: 'post',
