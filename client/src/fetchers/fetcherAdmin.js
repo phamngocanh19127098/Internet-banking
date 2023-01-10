@@ -49,3 +49,22 @@ export const fetcherDeleteManagement = async (id) => {
         return { data, status }
     }
 }
+
+
+
+export const fetcherListAdmin = async () => {
+    const url = `http://localhost:3001/transactions/list`
+
+    try {
+        const { data, status } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}

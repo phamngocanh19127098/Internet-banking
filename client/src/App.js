@@ -30,6 +30,7 @@ import PutMoney from "./pages/employee/putMoney";
 import SeeTransactions from "./pages/employee/transactionAcc";
 import Admin from "./pages/admin/adminHome";
 import Management from "./pages/admin/management";
+import ManagementTransaction from "./pages/admin/managementTransaction";
 function App() {
   return (
     <Router>
@@ -72,6 +73,7 @@ function App() {
                 <Route path="/" element={<Admin />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/management" element={<Management />} />
+                <Route path="/manaTrans" element={<ManagementTransaction />} />
                 {/* <Route path='/employee' element={<Employee />} /> */}
               </Route>
             </Route>

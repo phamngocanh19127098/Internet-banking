@@ -23,6 +23,8 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
+    "react-table": "^7.8.0",
+    "reactstrap": "^8.4.1",
     "reaptcha": "^1.12.1",
     "redux": "^4.2.0",
     "socket.io-client": "^4.5.4",
