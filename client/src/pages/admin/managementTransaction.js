@@ -8,6 +8,7 @@ import TableContainer from '../../components/tableConfig/TableContainer';
 import { fetcherListBanks } from "../../fetchers/fetcherCustomer";
 import { DateRangeColumnFilter, dateBetweenFilterFn } from '../../components/tableConfig/filters';
 import moment from "moment/moment";
+
 const ManagementTransaction = () => {
     const [allList, setAllList] = useState([])
     const [finalList, setFinalList] = useState([])
@@ -32,7 +33,7 @@ const ManagementTransaction = () => {
         if (allList !== null) {
             const list = allList
             list.map((element, index) =>
-                element["createdAt"] = moment(element["createdAt"]).format('MM/DD/YYYY hh:mm:ss')
+                element["createdAt"] = moment(element["createdAt"]).utcOffset(2, false).format('MM/DD/YYYY hh:mm:ss')
             )
             list.map((element, index) =>
                 element["bankDesId"] === null ?
