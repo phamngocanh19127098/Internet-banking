@@ -208,3 +208,37 @@ export const fetcherAddAffiliatedBank = async (accNum, name, nickName, bankId) =
         return { data, status }
     }
 }
+
+
+export const fetcherListReceiversInternal = async (userId) => {
+    const url = `http://localhost:3001/savedBeneficiarys/list/internal/${userId}`
+    try {
+        const { data, statusCode } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, statusCode }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
+export const fetcherListReceiversExternal = async (userId) => {
+    const url = `http://localhost:3001/savedBeneficiarys/list/external/${userId}`
+    try {
+        const { data, statusCode } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, statusCode }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}

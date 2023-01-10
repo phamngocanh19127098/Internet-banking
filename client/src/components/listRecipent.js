@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { fetcherListReceivers } from "../fetchers/fetcherCustomer";
+import { fetcherListReceiversInternal } from "../fetchers/fetcherCustomer";
 
 const ListRecipents = (props) => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -10,7 +10,7 @@ const ListRecipents = (props) => {
   const [listRecipents, setListRecipents] = useState([{}]);
 
   async function getList() {
-    const list = await fetcherListReceivers(userInfo.id);
+    const list = await fetcherListReceiversInternal(userInfo.id);
     setListRecipents(list.data.data);
   }
   useEffect(() => {
@@ -79,10 +79,10 @@ const ListRecipents = (props) => {
             >
               {listRecipents.length !== 0
                 ? listRecipents.map((account, index) => (
-                    <option value={account.beneficiaryAccountNumber}>
-                      {account.beneficiaryNickname}
-                    </option>
-                  ))
+                  <option value={account.beneficiaryAccountNumber}>
+                    {account.beneficiaryNickname}
+                  </option>
+                ))
                 : null}
             </select>
           </div>

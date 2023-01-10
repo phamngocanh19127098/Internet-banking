@@ -4,7 +4,7 @@ const TransferListTransaction = (props) => {
     return (
         <div>
             {props.allList !== null && props.allList !== undefined ? (
-                <div class="flex flex-col h-64 xl:h-150 lg:h-150 md:h-128 w-48 lg:w-150 xl:w-150 md:w-96 bg-white">
+                <div class="flex flex-col bg-white">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-auto  ">
                         <table class=" table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400 border ">
                             <thead class="relative w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
@@ -37,7 +37,7 @@ const TransferListTransaction = (props) => {
 
                                         </td>
                                         <td class="px-6 py-4">
-                                            $2999
+                                            {transaction.accountDes.user.name}
                                         </td>
                                         <td class="px-8 py-4">
                                             <div className="text-red text-base font-bold"> -{transaction.amount}</div>

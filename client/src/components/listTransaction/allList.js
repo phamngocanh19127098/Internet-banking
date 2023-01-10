@@ -3,7 +3,7 @@ const AllListTransaction = (props) => {
     return (
         <div>
             {props.allList !== null && props.allList !== undefined ? (
-                <div class="flex flex-col h-64 xl:h-150 lg:h-150 md:h-128 w-48 lg:w-150 xl:w-150 md:w-96 bg-white ">
+                <div class="flex flex-col  bg-white ">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-auto ">
                         <table class="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
                             <thead class="relative w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
@@ -29,7 +29,8 @@ const AllListTransaction = (props) => {
                                 {props.allList.map((transaction, index) => (
                                     <tr key={index} class=" bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {transaction.accountSrcNumber === props.accNum && <div className="text-red"> Chuyển tiền từ</div>}
+                                            {transaction.transactionType === "TRANSFER" && transaction.accountSrcNumber === props.accNum && <div className="text-red"> Chuyển tiền từ</div>}
+                                            {transaction.transactionType === "DEBT_REMINDERS_PAYMENT" && transaction.accountSrcNumber === props.accNum && <div className="text-red"> Trả nợ </div>}
                                             {transaction.accountDesNumber === props.accNum && <div className="text-green">Nhận tiền từ</div>}
                                         </th>
                                         <td class="px-6 py-4">

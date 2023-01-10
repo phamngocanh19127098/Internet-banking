@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import HomeNavigation from "../../components/homeNavigation";
+import ReceivedListTransaction from "../../components/listTransaction/receivedList";
 import { useState } from "react";
 import Loader from "../../components/loading";
 import { fetcherListTransactions } from "../../fetchers/fetcherCustomer";
@@ -10,6 +11,7 @@ import { fetcherAllList } from "../../fetchers/fetcherEmployee";
 import AllListTransaction from "../../components/listTransaction/allList";
 import TransferListTransaction from "../../components/listTransaction/transferList";
 import { fetcherReceivedList, fetcherDebtList } from "../../fetchers/fetcherEmployee";
+import DebtListTransaction from "../../components/listTransaction/debtList";
 
 const Transaction = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -121,18 +123,18 @@ const Transaction = () => {
                       </div>
                     </li>
                   </ul>
-                  <div className="p-3 mt-6 max-h-screen  ">
-                    <div className={` ${openTab === 1 ? "block" : "hidden"}`}>
+                  <div className="p-3 mt-6 max-h-screen grid-rows-4  ">
+                    <div className={`row-start-1 row-span-3 ${openTab === 1 ? "block" : "hidden"}`}>
                       <AllListTransaction allList={allList} accNum={accNum} />
                     </div>
                     <div className={openTab === 2 ? "block" : "hidden"}>
                       <TransferListTransaction allList={transferList} />
                     </div>
                     <div className={openTab === 3 ? "block" : "hidden"}>
-                      <AllListTransaction allList={allList} accNum={accNum} />
+                      <ReceivedListTransaction allList={receivedList} />
                     </div>
                     <div className={openTab === 4 ? "block" : "hidden"}>
-                      <AllListTransaction allList={allList} accNum={accNum} />
+                      <DebtListTransaction allList={debtList} />
                     </div>
                   </div>
                 </div>
