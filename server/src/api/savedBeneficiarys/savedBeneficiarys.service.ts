@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
+import { CreateSavedBeneficiaryDto, CreateSavedBeneficiaryAffiliatedDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,7 +13,7 @@ export class SavedBeneficiarysService {
     private savedBeneficiaryRepository: Repository<SavedBeneficiary>,
     @InjectRepository(Account)
     private accountRepository: Repository<Account>,
-  ) {}
+  ) { }
   async create(
     createSavedBeneficiaryDto: CreateSavedBeneficiaryDto,
     customerId: number,
@@ -113,4 +113,37 @@ export class SavedBeneficiarysService {
       // }
     }
   }
+
+  async createBenificiatyAffiliated(
+    createSavedBeneficiaryDto: CreateSavedBeneficiaryAffiliatedDto,
+    customerId: number,
+  ) {
+
+    try {
+      // const infoAccount = await this.accountRepository
+      //   .createQueryBuilder('account')
+      //   .leftJoinAndSelect('account.user', 'user')
+      //   .where('account.account_number= :account_number', {
+      //     account_number: createSavedBeneficiaryDto.beneficiaryAccountNumber,
+      //   })
+      //   .getOne();
+
+      // if (infoAccount == null) {
+      //   throw new BadRequestException('Tài khoản không tồn tại');
+      // }
+
+      if (!createSavedBeneficiaryDto.beneficiaryNickname) {
+        createSavedBeneficiaryDto.beneficiaryNickname =
+          createSavedBeneficiaryDto.beneficiaryDefaultName
+      }
+
+      return await this.savedBeneficiaryRepository.save({
+        ...createSavedBeneficiaryDto,
+        customerId: customerId,
+      });
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
 }

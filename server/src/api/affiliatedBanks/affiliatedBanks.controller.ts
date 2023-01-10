@@ -27,7 +27,7 @@ import { Role } from '../users/entity/user.entity';
 export class AffiliatedBanksController {
   constructor(
     private readonly affiliatedBanksService: AffiliatedBanksService,
-  ) {}
+  ) { }
 
   @Post()
   create(@Body() createAffiliatedBankDto: CreateAffiliatedBankDto) {
@@ -77,4 +77,31 @@ export class AffiliatedBanksController {
   remove(@Param('id') id: string) {
     return this.affiliatedBanksService.remove(+id);
   }
+
+  @Get('list')
+  @ApiOperation({
+    description:
+      'Lấy danh sách ngân hàng đã liên kết. Vai trò nào cũng dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Lấy danh sách ngân hàng đã liên kết thành công',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không được dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({ description: 'Không có quyền dùng tính năng này' })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy danh sách ngân hàng',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN, Role.CUSTOMER, Role.EMPLOYEE)
+  async getInfoBanks() {
+    const data = await this.affiliatedBanksService.getInfoBanks();
+    return {
+      statusCode: 200,
+      message: 'Lấy danh sách ngân hàng thành công',
+      data,
+    };
+  }
+
 }

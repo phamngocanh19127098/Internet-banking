@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { SavedBeneficiarysService } from './savedBeneficiarys.service';
-import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
+import { CreateSavedBeneficiaryDto, CreateSavedBeneficiaryAffiliatedDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import {
   ApiBadRequestResponse,
@@ -32,7 +32,7 @@ import {
 export class SavedBeneficiarysController {
   constructor(
     private readonly savedBeneficiarysService: SavedBeneficiarysService,
-  ) {}
+  ) { }
 
   @ApiOperation({ description: 'Lưu người thụ hưởng, Customer mới dùng được.' })
   @ApiCreatedResponse({ description: 'Lưu người thụ hưởng thành công' })
@@ -182,4 +182,38 @@ export class SavedBeneficiarysController {
       message: 'Xoá người thụ hưởng thành công',
     };
   }
+
+  @ApiOperation({ description: 'Lưu người thụ hưởng Liên ngân hàng, Customer mới dùng được.' })
+  @ApiCreatedResponse({ description: 'Lưu người thụ hưởng Liên ngân hàng thành công' })
+  @ApiBadRequestResponse({
+    description: 'Tài khoản không tồn tại',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lưu người thụ hưởng Liên ngân hàng',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Post('affiliatedBank')
+  async createBenificiatyAffiliated(
+    @User() user,
+    @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryAffiliatedDto,
+  ) {
+    const data = await this.savedBeneficiarysService.createBenificiatyAffiliated(
+      createSavedBeneficiaryDto,
+      user.id,
+    );
+
+    return {
+      data,
+      statusCode: 201,
+      message: 'Lưu người thụ hưởng Liên ngân hàng thành công',
+    };
+  }
+
 }

@@ -57,7 +57,7 @@ function App() {
                 <Route path="/recipents" element={<Recipents />} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/other" element={<Other />} />
+                <Route path="/paymentExternal" element={<Other />} />
                 <Route path="/transactions" element={<Transaction />} />
               </Route>
               <Route element={<RequireAuth allowedRoles={ROLES.Employee} />}>
