@@ -22,6 +22,7 @@ import { User } from '../../commons/decorator/user.decorator';
 import { Roles } from '../../commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import {
+  ApiConflictResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiUnauthorizedResponse,
@@ -47,6 +48,9 @@ export class SavedBeneficiarysController {
   })
   @ApiInternalServerErrorResponse({
     description: 'Xảy ra lỗi từ server khi lưu người thụ hưởng',
+  })
+  @ApiConflictResponse({
+    description: 'Người thụ hưởng này đã tồn tại'
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)

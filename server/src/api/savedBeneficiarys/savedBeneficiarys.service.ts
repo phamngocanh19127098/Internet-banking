@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable , ConflictException} from '@nestjs/common';
 import { CreateSavedBeneficiaryDto, CreateSavedBeneficiaryAffiliatedDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,6 +29,15 @@ export class SavedBeneficiarysService {
 
       if (infoAccount == null) {
         throw new BadRequestException('Tài khoản không tồn tại');
+      }
+
+      const exist = await this.savedBeneficiaryRepository.findBy({
+        customerId: customerId,
+        beneficiaryAccountNumber: createSavedBeneficiaryDto.beneficiaryAccountNumber
+      })
+
+      if (exist !== null) {        
+        throw new ConflictException('Beneficiary already exist');
       }
 
       if (!createSavedBeneficiaryDto.beneficiaryNickname) {
@@ -148,6 +157,16 @@ export class SavedBeneficiarysService {
       // if (infoAccount == null) {
       //   throw new BadRequestException('Tài khoản không tồn tại');
       // }
+
+      const exist = await this.savedBeneficiaryRepository.findBy({
+        customerId: customerId,
+        beneficiaryAccountNumber: createSavedBeneficiaryDto.beneficiaryAccountNumber
+      })
+
+      if (exist !== null) { 
+        console.log(1)       
+        throw new ConflictException('Beneficiary already exist');
+      }
 
       if (!createSavedBeneficiaryDto.beneficiaryNickname) {
         createSavedBeneficiaryDto.beneficiaryNickname =
