@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateSavedBeneficiaryDto, CreateSavedBeneficiaryAffiliatedDto } from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository, Not } from 'typeorm';
 import { SavedBeneficiary } from './entities/savedBeneficiary.entity';
 import { Account } from '../accounts/entities/account.entity';
 
@@ -48,6 +48,23 @@ export class SavedBeneficiarysService {
 
   findAll(userId: number) {
     return this.savedBeneficiaryRepository.findBy({ customerId: userId });
+  }
+
+
+  async findAllExternal(userId: number) {
+    // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
+    return await this.savedBeneficiaryRepository.find({where: {
+      customerId: userId,
+      beneficiaryBankId: IsNull()
+    }})
+  }
+
+  async findAllAffiliated(userId: number) {
+    // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
+    return await this.savedBeneficiaryRepository.find({where: {
+      customerId: userId,
+      beneficiaryBankId: Not(IsNull())
+    }})
   }
 
   findOne(id: number) {

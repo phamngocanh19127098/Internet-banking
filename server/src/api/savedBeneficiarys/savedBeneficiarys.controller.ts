@@ -216,4 +216,60 @@ export class SavedBeneficiarysController {
     };
   }
 
+
+
+  @ApiOperation({
+    description: 'Lấy danh sách người thụ hưởng liên ngân hàng. Customer mới dùng được.',
+  })
+  @ApiOkResponse({ description: 'Lấy danh sách người thụ hưởng liên ngân hàng thành công' })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng liên ngân hàng',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Get('list/affiliated/:userId')
+  async findAllAffiliated(@Param('userId') userId: string) {
+    const data = await this.savedBeneficiarysService.findAllAffiliated(+userId);
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy danh sách người thụ hưởng liên ngân hàng thành công',
+    };
+  }
+
+
+
+
+  @ApiOperation({
+    description: 'Lấy danh sách người thụ hưởngn nội bộ. Customer mới dùng được.',
+  })
+  @ApiOkResponse({ description: 'Lấy danh sách người thụ hưởng nội bộ thành công' })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng nội bộ',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Get('list/external/:userId')
+  async findAllExternal(@Param('userId') userId: string) {
+    const data = await this.savedBeneficiarysService.findAllExternal(+userId);
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy danh sách người thụ hưởng nội bộ thành công',
+    };
+  }
+
+
 }
