@@ -154,3 +154,57 @@ export const fetcherListTransactions = async (accountNumber) => {
         return { data, status }
     }
 }
+
+export const fetcherListBanks = async () => {
+    const url = `http://localhost:3001/affiliatedBanks`
+    try {
+        const { data, statusCode } = await axios({
+            method: 'get',
+            url, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, statusCode }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
+export const fetcherGetInfo = async (accountNumber, bankDesId) => {
+    const url = `http://localhost:3001/accounts/get-info`
+
+    try {
+        const { data, status } = await axios({
+            method: 'post',
+            url, data: { "accountNumber": accountNumber, "bankDesId": bankDesId },
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
+export const fetcherAddAffiliatedBank = async (accNum, name, nickName, bankId) => {
+    const url = `http://localhost:3001/savedBeneficiarys/affiliatedBank`
+    try {
+        const { data, status } = await axios({
+            method: 'post',
+            url, data: {
+                "beneficiaryAccountNumber": accNum, "beneficiaryDefaultName": name, "beneficiaryNickname": nickName, "beneficiaryBankId": bankId
+            }, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}

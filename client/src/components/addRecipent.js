@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { fetcherReceiver } from "../fetchers/fetcherCustomer";
+import { fetcherAddAffiliatedBank, fetcherReceiver } from "../fetchers/fetcherCustomer";
 import { fetcherAddReceiver } from "../fetchers/fetcherCustomer";
-
+import { fetcherGetInfo } from "../fetchers/fetcherCustomer";
 const AddRecipent = (props) => {
   const [name, setName] = useState("");
   const [nickname, setNickName] = useState("");
@@ -10,8 +10,14 @@ const AddRecipent = (props) => {
   const [notification, setNotification] = useState("");
   const [isDisable, setIsDisable] = useState(true);
   const [result, setResult] = useState();
+  const [listBank, setListBank] = useState(props.banks);
+  const [value, setValue] = useState(props.banks[0].id);
+  const a = { "id": "", "name": "TaiXiu Bank" }
+  useEffect(() => {
+    setListBank([...listBank, a])
+  }, []);
   async function getName() {
-    const info = await fetcherReceiver(accNum);
+    const info = await fetcherGetInfo(accNum, value);
     setStatuscode(info.status);
     setName(info.data.data.user.name);
   }
@@ -20,14 +26,25 @@ const AddRecipent = (props) => {
     const info = await fetcherAddReceiver(accNum, nickname);
     setResult(info.status);
   }
-
+  async function addNewRecipentOtherBank() {
+    const info = await fetcherAddAffiliatedBank(accNum, name, nickname, parseInt(value));
+    setResult(info.status);
+  }
+  const resetState = () => {
+    setListBank([])
+    setName("")
+    setAccNum("")
+  }
   const handleXClick = (e) => {
+    resetState()
     props.onClose();
   };
-
+  useEffect(() => {
+    getName()
+  }, [value]);
   useEffect(() => {
     if (nickname === "") console.log(true);
-    if (statuscode === 200) {
+    if (statuscode === 201) {
       if (accNum !== null) {
         setNotification(name);
         setIsDisable(false);
@@ -49,21 +66,34 @@ const AddRecipent = (props) => {
     }
   }, [statuscode]);
   useEffect(() => {
-    console.log(accNum);
+    console.log(accNum, value);
     if (accNum !== null) {
       getName();
     }
   }, [accNum]);
 
   const handleCancelClick = (e) => {
+    resetState()
     props.onClose();
+  };
+
+  const handleChangeSelect = (e) => {
+    console.log(e.target.value)
+    setValue(e.target.value);
   };
 
   const handleSaveClick = (e) => {
     if (nickname === "") {
       setNickName(name);
     }
-    addNewRecipent();
+    if (value !== "") {
+      addNewRecipentOtherBank()
+    }
+    else {
+      addNewRecipent();
+    }
+
+    resetState()
     props.handleChange();
     props.onClose();
   };
@@ -92,6 +122,18 @@ const AddRecipent = (props) => {
         </button>
         <div className="flex  text-lg  text-black font-bold pt-4 px-20 border-b-2 border-b-gray-100">
           Thêm người nhận
+        </div>
+        <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+          Ngân hàng
+        </div>
+        <div className="flex flex-col mb-4 px-8">
+          <div className="border  border-[#001B3A] select-container">
+            <select value={value} onChange={handleChangeSelect} >
+              {listBank.map((option) => (
+                <option value={option.id}>{option.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
           Số tài khoản
