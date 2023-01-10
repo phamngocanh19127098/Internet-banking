@@ -233,9 +233,9 @@ export class SavedBeneficiarysController {
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
-  @Get('list/affiliated/:userId')
+  @Get('list/external/:userId')
   async findAllAffiliated(@Param('userId') userId: string) {
-    const data = await this.savedBeneficiarysService.findAllAffiliated(+userId);
+    const data = await this.savedBeneficiarysService.findAllExternal(+userId);
     return {
       data,
       statusCode: 200,
@@ -247,7 +247,7 @@ export class SavedBeneficiarysController {
 
 
   @ApiOperation({
-    description: 'Lấy danh sách người thụ hưởngn nội bộ. Customer mới dùng được.',
+    description: 'Lấy danh sách người thụ hưởng nội bộ. Customer mới dùng được.',
   })
   @ApiOkResponse({ description: 'Lấy danh sách người thụ hưởng nội bộ thành công' })
   @ApiForbiddenResponse({
@@ -261,9 +261,9 @@ export class SavedBeneficiarysController {
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
-  @Get('list/external/:userId')
+  @Get('list/internal/:userId')
   async findAllExternal(@Param('userId') userId: string) {
-    const data = await this.savedBeneficiarysService.findAllExternal(+userId);
+    const data = await this.savedBeneficiarysService.findAllInternal(+userId);
     return {
       data,
       statusCode: 200,

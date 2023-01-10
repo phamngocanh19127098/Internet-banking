@@ -51,7 +51,7 @@ export class SavedBeneficiarysService {
   }
 
 
-  async findAllExternal(userId: number) {
+  async findAllInternal(userId: number) {
     // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
     return await this.savedBeneficiaryRepository.find({where: {
       customerId: userId,
@@ -59,7 +59,7 @@ export class SavedBeneficiarysService {
     }})
   }
 
-  async findAllAffiliated(userId: number) {
+  async findAllExternal(userId: number) {
     // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
     return await this.savedBeneficiaryRepository.find({where: {
       customerId: userId,
