@@ -121,7 +121,7 @@ export const fetcherSendTransfer = async (accountDesNumber, amount, description,
 
 
 export const fetcherVerifyTransfer = async (transactionId, otpCode) => {
-    const url = `http://localhost:3001/transactions/internal/transfer/verify`
+    const url = `http://localhost:3001/transactions/transfer/verify`
     try {
         const { data, statusCode } = await axios({
             method: 'post',

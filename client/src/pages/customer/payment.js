@@ -7,7 +7,8 @@ import CurrencyInput from "react-currency-input-field";
 import ListRecipents from "../../components/listRecipent";
 import { fetcherSendTransfer } from "../../fetchers/fetcherCustomer";
 import ConfirmOTP from "../../components/confirmOTP";
-
+import { fetcherAddReceiver } from "../../fetchers/fetcherCustomer";
+import { Link } from "react-router-dom";
 const Payment = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
@@ -48,6 +49,10 @@ const Payment = () => {
     const info = await fetcherReceiver(accNum);
     setStatuscode(info.status);
     setResponse(info);
+  }
+
+  async function addNewRecipent(accSrcNumber, nickName) {
+    const info = await fetcherAddReceiver(accSrcNumber, nickName);
   }
 
   async function sendReqTransfer() {
@@ -130,6 +135,10 @@ const Payment = () => {
     sendReqTransfer();
   };
 
+  const handleSave = () => {
+    addNewRecipent(accNum, name)
+  };
+
   if (isSuccess === true) {
     return (
       <div>
@@ -138,23 +147,42 @@ const Payment = () => {
             <HomeNavigation id={3} />
             <div className="h-screen flex-auto">
               <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
-                <div className="block mb-2 text-xl text-gray-900 dark:text-white font-bold">
+                <div className="block mb-2 text-2xl text-gray-900 dark:text-white font-bold">
                   Thực hiện giao dịch chuyển khoản thành công
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Tên người chuyển khoản: {userInfo.name}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Tên người người nhận: {name}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   STK người nhận: {accNum}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Số tiền: {money}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Nội dung: {description}
+                </div>
+                <div className="flex justify-end pb-4 px-8">
+                  <Link to="/payment">
+                    <button
+                      id="handlecancel"
+                      className="cursor-pointer text-xl px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
+                    >
+                      Thực hiện giao dịch mới
+                    </button>
+                  </Link>
+                  <Link to="/recipents">
+                    <button
+                      id="handleSave"
+                      onClick={handleSave}
+                      className=" cursor-pointer text-xl rounded px-2 py-2 ml-4 text-white  text-xs font-bold bg-darkblue hover:bg-[#cf4a04] disabled:bg-[#edb395] "
+                    >
+                      Lưu người nhận này vào danh sách
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
