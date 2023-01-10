@@ -51,7 +51,7 @@ export class TransactionsController {
     private affiliatedBanksService: AffiliatedBanksService,
   ) {}
 
-  @ApiOperation({ description: 'Lấy tất cả transaction' })
+  @ApiOperation({ description: 'Lấy tất cả transaction. Admin mới dùng được.' })
   @ApiOkResponse({ description: 'Lấy tất cả transaction thành công' })
   @ApiForbiddenResponse({
     description: 'Vai trò của bạn không thể dùng tính năng này',
