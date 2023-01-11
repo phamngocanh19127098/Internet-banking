@@ -27,8 +27,8 @@ const Other = () => {
 
   const [showOTPModal, setShowOTPModal] = useState(false);
   const handleOnCloseOTP = () => setShowOTPModal(false);
-  const [value, setValue] = useState()
-  const [listBank, setListBank] = useState()
+  const [value, setValue] = useState();
+  const [listBank, setListBank] = useState();
   async function getBanks() {
     const list = await fetcherListBanks();
     setListBank(list.data.data);
@@ -44,15 +44,12 @@ const Other = () => {
 
   const [isSuccess, setIsSuccess] = useState(false);
 
-
-  const [fee, setFee] = React.useState('DES');
+  const [fee, setFee] = React.useState("DES");
 
   const handleChangeFee = (event) => {
-    setFee(event.target.value)
-    console.log(event.target.value)
-  }
-
-
+    setFee(event.target.value);
+    console.log(event.target.value);
+  };
 
   async function getName() {
     const info = await fetcherGetInfo(accNum, value);
@@ -68,7 +65,9 @@ const Other = () => {
     const info = await fetcherSendTransferExternal(
       accNum,
       parseInt(money),
-      description, fee, value
+      description,
+      fee,
+      value
     );
     setResult(info.data);
   }
@@ -84,18 +83,18 @@ const Other = () => {
   }
 
   useEffect(() => {
-    getBanks()
+    getBanks();
     getList();
   }, []);
 
   useEffect(() => {
     if (listBank !== undefined) {
-      setValue(listBank[0].id)
+      setValue(listBank[0].id);
     }
   }, [listBank]);
 
   const handleChangeSelect = (e) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     setValue(e.target.value);
   };
 
@@ -106,7 +105,7 @@ const Other = () => {
   }, [listAccounts]);
 
   useEffect(() => {
-    console.log(response)
+    console.log(response);
     if (statuscode === 201) {
       if (accNum !== null) {
         setName(response.data.data.user.name);
@@ -146,13 +145,13 @@ const Other = () => {
   }, [result]);
 
   const resetState = () => {
-    setAccNum("")
-    setName("")
-    setMoney("")
-    setStatuscode(404)
-    setNotification("")
-    setShowAddModal(false)
-    setIsSuccess(false)
+    setAccNum("");
+    setName("");
+    setMoney("");
+    setStatuscode(404);
+    setNotification("");
+    setShowAddModal(false);
+    setIsSuccess(false);
   };
 
   const handleTransfer = () => {
@@ -165,7 +164,7 @@ const Other = () => {
   };
 
   const handleSave = () => {
-    addNewRecipent(accNum, name)
+    addNewRecipent(accNum, name);
   };
 
   if (isSuccess === true) {
@@ -195,8 +194,8 @@ const Other = () => {
                   Nội dung: {description}
                 </div>
                 <div className="flex justify-end pb-4 px-8">
-
-                  <button onClick={resetState}
+                  <button
+                    onClick={resetState}
                     id="handlecancel"
                     className="cursor-pointer text-xl px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
                   >
@@ -243,28 +242,32 @@ const Other = () => {
                 >
                   {listAccounts !== null
                     ? listAccounts.map((account, index) => (
-                      <option value={account.accountNumber}>
-                        {account.accountNumber}
-                      </option>
-                    ))
+                        <option key={index} value={account.accountNumber}>
+                          {account.accountNumber}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
-              <label
-                className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8"
-              >
+              <label className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8">
                 Chọn ngân hàng
               </label>
               <div className="flex flex-col mb-4 px-8">
-                {listBank !== undefined ?
+                {listBank !== undefined ? (
                   <div className=" select-container">
-                    <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      value={value} onChange={handleChangeSelect} >
-                      {listBank.map((option) => (
-                        <option value={option.id}>{option.name}</option>
+                    <select
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      value={value}
+                      onChange={handleChangeSelect}
+                    >
+                      {listBank.map((option, index) => (
+                        <option key={index} value={option.id}>
+                          {option.name}
+                        </option>
                       ))}
                     </select>
-                  </div> : null}
+                  </div>
+                ) : null}
               </div>
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
                 Số tài khoản người nhận
@@ -326,17 +329,19 @@ const Other = () => {
                   <input
                     type="radio"
                     value="DES"
-                    checked={fee === 'DES'}
+                    checked={fee === "DES"}
                     onChange={handleChangeFee}
-                  /> Người chuyển khoản chịu phí
+                  />{" "}
+                  Người chuyển khoản chịu phí
                 </div>
                 <div>
                   <input
                     type="radio"
                     value="SRC"
-                    checked={fee === 'SRC'}
+                    checked={fee === "SRC"}
                     onChange={handleChangeFee}
-                  /> Người nhận chịu phí
+                  />{" "}
+                  Người nhận chịu phí
                 </div>
               </div>
 
