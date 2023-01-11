@@ -42,6 +42,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger/dist';
+import { BankIdDto } from './dto/bankIdDto';
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -248,10 +249,32 @@ export class TransactionsController {
     );
   }
 
-  // @Get(':id')
-  // async findOne(@Param('id') id: string) {
-  //   return await this.transactionsService.findOne(+id);
-  // }
+  @ApiOperation({
+    description:
+      'Lấy danh sách các giao dịch theo Bank Id. Admin mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Lấy danh sách các giao dịch theo Bank Id thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Không tồn tại ngân hàng cần đối soát',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách các giao dịch theo Bank Id',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
+  @Get('listWithBankId')
+  findByBankId(@Body() dto: BankIdDto) {
+    return this.transactionsService.findByBankId(dto.bankId);
+  }
 
   // @Patch(':id')
   // update(
