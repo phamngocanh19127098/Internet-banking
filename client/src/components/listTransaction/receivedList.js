@@ -14,9 +14,6 @@ const ReceivedListTransaction = (props) => {
                                     <th scope="col" class="sticky px-6 py-3">
                                         Số tài khoản
                                     </th>
-                                    <th scope="col" class="sticky px-6 py-3">
-                                        Tên
-                                    </th>
                                     <th scope="col" class="sticky px-8 py-3">
                                         Số tiền
                                     </th>
@@ -33,9 +30,6 @@ const ReceivedListTransaction = (props) => {
                                         </th>
                                         <td class="px-6 py-4">
                                             <div>{transaction.accountSrcNumber}</div>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            $2999
                                         </td>
                                         <td class="px-8 py-4">
                                             <div className="text-green text-base font-bold">+{transaction.amount}</div>
