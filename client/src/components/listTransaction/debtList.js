@@ -15,9 +15,6 @@ const DebtListTransaction = (props) => {
                                     <th scope="col" class="sticky px-6 py-3">
                                         Số tài khoản
                                     </th>
-                                    <th scope="col" class="sticky px-6 py-3">
-                                        Tên
-                                    </th>
                                     <th scope="col" class="sticky px-8 py-3">
                                         Số tiền
                                     </th>
@@ -35,9 +32,6 @@ const DebtListTransaction = (props) => {
                                         <td class="px-6 py-4">
                                             <div> {transaction.accountDesNumber}</div>
 
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            {transaction.accountDes.user.name}
                                         </td>
                                         <td class="px-8 py-4">
                                             <div className="text-red text-base font-bold"> -{transaction.amount}</div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import moment from 'moment';
 import { fetcherListBanks } from '../../fetchers/fetcherCustomer';
 import AdminNavigation from '../../components/adminNavigation';
@@ -48,6 +48,7 @@ function ManagementTransaction() {
         setListBank(list.data.data);
     }
 
+
     useEffect(() => {
         getAllList();
         getBanks();
@@ -73,19 +74,16 @@ function ManagementTransaction() {
 
 
     const columns = [
-        { headerName: "ID", field: "id" },
-        { headerName: "Tài khoản nguồn", field: "accountSrcNumber" },
-        { headerName: "Tài khoản đích", field: "accountDesNumber" },
+        { headerName: "ID", field: "id", sortable: true, filter: true },
+        { headerName: "Tài khoản nguồn", field: "accountSrcNumber", sortable: true },
+        { headerName: "Tài khoản đích", field: "accountDesNumber", sortable: true },
         {
-            headerName: "Ngân hàng", field: "bankName", filter: "agSetColumnFilter",
-            filterParams: { suppressMiniFilter: true }
+            headerName: "Ngân hàng", field: "bankName", sortable: true
         },
-        { headerName: "Thời gian", field: "date", filter: 'agDateColumnFilter', filterParams: dateFilterParams, }
+        { headerName: "Thời gian", field: "date", filter: 'agDateColumnFilter', filterParams: dateFilterParams }
     ]
     const defColumnDefs = {
         flex: 1,
-        minWidth: 150,
-        filter: true,
     }
 
     const onGridReady = (params) => {
@@ -143,9 +141,7 @@ function ManagementTransaction() {
                         >
                             {rowData1 !== null ? (
                                 <div>
-                                    <h2 align="center">Ag Grid with React</h2>
-                                    <p align="center">Date Range Filtering </p>
-                                    <div className="ag-theme-alpine" style={{ height: 400 }}>
+                                    <div className="ag-theme-alpine" style={{ height: 600 }}>
                                         From : <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
                                         To : <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
                                         <AgGridReact

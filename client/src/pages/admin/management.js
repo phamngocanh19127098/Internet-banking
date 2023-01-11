@@ -5,6 +5,7 @@ import AdminNavigation from '../../components/adminNavigation';
 import { fetcherGetManagement, fetcherDeleteManagement, fetcherEditManagement } from '../../fetchers/fetcherAdmin';
 import EditUser from '../../components/management/editUser';
 import DeleteUser from '../../components/management/deleteUser';
+import moment from 'moment';
 const Management = () => {
     const [listEmployees, setListEmployees] = useState([])
 
@@ -38,39 +39,36 @@ const Management = () => {
     return (
         <div>
             <div>
-                <div className=' bg-cover w-screen flex h-screen bg-[#F0F2FF] '>
+                <div className=' bg-cover w-full flex h-screen bg-[#F0F2FF] '>
                     <AdminNavigation id={1} />
-                    <div className="h-screen flex-auto">
+                    <div className="flex-auto">
                         <div
-                            className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
+                            className="m-10 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
                         >
-                            <div className=" h-180 flex  py-2 -my-2 col-start-3 col-span-8 mt-6 place-items-start overflow-y-auto overflow-x-auto row-start-4 row-span-4">
+                            <div className=" h-128 w-150 lg:w-210 xl:w-210 flex  py-2 -my-2 col-start-3 col-span-8 mt-6 place-items-start overflow-y-auto overflow-x-auto row-start-4 row-span-4">
                                 <div className="border-b border-gray-200 shadow px-4 py-4  items-center min-w-full justify-center">
                                     <table className=" table-fixed border-0 border-b border-gray-300 min-w-full">
                                         <thead className=" border-0 border-b border-b-black">
                                             <tr>
-                                                <th className="px-4 py-3 pr-20 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                                                <th className="px-2 py-3 pr-20 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                                                     Tên
                                                 </th>
-                                                <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                                                <th className="px-2 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                                                     Dob
                                                 </th>
-                                                <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                                                <th className="px-2 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                                                     SDT
                                                 </th>
-                                                <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                                                <th className="px-2 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                                                     Địa chỉ
                                                 </th>
-                                                <th className="px-8 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                                                <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                                                     Email
                                                 </th>
-                                                <th className="px-8 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
-                                                    Vai trò
-                                                </th>
-                                                <th className="px-6 py-3 text-sm font-bold leading-4 tracking-wider text-left text-gray-500">
+                                                <th className="px-3 py-3 text-sm font-bold leading-4 tracking-wider text-left text-gray-500">
 
                                                 </th>
-                                                <th className="px-6 py-3 text-sm font-bold leading-4 tracking-wider text-left text-gray-500">
+                                                <th className="px-3 py-3 text-sm font-bold leading-4 tracking-wider text-left text-gray-500">
 
                                                 </th>
                                             </tr>
@@ -88,7 +86,9 @@ const Management = () => {
 
 
                                                         <div className="text-sm text-black-900">
-                                                            {person.dob}
+                                                            {!person.dob && null}
+                                                            {person.dob && moment(person.dob).format("DD-MM-YYYY")}
+
                                                         </div>
 
                                                     </td>
@@ -100,9 +100,6 @@ const Management = () => {
                                                     </td>
                                                     <td className="px-4 py-2">
                                                         <div className="text-sm text-black-900">{person.email}</div>
-                                                    </td>
-                                                    <td className="px-4 py-2">
-                                                        <div className="text-sm text-black-900">{person.role}</div>
                                                     </td>
                                                     <td className="px-6 py-2">
                                                         <div>

@@ -14,9 +14,6 @@ const AllListTransaction = (props) => {
                                     <th scope="col" class="sticky px-6 py-3">
                                         Số tài khoản
                                     </th>
-                                    <th scope="col" class="sticky px-6 py-3">
-                                        Tên
-                                    </th>
                                     <th scope="col" class="sticky px-8 py-3">
                                         Số tiền
                                     </th>
@@ -36,9 +33,6 @@ const AllListTransaction = (props) => {
                                         <td class="px-6 py-4">
                                             {transaction.accountSrcNumber === props.accNum && <div> {transaction.accountDesNumber}</div>}
                                             {transaction.accountDesNumber === props.accNum && <div>{transaction.accountSrcNumber}</div>}
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            $2999
                                         </td>
                                         <td class="px-8 py-4">
                                             {transaction.accountSrcNumber === props.accNum && <div className="text-red text-base font-bold"> -{transaction.amount}</div>}
