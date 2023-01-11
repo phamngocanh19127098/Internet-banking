@@ -134,7 +134,15 @@ const Payment = () => {
     console.log(description);
     sendReqTransfer();
   };
-
+  const resetState = () => {
+    setAccNum("")
+    setName("")
+    setMoney("")
+    setStatuscode(404)
+    setNotification("")
+    setShowAddModal(false)
+    setIsSuccess(false)
+  };
   const handleSave = () => {
     addNewRecipent(accNum, name)
   };
@@ -166,14 +174,14 @@ const Payment = () => {
                   Nội dung: {description}
                 </div>
                 <div className="flex justify-end pb-4 px-8">
-                  <Link to="/payment">
-                    <button
-                      id="handlecancel"
-                      className="cursor-pointer text-xl px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
-                    >
-                      Thực hiện giao dịch mới
-                    </button>
-                  </Link>
+
+                  <button onClick={resetState}
+                    id="handlecancel"
+                    className="cursor-pointer text-xl px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
+                  >
+                    Thực hiện giao dịch mới
+                  </button>
+
                   <Link to="/recipents">
                     <button
                       id="handleSave"

@@ -5,7 +5,7 @@ const TransferListTransaction = (props) => {
         <div>
             {props.allList !== null && props.allList !== undefined ? (
                 <div class="flex flex-col bg-white">
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-auto  ">
+                    <div class="h-128 relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-auto  ">
                         <table class=" table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400 border ">
                             <thead class="relative w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                                 <tr className="">

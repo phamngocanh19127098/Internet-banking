@@ -68,3 +68,21 @@ export const fetcherListAdmin = async () => {
         return { data, status }
     }
 }
+
+
+export const fetcherListByID = async (id) => {
+    const url = `http://localhost:3001/transactions/listWithBankId`
+
+    try {
+        const { data, status } = await axios({
+            method: 'get',
+            url, data: { "bankId": 1001 }, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}

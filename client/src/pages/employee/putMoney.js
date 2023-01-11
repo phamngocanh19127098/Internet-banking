@@ -14,6 +14,7 @@ const PutMoney = () => {
   const [isDisable, setIsDisable] = useState(true);
   const [response, setResponse] = useState();
   const [money, setMoney] = useState();
+  const [checkInfo, setCheckInfo] = useState(true)
   async function putMoney(infoMoney) {
     const list = await fetcherPutMoney(infoMoney);
     setResult(list)
@@ -22,11 +23,13 @@ const PutMoney = () => {
     const info = await fetcherReceiver(check);
     setStatuscode(info.status);
     setResponse(info);
+    setCheckInfo(!checkInfo)
   }
   async function getNameByUsername() {
     const info = await fetcherUsername(check);
     setStatuscode(info.status);
     setResponse(info);
+    setCheckInfo(!checkInfo)
   }
 
 
@@ -70,7 +73,7 @@ const PutMoney = () => {
       }
 
     }
-  }, [statuscode]);
+  }, [statuscode, checkInfo]);
 
 
   useEffect(() => {

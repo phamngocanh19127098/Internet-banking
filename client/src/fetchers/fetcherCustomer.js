@@ -242,3 +242,22 @@ export const fetcherListReceiversExternal = async (userId) => {
         return { data, status }
     }
 }
+
+export const fetcherSendTransferExternal = async (accountDesNumber, amount, description, fee, bankId) => {
+    const url = `http://localhost:3001/transactions/transfer`
+    try {
+        const { data, statusCode } = await axios({
+            method: 'post',
+            url, data: {
+                "accountDesNumber": accountDesNumber, "amount": amount, "description": description, "payTransactionFee": fee,
+                "bankDesId": bankId
+            }, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, statusCode }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
