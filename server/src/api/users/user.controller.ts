@@ -81,6 +81,33 @@ export class UserController {
   }
 
   @ApiOperation({
+    description: 'Lấy danh sách khách hàng. Employee mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Lấy danh sách khách hàng thành công',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy danh sách khách hàng',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.EMPLOYEE)
+  @Get('customer/list')
+  async findAllCustomer() {
+    const data = await this.userService.findAllCustomer();
+    return {
+      statusCode: 200,
+      message: 'Lấy danh sách khách hàng thành công',
+      data,
+    };
+  }
+
+  @ApiOperation({
     description: 'Cập nhập thông tin nhân viên. Admin mới dùng được.',
   })
   @ApiOkResponse({
@@ -231,6 +258,10 @@ export class UserController {
 
     if (!user) {
       throw new BadRequestException('Người dùng không tồn tại');
+    }
+
+    if (user.status === 1) {
+      throw new BadRequestException('Tài khoản này đã bị đóng.');
     }
 
     await this.userService.updateEmployee(id, { ...user, status: 1 });

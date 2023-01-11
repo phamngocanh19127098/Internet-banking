@@ -13,7 +13,18 @@ const EmployeeNavigation = (props) => {
       current: false,
     },
     { id: 2, title: "Nạp tiền", link: "/putMoney", current: false },
-    { id: 3, title: "Xem lịch sử giao dịch", link: "/seeTransaction", current: false },
+    {
+      id: 3,
+      title: "Xem lịch sử giao dịch",
+      link: "/seeTransaction",
+      current: false,
+    },
+    {
+      id: 4,
+      title: "Đóng tài khoản",
+      link: "/lockUserAccount",
+      current: false,
+    },
   ]);
 
   useEffect(() => {

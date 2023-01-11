@@ -124,6 +124,20 @@ export class UserService {
     }
   }
 
+  async findAllCustomer() {
+    try {
+      const customer = await this.userRepository.findBy({
+        role: Role.CUSTOMER,
+      });
+      for (const e of customer) {
+        delete e.password;
+      }
+      return customer;
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
   async updateEmployee(id: number, updateUserDto: UpdateUserDto) {
     try {
       const employee: User = await this.userRepository.findOneBy({ id });

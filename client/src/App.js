@@ -31,6 +31,8 @@ import SeeTransactions from "./pages/employee/transactionAcc";
 import Admin from "./pages/admin/adminHome";
 import Management from "./pages/admin/management";
 import ManagementTransaction from "./pages/admin/managementTransaction";
+import LockUserAccount from "./pages/employee/lockUserAccount";
+
 function App() {
   return (
     <Router>
@@ -49,7 +51,6 @@ function App() {
               <Route path="/changepwd" element={<ChangePassword />} />
               <Route path="/roleError" element={<RoleError />} />
               <Route element={<RequireAuth allowedRoles={ROLES.Customer} />}>
-
                 <Route path="/" element={<HomeCustomer />} />
                 <Route path="/customer" element={<HomeCustomer />} />
                 <Route path="/accounts" element={<Accounts />} />
@@ -67,6 +68,7 @@ function App() {
                 <Route path="/addAccount" element={<AddAccount />} />
                 <Route path="/putMoney" element={<PutMoney />} />
                 <Route path="/seeTransaction" element={<SeeTransactions />} />
+                <Route path="/lockUserAccount" element={<LockUserAccount />} />
                 {/* <Route path='/employee' element={<Employee />} /> */}
               </Route>
               <Route element={<RequireAuth allowedRoles={ROLES.Admin} />}>
@@ -78,7 +80,7 @@ function App() {
               </Route>
             </Route>
           </Route>
-          <Route path='*' element={<Navigate to='/' replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </Router>
