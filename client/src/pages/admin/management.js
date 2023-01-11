@@ -7,6 +7,7 @@ import EditUser from '../../components/management/editUser';
 import DeleteUser from '../../components/management/deleteUser';
 import moment from 'moment';
 import AddUser from '../../components/management/addUser';
+import Loader from '../../components/loading';
 const Management = () => {
     const [listEmployees, setListEmployees] = useState([])
 
@@ -17,7 +18,7 @@ const Management = () => {
     const handleOnCloseAdd = () => setShowAddModal(false);
     const [showEditUser, setShowEditUser] = useState(false);
     const handleOnCloseEdit = () => setShowEditUser(false)
-
+    const [isLoading, setIsLoading] = useState(false);
     const [showDeleteUser, setShowDeleteUser] = useState(false);
     const handleOnCloseDelete = () => setShowDeleteUser(false)
 
@@ -31,13 +32,31 @@ const Management = () => {
     }, []);
 
     const handleChange = () => {
-        getList()
+        setIsLoading(true);
+        setTimeout(() => {
+            getList();
+            setIsLoading(false);
+        }, 1000);
     }
 
     useEffect(() => {
         console.log(listEmployees)
     }, [listEmployees]);
-
+    if (isLoading)
+        return (
+            <div>
+                <div>
+                    <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
+                        <AdminNavigation id={1} />
+                        <div className="h-screen flex-auto">
+                            <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
+                                <Loader />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     return (
         <div>
             <div>
