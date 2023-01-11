@@ -6,13 +6,15 @@ import { fetcherGetManagement, fetcherDeleteManagement, fetcherEditManagement } 
 import EditUser from '../../components/management/editUser';
 import DeleteUser from '../../components/management/deleteUser';
 import moment from 'moment';
+import AddUser from '../../components/management/addUser';
 const Management = () => {
     const [listEmployees, setListEmployees] = useState([])
 
     const [editData, setEditData] = useState()
 
     const [deleteData, setDeleteData] = useState()
-
+    const [showAddModal, setShowAddModal] = useState(false);
+    const handleOnCloseAdd = () => setShowAddModal(false);
     const [showEditUser, setShowEditUser] = useState(false);
     const handleOnCloseEdit = () => setShowEditUser(false)
 
@@ -45,6 +47,17 @@ const Management = () => {
                         <div
                             className="m-10 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
                         >
+                            <div className=" row-start-2 row-span-1 flex justify-end place-items-end col-start-7 col-span-2 mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowAddModal(true);
+                                    }}
+                                    className="cursor-pointer px-8 h-10  text-sm font-bold text-white bg-orange rounded hover:bg-[#cf4e0a]"
+                                >
+                                    Thêm nhân viên
+                                </button>
+                            </div>
                             <div className=" h-128 w-150 lg:w-210 xl:w-210 flex  py-2 -my-2 col-start-3 col-span-8 mt-6 place-items-start overflow-y-auto overflow-x-auto row-start-4 row-span-4">
                                 <div className="border-b border-gray-200 shadow px-4 py-4  items-center min-w-full justify-center">
                                     <table className=" table-fixed border-0 border-b border-gray-300 min-w-full">
@@ -131,6 +144,13 @@ const Management = () => {
                         </div>
                     </div>
                 </div>
+                {showAddModal && (
+                    <AddUser
+                        onClose={handleOnCloseAdd}
+                        visible={showAddModal}
+                        handleChange={handleChange}
+                    />
+                )}
                 {showEditUser && <EditUser onClose={handleOnCloseEdit} visible={showEditUser} info={editData} handleChange={handleChange} />
                 }
                 {showDeleteUser && <DeleteUser onClose={handleOnCloseDelete} visible={showDeleteUser} id={deleteData} handleChange={handleChange} />

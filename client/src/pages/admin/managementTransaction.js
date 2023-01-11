@@ -70,11 +70,9 @@ function ManagementTransaction() {
             getAllList();
         }
         if (value === "1") {
-            console.log("B")
             getInternalList();
         }
         if (value !== "1" && value !== "0") {
-            console.log("C")
             getExternalList();
         }
 
@@ -89,9 +87,8 @@ function ManagementTransaction() {
         if (allList !== undefined) {
             const list = allList
             list.map((element, index) =>
-                element["date"] = moment(element["createdAt"]).format('DD-MM-YYYY hh:mm:ss')
+                element["date"] = moment(element["updatedAt"]).format('DD-MM-YYYY hh:mm:ss')
             )
-            console.log(list[0].createdAt)
             list.map((element, index) =>
                 element["bankDesId"] === null ?
                     element["bankName"] = "TaiXiu Bank"
