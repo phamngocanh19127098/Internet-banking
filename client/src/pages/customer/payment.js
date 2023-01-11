@@ -9,6 +9,7 @@ import { fetcherSendTransfer } from "../../fetchers/fetcherCustomer";
 import ConfirmOTP from "../../components/confirmOTP";
 import { fetcherAddReceiver } from "../../fetchers/fetcherCustomer";
 import { Link } from "react-router-dom";
+
 const Payment = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
@@ -35,15 +36,12 @@ const Payment = () => {
 
   const [isSuccess, setIsSuccess] = useState(false);
 
-
-  const [fee, setFee] = React.useState('DES');
+  const [fee, setFee] = React.useState("DES");
 
   const handleChangeFee = (event) => {
-    setFee(event.target.value)
-    console.log(event.target.value)
-  }
-
-
+    setFee(event.target.value);
+    console.log(event.target.value);
+  };
 
   async function getName() {
     const info = await fetcherReceiver(accNum);
@@ -59,7 +57,8 @@ const Payment = () => {
     const info = await fetcherSendTransfer(
       accNum,
       parseInt(money),
-      description, fee
+      description,
+      fee
     );
     setResult(info.data);
   }
@@ -77,8 +76,6 @@ const Payment = () => {
   useEffect(() => {
     getList();
   }, []);
-
-
 
   useEffect(() => {
     if (listAccounts !== [{}]) {
@@ -122,6 +119,8 @@ const Payment = () => {
       if (result.statusCode === 200) {
         setTransactionId(result.data.id);
         setShowOTPModal(true);
+      } else {
+        alert(result.error.message);
       }
     }
   }, [result]);
@@ -135,13 +134,13 @@ const Payment = () => {
     sendReqTransfer();
   };
   const resetState = () => {
-    setAccNum("")
-    setName("")
-    setMoney("")
-    setStatuscode(404)
-    setNotification("")
-    setShowAddModal(false)
-    setIsSuccess(false)
+    setAccNum("");
+    setName("");
+    setMoney("");
+    setStatuscode(404);
+    setNotification("");
+    setShowAddModal(false);
+    setIsSuccess(false);
   };
   const handleSave = () => {
     addNewRecipent(accNum, name)
@@ -175,8 +174,8 @@ const Payment = () => {
                   Nội dung: {description}
                 </div>
                 <div className="flex justify-end pb-4 px-8">
-
-                  <button onClick={resetState}
+                  <button
+                    onClick={resetState}
                     id="handlecancel"
                     className="cursor-pointer text-xl px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
                   >
@@ -219,7 +218,7 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                    <option value={account.accountNumber}>
+                    <option key={index} value={account.accountNumber}>
                       {account.accountNumber}
                     </option>
                   ))
@@ -285,17 +284,19 @@ const Payment = () => {
                   <input
                     type="radio"
                     value="DES"
-                    checked={fee === 'DES'}
+                    checked={fee === "DES"}
                     onChange={handleChangeFee}
-                  /> Người chuyển khoản chịu phí
+                  />{" "}
+                  Người chuyển khoản chịu phí
                 </div>
                 <div>
                   <input
                     type="radio"
                     value="SRC"
-                    checked={fee === 'SRC'}
+                    checked={fee === "SRC"}
                     onChange={handleChangeFee}
-                  /> Người nhận chịu phí
+                  />{" "}
+                  Người nhận chịu phí
                 </div>
               </div>
 
