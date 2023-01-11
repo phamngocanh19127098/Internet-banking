@@ -166,6 +166,7 @@ const Other = () => {
 
   const handleSave = () => {
     addNewRecipent(accNum, name)
+    resetState()
   };
 
   if (isSuccess === true) {
@@ -202,16 +203,13 @@ const Other = () => {
                   >
                     Thực hiện giao dịch mới
                   </button>
-
-                  <Link to="/recipents">
-                    <button
-                      id="handleSave"
-                      onClick={handleSave}
-                      className=" cursor-pointer text-xl rounded px-2 py-2 ml-4 text-white  text-xs font-bold bg-darkblue hover:bg-[#cf4a04] disabled:bg-[#edb395] "
-                    >
-                      Lưu người nhận này vào danh sách
-                    </button>
-                  </Link>
+                  <button
+                    id="handleSave"
+                    onClick={handleSave}
+                    className=" cursor-pointer text-xl rounded px-2 py-2 ml-4 text-white  text-xs font-bold bg-darkblue hover:bg-[#cf4a04] disabled:bg-[#edb395] "
+                  >
+                    Lưu người nhận này vào danh sách
+                  </button>
                 </div>
               </div>
             </div>
