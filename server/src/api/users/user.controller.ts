@@ -192,17 +192,52 @@ export class UserController {
   async findUserByUsername(@Param('username') username: string) {
     const user = await this.userService.getUserByUsername(username);
 
-    if (!user)
-      throw new BadRequestException('Không tìm thấy khách hàng này');
+    if (!user) throw new BadRequestException('Không tìm thấy khách hàng này');
     delete user.password;
-    delete user.refreshToken
+    delete user.refreshToken;
 
     return {
       statusCode: 200,
       message: 'Tìm kiếm người dùng bằng username thành công',
       data: {
-        user: user
+        user: user,
       },
+    };
+  }
+
+  @ApiOperation({
+    description: 'Đóng tài khoản. Admin mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Đóng tài khoản thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Không tìm thấy người dùng hoặc sai kiểu dữ liệu',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi cập nhật thông tin nhân viên',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.EMPLOYEE, Role.CUSTOMER)
+  @Put('lock')
+  async lockUserAccount(@Param('id') id: number) {
+    const user = await this.userService.getUserById(id);
+
+    if (!user) {
+      throw new BadRequestException('Người dùng không tồn tại');
+    }
+
+    await this.userService.updateEmployee(id, { ...user, status: 1 });
+
+    return {
+      statusCode: 200,
+      message: 'Đóng tài khoản thành công',
     };
   }
 }

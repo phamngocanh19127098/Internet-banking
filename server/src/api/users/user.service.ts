@@ -1,18 +1,25 @@
-import {InjectRepository} from '@nestjs/typeorm';
-import {BadRequestException, Injectable, InternalServerErrorException,} from '@nestjs/common';
-import {Repository, UpdateResult} from 'typeorm';
-import {compareSync, hash} from 'bcrypt';
-import {InvalidCredentialsException} from 'src/commons/filters/exceptions/auth/InvalidCredentialsException';
-import {FailLoginException, InvalidTokenException,} from 'src/commons/filters/exceptions/auth';
-import {sendMail} from 'src/commons/mailing/nodemailer';
+import { InjectRepository } from '@nestjs/typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { Repository, UpdateResult } from 'typeorm';
+import { compareSync, hash } from 'bcrypt';
+import { InvalidCredentialsException } from 'src/commons/filters/exceptions/auth/InvalidCredentialsException';
+import {
+  FailLoginException,
+  InvalidTokenException,
+} from 'src/commons/filters/exceptions/auth';
+import { sendMail } from 'src/commons/mailing/nodemailer';
 import {
   EmailExistedException,
   UsernameExistedException,
   UserUnexistingException,
 } from 'src/commons/filters/exceptions/users';
 
-import {CreateUserDto, LoginUserDto, UpdateUserDto} from './dto/user.dto';
-import {Role, User} from './entity/user.entity';
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
+import { Role, User } from './entity/user.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const randomstring = require('randomstring');
 
@@ -69,6 +76,10 @@ export class UserService {
 
     if (!checkPassword) {
       throw new FailLoginException();
+    }
+
+    if (user.status === 1) {
+      throw new BadRequestException('Tài khoản của bạn đã bị đóng.');
     }
 
     return user;
@@ -149,14 +160,13 @@ export class UserService {
     try {
       return this.userRepository.findOneBy({
         username,
-        role: Role.CUSTOMER
+        role: Role.CUSTOMER,
       });
     } catch (e) {
-    throw new InternalServerErrorException(
-      'Xảy ra lỗi từ server khi tìm kiếm người dùng bằng Username',
-    );
-  }
-
+      throw new InternalServerErrorException(
+        'Xảy ra lỗi từ server khi tìm kiếm người dùng bằng Username',
+      );
+    }
   }
 
   getAccessTokenFromClient(authorization: string) {
