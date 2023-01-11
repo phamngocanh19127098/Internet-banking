@@ -328,6 +328,10 @@ export class TransactionsService {
     return this.transactionRepository.findOneBy({ id });
   }
 
+  findByBankId(bankid: number) {
+    return this.transactionRepository.findBy({ bankDesId: bankid });
+  }
+
   // update(id: number, updateTransactionDto: UpdateTransactionDto) {
   //   return `This action updates a #${id} transaction`;
   // }
