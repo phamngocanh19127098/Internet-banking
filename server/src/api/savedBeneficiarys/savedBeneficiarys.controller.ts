@@ -8,7 +8,10 @@ import {
   Post,
 } from '@nestjs/common';
 import { SavedBeneficiarysService } from './savedBeneficiarys.service';
-import { CreateSavedBeneficiaryDto, CreateSavedBeneficiaryAffiliatedDto } from './dto/create-saved-beneficiary.dto';
+import {
+  CreateSavedBeneficiaryDto,
+  CreateSavedBeneficiaryAffiliatedDto,
+} from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import {
   ApiBadRequestResponse,
@@ -33,7 +36,7 @@ import {
 export class SavedBeneficiarysController {
   constructor(
     private readonly savedBeneficiarysService: SavedBeneficiarysService,
-  ) { }
+  ) {}
 
   @ApiOperation({ description: 'Lưu người thụ hưởng, Customer mới dùng được.' })
   @ApiCreatedResponse({ description: 'Lưu người thụ hưởng thành công' })
@@ -50,7 +53,7 @@ export class SavedBeneficiarysController {
     description: 'Xảy ra lỗi từ server khi lưu người thụ hưởng',
   })
   @ApiConflictResponse({
-    description: 'Người thụ hưởng này đã tồn tại'
+    description: 'Người thụ hưởng này đã tồn tại',
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
@@ -187,8 +190,12 @@ export class SavedBeneficiarysController {
     };
   }
 
-  @ApiOperation({ description: 'Lưu người thụ hưởng Liên ngân hàng, Customer mới dùng được.' })
-  @ApiCreatedResponse({ description: 'Lưu người thụ hưởng Liên ngân hàng thành công' })
+  @ApiOperation({
+    description: 'Lưu người thụ hưởng Liên ngân hàng, Customer mới dùng được.',
+  })
+  @ApiCreatedResponse({
+    description: 'Lưu người thụ hưởng Liên ngân hàng thành công',
+  })
   @ApiBadRequestResponse({
     description: 'Tài khoản không tồn tại',
   })
@@ -208,10 +215,11 @@ export class SavedBeneficiarysController {
     @User() user,
     @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryAffiliatedDto,
   ) {
-    const data = await this.savedBeneficiarysService.createBenificiatyAffiliated(
-      createSavedBeneficiaryDto,
-      user.id,
-    );
+    const data =
+      await this.savedBeneficiarysService.createBenificiatyAffiliated(
+        createSavedBeneficiaryDto,
+        user.id,
+      );
 
     return {
       data,
@@ -220,12 +228,13 @@ export class SavedBeneficiarysController {
     };
   }
 
-
-
   @ApiOperation({
-    description: 'Lấy danh sách người thụ hưởng liên ngân hàng. Customer mới dùng được.',
+    description:
+      'Lấy danh sách người thụ hưởng liên ngân hàng. Customer mới dùng được.',
   })
-  @ApiOkResponse({ description: 'Lấy danh sách người thụ hưởng liên ngân hàng thành công' })
+  @ApiOkResponse({
+    description: 'Lấy danh sách người thụ hưởng liên ngân hàng thành công',
+  })
   @ApiForbiddenResponse({
     description: 'Vai trò của bạn không thể dùng tính năng này',
   })
@@ -233,7 +242,8 @@ export class SavedBeneficiarysController {
     description: 'Không có quyền dùng tính năng này',
   })
   @ApiInternalServerErrorResponse({
-    description: 'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng liên ngân hàng',
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng liên ngân hàng',
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
@@ -247,13 +257,13 @@ export class SavedBeneficiarysController {
     };
   }
 
-
-
-
   @ApiOperation({
-    description: 'Lấy danh sách người thụ hưởng nội bộ. Customer mới dùng được.',
+    description:
+      'Lấy danh sách người thụ hưởng nội bộ. Customer mới dùng được.',
   })
-  @ApiOkResponse({ description: 'Lấy danh sách người thụ hưởng nội bộ thành công' })
+  @ApiOkResponse({
+    description: 'Lấy danh sách người thụ hưởng nội bộ thành công',
+  })
   @ApiForbiddenResponse({
     description: 'Vai trò của bạn không thể dùng tính năng này',
   })
@@ -261,7 +271,8 @@ export class SavedBeneficiarysController {
     description: 'Không có quyền dùng tính năng này',
   })
   @ApiInternalServerErrorResponse({
-    description: 'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng nội bộ',
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng nội bộ',
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
@@ -274,6 +285,4 @@ export class SavedBeneficiarysController {
       message: 'Lấy danh sách người thụ hưởng nội bộ thành công',
     };
   }
-
-
 }

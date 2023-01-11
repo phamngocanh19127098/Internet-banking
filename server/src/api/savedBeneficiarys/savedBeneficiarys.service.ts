@@ -1,5 +1,12 @@
-import { BadRequestException, Injectable , ConflictException} from '@nestjs/common';
-import { CreateSavedBeneficiaryDto, CreateSavedBeneficiaryAffiliatedDto } from './dto/create-saved-beneficiary.dto';
+import {
+  BadRequestException,
+  Injectable,
+  ConflictException,
+} from '@nestjs/common';
+import {
+  CreateSavedBeneficiaryDto,
+  CreateSavedBeneficiaryAffiliatedDto,
+} from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository, Not } from 'typeorm';
@@ -13,7 +20,8 @@ export class SavedBeneficiarysService {
     private savedBeneficiaryRepository: Repository<SavedBeneficiary>,
     @InjectRepository(Account)
     private accountRepository: Repository<Account>,
-  ) { }
+  ) {}
+
   async create(
     createSavedBeneficiaryDto: CreateSavedBeneficiaryDto,
     customerId: number,
@@ -33,10 +41,11 @@ export class SavedBeneficiarysService {
 
       const exist = await this.savedBeneficiaryRepository.findBy({
         customerId: customerId,
-        beneficiaryAccountNumber: createSavedBeneficiaryDto.beneficiaryAccountNumber
-      })
+        beneficiaryAccountNumber:
+          createSavedBeneficiaryDto.beneficiaryAccountNumber,
+      });
 
-      if (exist !== null) {        
+      if (exist.length !== 0) {
         throw new ConflictException('Beneficiary already exist');
       }
 
@@ -59,21 +68,24 @@ export class SavedBeneficiarysService {
     return this.savedBeneficiaryRepository.findBy({ customerId: userId });
   }
 
-
   async findAllInternal(userId: number) {
     // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
-    return await this.savedBeneficiaryRepository.find({where: {
-      customerId: userId,
-      beneficiaryBankId: IsNull()
-    }})
+    return await this.savedBeneficiaryRepository.find({
+      where: {
+        customerId: userId,
+        beneficiaryBankId: IsNull(),
+      },
+    });
   }
 
   async findAllExternal(userId: number) {
     // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
-    return await this.savedBeneficiaryRepository.find({where: {
-      customerId: userId,
-      beneficiaryBankId: Not(IsNull())
-    }})
+    return await this.savedBeneficiaryRepository.find({
+      where: {
+        customerId: userId,
+        beneficiaryBankId: Not(IsNull()),
+      },
+    });
   }
 
   findOne(id: number) {
@@ -144,7 +156,6 @@ export class SavedBeneficiarysService {
     createSavedBeneficiaryDto: CreateSavedBeneficiaryAffiliatedDto,
     customerId: number,
   ) {
-
     try {
       // const infoAccount = await this.accountRepository
       //   .createQueryBuilder('account')
@@ -160,17 +171,17 @@ export class SavedBeneficiarysService {
 
       const exist = await this.savedBeneficiaryRepository.findBy({
         customerId: customerId,
-        beneficiaryAccountNumber: createSavedBeneficiaryDto.beneficiaryAccountNumber
-      })
+        beneficiaryAccountNumber:
+          createSavedBeneficiaryDto.beneficiaryAccountNumber,
+      });
 
-      if (exist !== null) { 
-        console.log(1)       
+      if (exist.length !== 0) {
         throw new ConflictException('Beneficiary already exist');
       }
 
       if (!createSavedBeneficiaryDto.beneficiaryNickname) {
         createSavedBeneficiaryDto.beneficiaryNickname =
-          createSavedBeneficiaryDto.beneficiaryDefaultName
+          createSavedBeneficiaryDto.beneficiaryDefaultName;
       }
 
       return await this.savedBeneficiaryRepository.save({
@@ -181,5 +192,4 @@ export class SavedBeneficiarysService {
       throw new BadRequestException(e.message);
     }
   }
-
 }
