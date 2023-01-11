@@ -53,15 +53,30 @@ export class AuthService {
         currentBalance: 0,
         createdBy: employeeId,
       });
+
+      delete user.password;
+
+      return {
+        data: { ...user, accountNumber: account.accountNumber },
+        statusCode: 200,
+        message: 'Đăng ký người dùng thành công.',
+      };
+    } else {
+      delete user.password;
+
+      let message: string;
+
+      if (user.role === Role.ADMIN) {
+        message = 'Đăng ký admin thành công.';
+      } else {
+        message = 'Đăng ký nhân viên thành công.';
+      }
+      return {
+        data: user,
+        statusCode: 200,
+        message,
+      };
     }
-
-    delete user.password;
-
-    return {
-      data: { ...user, accountNumber: account.accountNumber },
-      statusCode: 200,
-      message: 'Đăng ký người dùng thành công.',
-    };
   }
 
   async login(loginDto: LoginUserDto): Promise<IResponseData> {
