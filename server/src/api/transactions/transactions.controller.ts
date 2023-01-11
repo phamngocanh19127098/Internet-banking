@@ -271,7 +271,7 @@ export class TransactionsController {
   })
   @ApiBearerAuth()
   @Roles(Role.ADMIN)
-  @Get('listWithBankId')
+  @Post('listWithBankId')
   findByBankId(@Body() dto: BankIdDto) {
     return this.transactionsService.findByBankId(dto.bankId);
   }

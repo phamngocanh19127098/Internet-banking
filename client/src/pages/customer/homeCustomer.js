@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import HomeNavigation from "../../components/homeNavigation";
 import { useSelector } from "react-redux";
 import CloseAccCustomer from "../../components/closeAccCustomer";
+import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
 
 const HomeCustomer = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [usernameDelete, setUsernameDelete] = useState();
 
   const { userInfo } = useSelector((state) => state.auth);
+
+  const [account, setAccount] = useState({});
+
+  async function getAccount() {
+    const list = await fetcherAccounts(userInfo.id);
+    setAccount(list.data.data.accounts[0]);
+  }
+
+  function numberWithCommas(x) {
+    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  useEffect(() => {
+    getAccount();
+  }, []);
+
   return (
     <div>
       <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
@@ -23,11 +40,17 @@ const HomeCustomer = () => {
               </div>
             </div>
             <div className="row-span-1 col-span-1 ring-2 ring-main-green rounded flex flex-col justify-center items-center">
-              <div className="text-center text-main-green font-medium  text-sm duration-200">
-                Số dư hiện tại
+              <div className="text-center text-main-green font-semibold text-lg duration-200">
+                Số tài khoản:
               </div>
-              <div className="text-center text-main-green font-medium text-bold text-2xl duration-200">
-                3.000.000 VND
+              <div className="text-cente text-main-green font-bold text-2xl duration-200 mb-6">
+                {account.accountNumber}
+              </div>
+              <div className="text-center text-main-green font-bold text-lg duration-200">
+                Số dư hiện tại:
+              </div>
+              <div className="text-cente text-main-green font-bold text-2xl duration-200">
+                {numberWithCommas(account.currentBalance)} VND
               </div>
             </div>
             <div className="row-span-2 col-span-2 rounded flex flex-col items-center mt-6">
@@ -75,11 +98,7 @@ const HomeCustomer = () => {
       </div>
 
       {showDeleteModal && (
-        <CloseAccCustomer
-          visible={showDeleteModal}
-          username={usernameDelete}
-          // handleChange={hanldeChange}
-        />
+        <CloseAccCustomer visible={showDeleteModal} username={usernameDelete} />
       )}
     </div>
   );

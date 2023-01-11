@@ -6,6 +6,10 @@ const Accounts = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
 
+  function numberWithCommas(x) {
+    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   async function getList() {
     const list = await fetcherAccounts(userInfo.id);
     setListAccounts(list.data.data.accounts);
@@ -46,7 +50,7 @@ const Accounts = () => {
                             </td>
                             <td className="px-4 py-2">
                               <div className="text-sm text-black-900">
-                                {account.currentBalance}
+                                {numberWithCommas(account.currentBalance)} VND
                               </div>
                             </td>
                           </tr>
