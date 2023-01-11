@@ -328,8 +328,16 @@ export class TransactionsService {
     return this.transactionRepository.findOneBy({ id });
   }
 
-  findByBankId(bankid: number) {
-    return this.transactionRepository.findBy({ bankDesId: bankid });
+  async findByBankId(bankid: number) {
+    const transactions = await this.transactionRepository.findBy({
+      bankDesId: bankid,
+    });
+
+    return {
+      data: transactions,
+      message: 'Lấy danh sách các giao dịch theo Bank Id thành công',
+      statusCode: 200,
+    };
   }
 
   // update(id: number, updateTransactionDto: UpdateTransactionDto) {

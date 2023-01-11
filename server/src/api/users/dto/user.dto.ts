@@ -119,7 +119,7 @@ export class LoginUserDto {
   @ApiProperty({
     description: 'Mật khẩu của chủ tài khoản',
     required: true,
-    example: 'admin',
+    example: '123123',
   })
   password: string;
 }
