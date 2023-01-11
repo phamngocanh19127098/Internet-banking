@@ -1,18 +1,18 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import EmployeeNavigation from "../../components/employeeNavigation";
-import DeleteRecipent from "../../components/deleteRecipent";
 import Loader from "../../components/loading";
 import { fetcherGetAllCustomer } from "../../fetchers/fetcherEmployee";
 import CloseAcc from "../../components/closeAcc";
+
 const LockUserAccount = () => {
-  const { userInfo } = useSelector((state) => state.auth);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const handleOnCloseDelete = () => setShowDeleteModal(false);
   const [listRecipents, setListRecipents] = useState();
-  const [usernameDelete, setUsernameDelete] = useState();
+  const [username, setUsername] = useState();
+  const [userStatus, setUserStatus] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
   async function getList() {
     const list = await fetcherGetAllCustomer();
     setListRecipents(list.data.data);
@@ -101,10 +101,14 @@ const LockUserAccount = () => {
                             {account.status ? (
                               <div>
                                 <button
-                                  className="px-10 py-2 text-sm font-bold text-white text-center bg-gray-300 rounded-full"
-                                  disabled
+                                  onClick={() => {
+                                    setShowDeleteModal(true);
+                                    setUsername(account.username);
+                                    setUserStatus(account.status);
+                                  }}
+                                  className="cursor-pointer px-10 py-2 text-sm font-bold text-white text-center bg-new-green rounded-full hover:bg-main-green disabled:bg-[#edb395]"
                                 >
-                                  Đóng
+                                  Mở
                                 </button>
                               </div>
                             ) : (
@@ -112,7 +116,8 @@ const LockUserAccount = () => {
                                 <button
                                   onClick={() => {
                                     setShowDeleteModal(true);
-                                    setUsernameDelete(account.username);
+                                    setUsername(account.username);
+                                    setUserStatus(account.status);
                                   }}
                                   className="cursor-pointer px-10 py-2 text-sm font-bold text-white text-center bg-medium-pink-red rounded-full hover:bg-[#870e2b] disabled:bg-[#edb395]"
                                 >
@@ -140,7 +145,8 @@ const LockUserAccount = () => {
         <CloseAcc
           onClose={handleOnCloseDelete}
           visible={showDeleteModal}
-          username={usernameDelete}
+          username={username}
+          status={userStatus}
           handleChange={hanldeChange}
         />
       )}

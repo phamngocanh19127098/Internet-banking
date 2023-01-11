@@ -252,7 +252,7 @@ export class UserController {
   })
   @ApiBearerAuth()
   @Roles(Role.EMPLOYEE, Role.CUSTOMER)
-  @Put('lock/:username')
+  @Put('changestatus/:username')
   async lockUserAccount(@Param('username') username: string) {
     const user = await this.userService.getUserByUsername(username);
 
@@ -260,11 +260,10 @@ export class UserController {
       throw new BadRequestException('Người dùng không tồn tại');
     }
 
-    if (user.status === 1) {
-      throw new BadRequestException('Tài khoản này đã bị đóng.');
-    }
-
-    await this.userService.updateEmployee(user.id, { ...user, status: 1 });
+    await this.userService.updateEmployee(user.id, {
+      ...user,
+      status: user.status ? 0 : 1,
+    });
 
     return {
       statusCode: 200,

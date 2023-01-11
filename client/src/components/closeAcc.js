@@ -1,17 +1,18 @@
 import React from "react";
-import { fetcherDeleteReceiver } from "../fetchers/fetcherEmployee";
+import { fetcherUpdateUserStatus } from "../fetchers/fetcherEmployee";
 
 const CloseAcc = (props) => {
-  async function deleteRecipent() {
-    const info = await fetcherDeleteReceiver(props.username);
+  async function updateUserStatus() {
+    await fetcherUpdateUserStatus(props.username);
   }
 
   const handleRemoveClick = (e) => {
     console.log(props.username);
-    deleteRecipent();
+    updateUserStatus();
     props.handleChange();
     props.onClose();
   };
+
   const handleCancelClick = (e) => {
     props.onClose();
   };
@@ -47,7 +48,11 @@ const CloseAcc = (props) => {
           Đóng tài khoản
         </div>
         <div className="flex  text-sm  text-black mb-2 mt-4 px-8 ">
-          Bạn có xác nhận muốn đóng tài khoản {props.username}?
+          {props.status ? (
+            <p>Bạn có xác nhận muốn mở tài khoản {props.username}?</p>
+          ) : (
+            <p>Bạn có xác nhận muốn đóng tài khoản {props.username}?</p>
+          )}
         </div>
         <div className="flex justify-end pb-4 px-8">
           <button
