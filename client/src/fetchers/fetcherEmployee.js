@@ -143,3 +143,20 @@ export const fetcherGetAllCustomer = async () => {
     return { data, status };
   }
 };
+
+export const fetcherDeleteReceiver = async (username) => {
+  const url = `http://localhost:3001/users/lock/${username}`;
+  try {
+    const { data, statusCode } = await axios({
+      method: "put",
+      url,
+      headers: { Authorization: "Bearer " + localStorage.getItem("userToken") },
+    });
+    return { data, statusCode };
+  } catch (err) {
+    console.error("Error response:");
+    const data = err.response.data;
+    const status = err.response.status;
+    return { data, status };
+  }
+};

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import HomeNavigation from "../../components/homeNavigation";
 import { useSelector } from "react-redux";
+
 const HomeCustomer = () => {
   const { userInfo } = useSelector((state) => state.auth);
   return (

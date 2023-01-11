@@ -233,7 +233,7 @@ export class UserController {
   }
 
   @ApiOperation({
-    description: 'Đóng tài khoản. Admin mới dùng được.',
+    description: 'Đóng tài khoản. Employee, customer mới dùng được.',
   })
   @ApiOkResponse({
     description: 'Đóng tài khoản thành công',
@@ -252,9 +252,9 @@ export class UserController {
   })
   @ApiBearerAuth()
   @Roles(Role.EMPLOYEE, Role.CUSTOMER)
-  @Put('lock')
-  async lockUserAccount(@Param('id') id: number) {
-    const user = await this.userService.getUserById(id);
+  @Put('lock/:username')
+  async lockUserAccount(@Param('username') username: string) {
+    const user = await this.userService.getUserByUsername(username);
 
     if (!user) {
       throw new BadRequestException('Người dùng không tồn tại');
@@ -264,7 +264,7 @@ export class UserController {
       throw new BadRequestException('Tài khoản này đã bị đóng.');
     }
 
-    await this.userService.updateEmployee(id, { ...user, status: 1 });
+    await this.userService.updateEmployee(user.id, { ...user, status: 1 });
 
     return {
       statusCode: 200,
