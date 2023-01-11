@@ -25,29 +25,31 @@ const DebtReminderItem = (props) => {
 
 
     return <article id={props.item.id} className="cart-item">
-        <div className="flex items-center justify-between">
-            <h4>{props.item.accountSrcNumber}</h4>
-            <h4>{props.item.accountDesNumber}</h4>
-            <h4 className="amount"> {props.item.amount} </h4>
-            <h4>{props.item.paymentStatus}</h4>
-            {(props.type === CREATED_DEBT || props.type === RECEIVED_DEBT) && <button className="remove-btn" onClick={() => {
-                if (props.type === CREATED_DEBT) {
-                    dispatch(removeDebtReminder(props.item.id))
-                    socket.emit(removeCreatedDebtReminder, {userId: userInfo.id, id: props.item.id})
-                } else if (props.type === RECEIVED_DEBT) {
-                    dispatch(removeDebtReminder(props.item.id))
-                    socket.emit(removeReceivedDebtReminder, {userId: userInfo.id, id: props.item.id})
-                }
-            }}>
-                remove
-            </button>}
-
-            { props.type === PAY_DEBT && <button onClick={handlePayDebtAction}>Pay debt</button>}
-        </div>
-        <div>
-
+      <div className=" grid grid-cols-3 bg-[#d9ead3] w-full h-fit border rounded-lg m-3 p-3">
+        <div className="col-span-2 flex flex-col items-start ">
+          <h4><span className="font-bold">Người gửi: </span>{props.item.accountSrcNumber}</h4>
+            <h4><span className="font-bold">Gửi đến: </span>{props.item.accountDesNumber}</h4>
+            <h4 className="amount"><span className="font-bold">Số tiền cần thanh toán: </span> {props.item.amount} đ</h4>
+            <h4><span className="font-bold">Trạng thái thanh toán: </span>{props.item.paymentStatus}</h4>
 
         </div>
+        <div className="col-span-1 grid grid-col justify-end">
+          {(props.type === CREATED_DEBT || props.type === RECEIVED_DEBT) && <button className="cursor-pointer h-fit px-6 py-2 text-sm font-bold text-white bg-red rounded-full hover:bg-[#ea5b5b]" onClick={() => {
+            if (props.type === CREATED_DEBT) {
+              dispatch(removeDebtReminder(props.item.id))
+              socket.emit(removeCreatedDebtReminder, {userId: userInfo.id, id: props.item.id})
+            } else if (props.type === RECEIVED_DEBT) {
+              dispatch(removeDebtReminder(props.item.id))
+              socket.emit(removeReceivedDebtReminder, {userId: userInfo.id, id: props.item.id})
+            }
+          }}>
+            Xóa
+          </button>}
+
+          { (props.type === PAY_DEBT || props.type === RECEIVED_DEBT) && <button className="cursor-pointer h-fit w-fit  px-6 py-2 text-sm font-bold text-white bg-brightblue rounded-full hover:bg-hover-brightblue" onClick={handlePayDebtAction}>Thanh toán</button>}
+
+        </div>
+      </div>
     </article>
 }
 
