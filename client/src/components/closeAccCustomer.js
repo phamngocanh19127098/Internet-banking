@@ -1,6 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { fetcherDeleteReceiver } from "../fetchers/fetcherEmployee";
+import { fetcherUpdateUserStatus } from "../fetchers/fetcherEmployee";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 
@@ -8,7 +7,7 @@ const CloseAccCustomer = (props) => {
   const dispatch = useDispatch();
 
   async function deleteRecipent() {
-    const info = await fetcherDeleteReceiver(props.username);
+    await fetcherUpdateUserStatus(props.username);
   }
 
   const handleRemoveClick = (e) => {

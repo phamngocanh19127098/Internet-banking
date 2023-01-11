@@ -144,8 +144,8 @@ export const fetcherGetAllCustomer = async () => {
   }
 };
 
-export const fetcherDeleteReceiver = async (username) => {
-  const url = `http://localhost:3001/users/lock/${username}`;
+export const fetcherUpdateUserStatus = async (username) => {
+  const url = `http://localhost:3001/users/changestatus/${username}`;
   try {
     const { data, statusCode } = await axios({
       method: "put",

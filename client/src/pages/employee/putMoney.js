@@ -5,30 +5,32 @@ import { fetcherPutMoney } from "../../fetchers/fetcherEmployee";
 import { fetcherReceiver } from "../../fetchers/fetcherCustomer";
 import { fetcherUsername } from "../../fetchers/fetcherEmployee";
 const PutMoney = () => {
-  const [info, setInfo] = useState("username")
+  const [info, setInfo] = useState("username");
   const [notification, setNotification] = useState("");
-  const [result, setResult] = useState()
+  const [result, setResult] = useState();
   const [statuscode, setStatuscode] = useState(404);
-  const [check, setCheck] = useState("")
-  const [name, setName] = useState("")
+  const [check, setCheck] = useState("");
+  const [name, setName] = useState("");
   const [isDisable, setIsDisable] = useState(true);
   const [response, setResponse] = useState();
   const [money, setMoney] = useState();
+  const [checkInfo, setCheckInfo] = useState(true);
   async function putMoney(infoMoney) {
     const list = await fetcherPutMoney(infoMoney);
-    setResult(list)
+    setResult(list);
   }
   async function getNameByNum() {
     const info = await fetcherReceiver(check);
     setStatuscode(info.status);
     setResponse(info);
+    setCheckInfo(!checkInfo);
   }
   async function getNameByUsername() {
     const info = await fetcherUsername(check);
     setStatuscode(info.status);
     setResponse(info);
+    setCheckInfo(!checkInfo);
   }
-
 
   const options = [
     {
@@ -41,40 +43,33 @@ const PutMoney = () => {
     },
   ];
   const handleChange = (e) => {
-    setInfo(e.target.value)
+    setInfo(e.target.value);
   };
 
-
   useEffect(() => {
-    console.log(response)
+    console.log(response);
     if (statuscode === 200) {
       if (check !== null) {
         setName(response.data.data.user.name);
         setNotification(response.data.data.user.name);
-
       } else {
         setNotification("");
         setName(" ");
-
       }
-    }
-    else {
+    } else {
       if (check !== null && check !== "" && check !== undefined) {
-        console.log(typeof check)
+        console.log(typeof check);
         setNotification("Thông tin tài khoản chưa chính xác");
         setName("");
-
       } else {
         setNotification("");
         setName("");
       }
-
     }
-  }, [statuscode]);
-
+  }, [statuscode, checkInfo]);
 
   useEffect(() => {
-    console.log(money)
+    console.log(money);
     if (money !== undefined && money !== "" && name !== null && name !== "") {
       setIsDisable(false);
     } else {
@@ -85,32 +80,29 @@ const PutMoney = () => {
   useEffect(() => {
     if (check !== null && check !== "" && check !== undefined) {
       if (info === "username") {
-        getNameByUsername()
+        getNameByUsername();
+      } else {
+        getNameByNum();
       }
-      else {
-        getNameByNum()
-      }
-    }
-    else {
-      setStatuscode(101)
+    } else {
+      setStatuscode(101);
     }
   }, [check, info]);
 
   useEffect(() => {
     if (result) {
-      console.log(result)
+      console.log(result);
       if (result.status === 200) {
-        console.log("Success")
-      }
-      else {
-        console.log("FAIL")
+        console.log("Success");
+      } else {
+        console.log("FAIL");
       }
     }
   }, [result]);
 
   const submitForm = () => {
-    const data = { [info]: check, "depositMoney": parseInt(money) }
-    putMoney(data)
+    const data = { [info]: check, depositMoney: parseInt(money) };
+    putMoney(data);
   };
   return (
     <div>
@@ -121,8 +113,10 @@ const PutMoney = () => {
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
               <div className="select-container flex  text-xs  text-black font-bold mb-2 mt-4 px-8">
                 <select value={info} onChange={handleChange}>
-                  {options.map((option) => (
-                    <option value={option.value}>{option.label}</option>
+                  {options.map((option, index) => (
+                    <option key={index} value={option.value}>
+                      {option.label}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -166,7 +160,6 @@ const PutMoney = () => {
               >
                 Nạp tiền
               </button>
-
             </div>
           </div>
         </div>

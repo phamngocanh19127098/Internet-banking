@@ -6,6 +6,8 @@ import { fetcherAllList, fetcherDebtList, fetcherReceivedList, fetcherTransferLi
 import EmployeeNavigation from '../../components/employeeNavigation';
 import AllListTransaction from '../../components/listTransaction/allList';
 import TransferListTransaction from '../../components/listTransaction/transferList';
+import DebtListTransaction from '../../components/listTransaction/debtList';
+import ReceivedListTransaction from '../../components/listTransaction/receivedList';
 const SeeTransactions = () => {
     const [allList, setAllList] = useState([])
     const [receivedList, setReceivedList] = useState([])
@@ -32,7 +34,15 @@ const SeeTransactions = () => {
         const info = await fetcherTransferList(accNum);
         setTransferList(info.data.data);
     }
+    async function getReceivedList() {
+        const info = await fetcherReceivedList(accNum);
+        setReceivedList(info.data.data);
+    }
 
+    async function getDebtList() {
+        const info = await fetcherDebtList(accNum);
+        setDebtList(info.data.data);
+    }
 
     useEffect(() => {
         console.log(accNum);
@@ -69,6 +79,8 @@ const SeeTransactions = () => {
         console.log(accNum)
         getAllList()
         getTransferList()
+        getReceivedList();
+        getDebtList();
     };
     const [openTab, setOpenTab] = useState(1);
     return (
@@ -161,10 +173,10 @@ const SeeTransactions = () => {
                                                 <TransferListTransaction allList={transferList} />
                                             </div>
                                             <div className={openTab === 3 ? "block" : "hidden"}>
-                                                <AllListTransaction allList={allList} accNum={accNum} />
+                                                <ReceivedListTransaction allList={receivedList} />
                                             </div>
                                             <div className={openTab === 4 ? "block" : "hidden"}>
-                                                <AllListTransaction allList={allList} accNum={accNum} />
+                                                <DebtListTransaction allList={debtList} />
                                             </div>
                                         </div>
                                     </div>

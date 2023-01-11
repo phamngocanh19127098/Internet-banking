@@ -68,3 +68,42 @@ export const fetcherListAdmin = async () => {
         return { data, status }
     }
 }
+
+
+export const fetcherListByID = async (id) => {
+    const url = `http://localhost:3001/transactions/listWithBankId`
+
+    try {
+        const { data, status } = await axios({
+            method: 'post',
+            url, data: { "bankId": id }, headers: { 'Authorization': 'Bearer ' + localStorage.getItem('userToken') }
+        });
+        return { data, status }
+    } catch (err) {
+        console.error("Error response:");
+        const data = err.response.data
+        const status = err.response.status
+        return { data, status }
+    }
+}
+
+
+export const fetcherAddAccount = async (addData) => {
+    const url = `http://localhost:3001/auth/signup`;
+    try {
+        const { data } = await axios({
+            method: "post",
+            url,
+            data: addData,
+            headers: { Authorization: "Bearer " + localStorage.getItem("userToken") },
+        });
+        const { status } = { status: data.statusCode };
+        return { data, status };
+    } catch (err) {
+        alert(err.response.data.error.message);
+        console.error("Error response:");
+        const data = err.response.data;
+        const status = err.response.status;
+        return { data, status };
+    }
+};

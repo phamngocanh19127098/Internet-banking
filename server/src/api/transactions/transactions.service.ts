@@ -11,7 +11,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from './entities/transaction.entity';
-import { Brackets, Repository } from 'typeorm';
+import { Brackets, Repository, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CreateTransferDto,
@@ -329,10 +329,19 @@ export class TransactionsService {
   }
 
   async findByBankId(bankid: number) {
-    const transactions = await this.transactionRepository.findBy({
-      bankDesId: bankid,
-    });
+    let transactions: Transaction[];
 
+    if (bankid) {
+      transactions = await this.transactionRepository.findBy({
+        bankDesId: bankid,
+      });
+    } else {
+      transactions = await this.transactionRepository.find({
+        where: {
+          bankDesId: IsNull(),
+        },
+      });
+    }
     return {
       data: transactions,
       message: 'Lấy danh sách các giao dịch theo Bank Id thành công',

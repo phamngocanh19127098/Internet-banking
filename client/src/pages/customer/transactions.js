@@ -124,7 +124,7 @@ const Transaction = () => {
                     </li>
                   </ul>
                   <div className="p-3 mt-6 max-h-screen grid-rows-4  ">
-                    <div className={`row-start-1 row-span-3 ${openTab === 1 ? "block" : "hidden"}`}>
+                    <div className={`${openTab === 1 ? "block" : "hidden"}`}>
                       <AllListTransaction allList={allList} accNum={accNum} />
                     </div>
                     <div className={openTab === 2 ? "block" : "hidden"}>

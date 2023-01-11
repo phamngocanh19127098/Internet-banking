@@ -3,6 +3,7 @@ import moment from 'moment';
 import { fetcherListBanks } from '../../fetchers/fetcherCustomer';
 import AdminNavigation from '../../components/adminNavigation';
 import { fetcherListAdmin } from '../../fetchers/fetcherAdmin';
+import { fetcherListByID } from '../../fetchers/fetcherAdmin';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -37,20 +38,47 @@ function ManagementTransaction() {
     const [endDate, setEndDate] = useState('');
     const [allList, setAllList] = useState()
     const [rowData1, setRowData1] = useState()
+    const [value, setValue] = useState("0")
+
     async function getAllList() {
         const info = await fetcherListAdmin();
         setAllList(info.data.data);
     }
+    async function getInternalList() {
+        const info = await fetcherListByID(null);
+        setAllList(info.data.data);
+    }
 
-    const [listBank, setListBank] = useState([])
+    async function getExternalList() {
+        const info = await fetcherListByID(parseInt(value));
+        setAllList(info.data.data);
+    }
+
+    const [listBank, setListBank] = useState()
     async function getBanks() {
         const list = await fetcherListBanks();
         setListBank(list.data.data);
     }
 
+    const handleChangeSelect = (e) => {
+        setValue(e.target.value);
+    };
 
     useEffect(() => {
-        getAllList();
+        if (value === "0") {
+            console.log("A")
+            getAllList();
+        }
+        if (value === "1") {
+            getInternalList();
+        }
+        if (value !== "1" && value !== "0") {
+            getExternalList();
+        }
+
+    }, [value]);
+
+    useEffect(() => {
         getBanks();
     }, []);
 
@@ -59,14 +87,19 @@ function ManagementTransaction() {
         if (allList !== undefined) {
             const list = allList
             list.map((element, index) =>
-                element["date"] = moment(element["createdAt"]).format('DD-MM-YYYY hh:mm:ss')
+                element["date"] = moment(element["updatedAt"]).format('DD-MM-YYYY hh:mm:ss')
             )
-            console.log(list[0].createdAt)
             list.map((element, index) =>
-                element["bankDesId"] === null ?
-                    element["bankName"] = "TaiXiu Bank"
-                    : (listBank.map((bank => (element["bankDesId"] === bank["id"] ? element["bankName"] = bank["name"] : null)))
-                    ))
+                element["bankDesId"] === null
+                    ? (element["bankName"] = "TaiXiu Bank")
+                    : listBank !== undefined
+                        ? listBank.map((bank) =>
+                            element["bankDesId"] === bank["id"]
+                                ? (element["bankName"] = bank["name"])
+                                : null
+                        )
+                        : null
+            );
             setRowData1(list)
         }
 
@@ -139,6 +172,18 @@ function ManagementTransaction() {
                         <div
                             className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300"
                         >
+
+                            {listBank !== undefined ?
+                                <div className=" select-container">
+                                    <select value={value} onChange={handleChangeSelect} >
+                                        <option value={0}>Tất cả</option>
+                                        <option value={1}>TaiXiu Bank</option>
+                                        {listBank.map((option) => (
+                                            <option value={option.id}>{option.name}</option>
+                                        ))}
+                                    </select>
+                                </div> : null}
+
                             {rowData1 !== null ? (
                                 <div>
                                     <div className="ag-theme-alpine" style={{ height: 600 }}>
