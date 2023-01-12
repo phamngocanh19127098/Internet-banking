@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  push:
+    branches: ["production-fe"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          cd server
+      - run: docker build -t 19127098/client:latest ./client
+      - run: docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+      - run: docker push 19127098/client:latest
+
+  cd:
+    runs-on: self-hosted
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v3
+      - run: sudo docker pull 19127098/client:latest
+      - run: sudo docker rm -f client
+      - run: sudo docker run -d -p 3001:3001 --name client 19127098/client:latest
