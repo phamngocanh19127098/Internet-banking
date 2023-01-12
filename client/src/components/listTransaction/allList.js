@@ -1,5 +1,8 @@
 import moment from "moment/moment";
+import "moment/locale/vi";
+
 const AllListTransaction = (props) => {
+  moment.locale("vi");
   return (
     <div>
       {props.allList !== null && props.allList !== undefined ? (
@@ -67,9 +70,9 @@ const AllListTransaction = (props) => {
                       )}
                     </td>
                     <td className="px-8 py-4">
-                      {moment(transaction.updatedAt).format(
-                        "hh:mm:ss DD MMM, YYYY"
-                      )}
+                      {moment(transaction.updatedAt)
+                        .add(7, "h")
+                        .format("HH:mm:ss L")}
                     </td>
                   </tr>
                 ))}
