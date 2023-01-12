@@ -58,7 +58,6 @@ function App() {
                 <Route path="unpaid-loan" element={<UnpaidLoan />} />
                 <Route path="/recipents" element={<Recipents />} />
                 <Route path="/payment" element={<Payment />} />
-                <Route path="/contact" element={<Contact />} />
                 <Route path="/paymentExternal" element={<Other />} />
                 <Route path="/transactions" element={<Transaction />} />
               </Route>

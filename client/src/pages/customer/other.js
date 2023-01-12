@@ -171,7 +171,7 @@ const Other = () => {
       <div>
         <div>
           <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
-            <HomeNavigation id={6} />
+            <HomeNavigation id={4} />
             <div className="h-screen flex-auto">
               <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
                 <div className="block mb-2 text-2xl text-gray-900 dark:text-white font-bold">
@@ -220,7 +220,7 @@ const Other = () => {
     <div>
       <div>
         <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
-          <HomeNavigation id={6} />
+          <HomeNavigation id={4} />
           <div className="h-screen flex-auto">
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
               <label
@@ -238,10 +238,10 @@ const Other = () => {
                 >
                   {listAccounts !== null
                     ? listAccounts.map((account, index) => (
-                        <option key={index} value={account.accountNumber}>
-                          {account.accountNumber}
-                        </option>
-                      ))
+                      <option key={index} value={account.accountNumber}>
+                        {account.accountNumber}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
