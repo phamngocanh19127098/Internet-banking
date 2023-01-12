@@ -5,12 +5,15 @@ import { removeDebtReminder } from "../../features/debtReminder/debtReminderSlic
 import io from "socket.io-client";
 import {
     payDebt,
+    payDebtSuccess,
     removeCreatedDebtReminder,
     removeReceivedDebtReminder,
 } from "../../constants/debtReminderConstants";
+import { closeNotification, updateCurrentTransaction } from "../../features/notification/notificationSlice";
 import { CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
 import { SRC } from "../../constants/payTransactionFee";
 import { removeReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
+import ConfirmOTPDebt from "./otp";
 const socket = io.connect(
     "http://localhost:3001"
 );
@@ -18,7 +21,11 @@ const DebtList = (props) => {
     const token = localStorage.getItem("userToken");
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state.auth);
+    const [showOTP, setShowOTP] = useState(false);
+    const handleOnCloseOTP = () => setShowOTP(false);
+
     const handlePayDebtAction = (userId, amount) => {
+        console.log("ABC")
         socket.emit(payDebt, {
             authorization: `Bearer ${token}`,
             toUserId: userId,
@@ -26,8 +33,8 @@ const DebtList = (props) => {
             description: "Thanh toán nợ",
             payTransactionFee: SRC,
         });
+        setShowOTP(true)
     };
-
     return (
         <div>
             <div className="bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] h-64 relative duration-300">
@@ -113,7 +120,7 @@ const DebtList = (props) => {
                                                     {(props.type === PAY_DEBT || props.type === RECEIVED_DEBT) && (
                                                         <button
                                                             className="cursor-pointer h-fit w-fit  px-6 py-2 text-sm font-bold text-white bg-brightblue rounded-full hover:bg-hover-brightblue"
-                                                            onClick={ ()=> handlePayDebtAction(account.userId, account.amount)}
+                                                            onClick={() => handlePayDebtAction(account.userId, account.amount)}
                                                         >
                                                             Thanh toán
                                                         </button>
@@ -131,8 +138,14 @@ const DebtList = (props) => {
                         Danh sách trống
                     </div>
                 )}
-
+                {showOTP && (
+                    <ConfirmOTPDebt
+                        onClose={handleOnCloseOTP}
+                        visible={showOTP}
+                    />
+                )}
             </div>
+
         </div>
 
     );
