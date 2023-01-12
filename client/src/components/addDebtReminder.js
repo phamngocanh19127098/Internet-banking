@@ -6,7 +6,7 @@ import {
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
 const socket = io.connect(
-  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001"
+  "http://localhost:3001"
 );
 
 const AddDebtReminder = (props) => {

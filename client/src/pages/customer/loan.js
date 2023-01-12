@@ -13,6 +13,7 @@ import {
   verifyOtp,
   verifyOtpSuccess,
 } from "../../constants/debtReminderConstants";
+import DebtList from "../../components/debt/DebtList";
 import { onInit } from "../../features/debtReminder/debtReminderSlice";
 import { onInitReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
 import DebtReminderList from "../../components/DebtReminderList";
@@ -168,17 +169,20 @@ const Loan = () => {
                   Thêm nhắc nợ
                 </button>
               </div>
-              <div>
-                <DebtReminderList
+              <div className="">
+                <DebtList
                   debtReminders={debtReminder.debtReminders}
                   type={CREATED_DEBT}
                 />
+
+
+
               </div>
               <div className="text-2xl leading-relaxed">
                 Danh sách nợ do người khác tạo
               </div>
               <div>
-                <DebtReminderList
+                <DebtList
                   debtReminders={debtReceived.debtReceived}
                   type={RECEIVED_DEBT}
                 />

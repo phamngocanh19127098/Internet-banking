@@ -9,7 +9,7 @@ import {
 import { CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT } from "../constants/buttonType";
 import { SRC } from "../constants/payTransactionFee";
 const socket = io.connect(
-  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001"
+  "http://localhost:3001"
 );
 
 const DebtReminderItem = (props) => {
