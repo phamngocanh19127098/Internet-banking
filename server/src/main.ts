@@ -29,7 +29,7 @@ async function bootstrap() {
   app.useGlobalGuards(new JwtAuthGuard(reflector), new RolesGuard(reflector));
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3006'],
+    origin: ['http://localhost:3000', 'http://localhost:3006', 'http://ec2-35-171-9-165.compute-1.amazonaws.com'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
