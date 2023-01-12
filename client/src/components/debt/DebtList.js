@@ -10,6 +10,7 @@ import {
 } from "../../constants/debtReminderConstants";
 import { CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
 import { SRC } from "../../constants/payTransactionFee";
+import { removeReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
 const socket = io.connect(
     "http://localhost:3001"
 );
@@ -93,7 +94,7 @@ const DebtList = (props) => {
                                                                         id: account.id,
                                                                     });
                                                                 } else if (props.type === RECEIVED_DEBT) {
-                                                                    dispatch(removeDebtReminder(account.id));
+                                                                    dispatch(removeReceivedDebt(account.id));
                                                                     socket.emit(removeReceivedDebtReminder, {
                                                                         userId: userInfo.id,
                                                                         id: account.id,
@@ -112,7 +113,7 @@ const DebtList = (props) => {
                                                     {(props.type === PAY_DEBT || props.type === RECEIVED_DEBT) && (
                                                         <button
                                                             className="cursor-pointer h-fit w-fit  px-6 py-2 text-sm font-bold text-white bg-brightblue rounded-full hover:bg-hover-brightblue"
-                                                            onClick={handlePayDebtAction(account.userId, account.amount)}
+                                                            onClick={ ()=> handlePayDebtAction(account.userId, account.amount)}
                                                         >
                                                             Thanh toán
                                                         </button>
