@@ -11,12 +11,16 @@ import {
   findAllDebtReminder,
   findAllReceivedDebtReminder, findAllUnPaidDebtReminder, payDebt,
   removeCreatedDebtReminder,
-  removeReceivedDebtReminder
+  removeReceivedDebtReminder,
+  verifyOtp,
+  verifyOtpFail,
+  verifyOtpSuccess
 } from 'src/constant';
 import { ListDebtReminderDto } from './dto/list-debt-reminder.dto';
 import { RemoveDebtReminderDto } from './dto/remove-debt-reminder.dto';
 import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-reminder.dto";
 import {PayDebtReminderDto} from "../api/transactions/dto/pay-debt-reminder.dto";
+import { VerifyOtpTransferDto } from './dto/verify-otp-transfer.dto';
 
 @WebSocketGateway({cors: {
   origin: '*'
@@ -69,5 +73,16 @@ export class DebtReminderSocketGateway {
   async payDebt(@MessageBody() payDebtReminderDto: PayDebtReminderDto) {
     let data = await this.debtReminderSocketService.payDebt(payDebtReminderDto, payDebtReminderDto.authorization);
     return this.server.emit(payDebt, {...data})
+  }
+
+  @SubscribeMessage(verifyOtp)
+  async verifyOtp(@MessageBody() verifyOtpDto : VerifyOtpTransferDto){
+    let data = await this.debtReminderSocketService.verifyOtp(verifyOtpDto);
+    if (data.statusCode == 200) {
+      return this.server.emit(verifyOtpSuccess, data);
+    }
+    else {
+      return this.server.emit(verifyOtpFail, data);
+    }
   }
 }

@@ -12,3 +12,6 @@ export const createDebtReminderSocket = 'createDebtReminderSocket';
 
 export const findAllUnPaidDebtReminder = 'findAllUnPaidDebtReminder';
 export const payDebt = 'payDebt';
+export const verifyOtp = 'verifyOtp';
+export const verifyOtpSuccess = 'verifyOtpSuccess';
+export const verifyOtpFail = 'verifyOtpFail';

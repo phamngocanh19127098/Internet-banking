@@ -12,6 +12,9 @@ import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-remind
 import {PayDebtReminderDto} from "../api/transactions/dto/pay-debt-reminder.dto";
 import { User } from 'src/api/users/entity/user.entity';
 import {JwtService} from '@nestjs/jwt';
+import { VerifyOtpTransferDto } from './dto/verify-otp-transfer.dto';
+import { TransactionsService } from 'src/api/transactions/transactions.service';
+import { VerifyTransferInternalDto } from 'src/api/transactions/dto/transaction.dto';
 
 @Injectable()
 export class DebtReminderSocketService {
@@ -21,6 +24,7 @@ export class DebtReminderSocketService {
     private readonly debtReminderService : DebtRemindersService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly transactionService : TransactionsService
   ){
 
   }
@@ -115,5 +119,13 @@ export class DebtReminderSocketService {
     let result = await this.debtReminderService.payDebtReminder(payDebtReminderDto, authorization);
     result['userId'] = user.id
     return result;
+  }
+  async verifyOtp(verifyOtpDto : VerifyOtpTransferDto) {
+    let verifyDto : VerifyTransferInternalDto = {
+      transactionId: verifyOtpDto.transactionId,
+      otpCode: verifyOtpDto.otpCode,
+    }
+    let data = await this.transactionService.verifyTransferOtp(verifyDto, verifyOtpDto.authorization);
+    return data;
   }
 }
