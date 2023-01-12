@@ -116,7 +116,7 @@ const Recipents = () => {
                             </td>
                             <td className="px-4 py-2">
                               <div className="text-sm text-black-900">
-
+                                {account.beneficiaryBankId === null && "TaiXiu Bank"}
                                 {listBank.map((bank, index) => (
                                   bank.id === account.beneficiaryBankId && bank.name
                                 ))}
