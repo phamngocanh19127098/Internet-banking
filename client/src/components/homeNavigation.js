@@ -22,7 +22,12 @@ const HomeNavigation = (props) => {
       link: "/unpaid-loan",
       current: false,
     },
-    { id: 6, title: "Chuyển khoản liên ngân hàng ", link: "/paymentExternal", current: false },
+    {
+      id: 6,
+      title: "Chuyển khoản liên ngân hàng ",
+      link: "/paymentExternal",
+      current: false,
+    },
     { id: 7, title: "Liên hệ", link: "/contact", current: false },
     {
       id: 8,
@@ -40,6 +45,7 @@ const HomeNavigation = (props) => {
     );
     setMenus(newChoice);
   }, [props]);
+
   const handlechange = (index) => {
     const newChoice = [...Menus];
     newChoice.map((x, idx) =>
@@ -60,7 +66,6 @@ const HomeNavigation = (props) => {
           {" "}
           {userInfo.name}{" "}
         </div>
-
       </div>
       <ul className="pt-2">
         {Menus.map((Menu, index) => (

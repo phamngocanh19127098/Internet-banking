@@ -4,7 +4,7 @@ const EditRecipent = (props) => {
   const [nickname, setNickName] = useState("");
 
   async function editRecipent() {
-    const info = await fetcherEditReceiver(
+    await fetcherEditReceiver(
       props.editInfo.id,
       nickname,
       props.editInfo.name,

@@ -1,12 +1,7 @@
 import React from "react";
-import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import AdminNavigation from "../../components/adminNavigation";
-import {
-  fetcherGetManagement,
-  fetcherDeleteManagement,
-  fetcherEditManagement,
-} from "../../fetchers/fetcherAdmin";
+import { fetcherGetManagement } from "../../fetchers/fetcherAdmin";
 import EditUser from "../../components/management/editUser";
 import DeleteUser from "../../components/management/deleteUser";
 import moment from "moment";

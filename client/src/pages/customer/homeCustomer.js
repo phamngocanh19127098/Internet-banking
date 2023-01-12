@@ -8,10 +8,9 @@ import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
 const HomeCustomer = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [usernameDelete, setUsernameDelete] = useState();
+  const [account, setAccount] = useState({});
 
   const { userInfo } = useSelector((state) => state.auth);
-
-  const [account, setAccount] = useState({});
 
   async function getAccount() {
     const list = await fetcherAccounts(userInfo.id);

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import HomeNavigation from '../../components/homeNavigation';
+import React, { useEffect, useState } from "react";
+import HomeNavigation from "../../components/homeNavigation";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
 import {
@@ -23,7 +23,7 @@ import { SRC } from "../../constants/payTransactionFee";
 const socket = io.connect("http://localhost:3001");
 
 const Loan = () => {
-  const token = localStorage.getItem('userToken')
+  const token = localStorage.getItem("userToken");
   const { userInfo } = useSelector((state) => state.auth);
   const debtReminder = useSelector((state) => state.debtReminder);
   const debtReceived = useSelector((state) => state.debtReceived);
@@ -33,7 +33,7 @@ const Loan = () => {
   const handleOnCloseAdd = () => setShowAddModal(false);
   // const [notification, setNotification] = useState("");
 
-  const notification = useSelector((state) => state.notification)
+  const notification = useSelector((state) => state.notification);
 
   const handlePayDebt = () => {
     console.log(notification.currentPaymentDebt);
@@ -78,9 +78,9 @@ const Loan = () => {
       if (userInfo.id === data.receiverId) {
         console.log(data);
         let message = `Một yêu cầu thanh toán nợ ${data.amount} VND đã được tạo bởi ${data.createdName} với lời nhắn là ${data.description}`;
-        dispatch(newNotification(message))
+        dispatch(newNotification(message));
         socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
-        dispatch(updateCurrentDebt(data))
+        dispatch(updateCurrentDebt(data));
       }
     });
   }, [userInfo.id, dispatch]);
@@ -101,27 +101,26 @@ const Loan = () => {
   useEffect(() => {
     socket.on(removeCreatedDebtReminder, (data) => {
       if (userInfo.id === data.receiverId) {
-
-        let message = `Một yêu cầu thanh toán nợ ${data.amount} VND vừa được xóa bởi bởi ${data.actionTakerName}`
-        dispatch(newNotification(message))
+        let message = `Một yêu cầu thanh toán nợ ${data.amount} VND vừa được xóa bởi bởi ${data.actionTakerName}`;
+        dispatch(newNotification(message));
         socket.emit(findAllReceivedDebtReminder, { userId: data.receiverId });
         socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
       }
     });
   }, [userInfo.id, dispatch]);
 
-    // Thông báo cho user hiện tại khi người khác xóa thông báo nhắc nợ  
+  // Thông báo cho user hiện tại khi người khác xóa thông báo nhắc nợ
   useEffect(() => {
     socket.on(removeReceivedDebtReminder, (data) => {
       if (userInfo.id === data.userId) {
         let message = `Một yêu cầu thanh toán nợ ${data.amount} VND vừa được xóa bởi bởi ${data.actionTakerName}`;
-        dispatch(newNotification(message))
+        dispatch(newNotification(message));
         socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
         socket.emit(findAllReceivedDebtReminder, { userId: data.receiverId });
       }
     });
   }, [userInfo.id, dispatch]);
- 
+
   useEffect(() => {
     socket.on(payDebtSuccess, (response) => {
         if (userInfo.id === response.userId){
@@ -149,17 +148,25 @@ const Loan = () => {
           <HomeNavigation id={4} />
           <div className="h-screen flex-auto">
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
-
-              {showAddModal && ( <AddDebtReminder
-                onClose={handleOnCloseAdd}
-                visible={showAddModal}/>) }
-              <div className="flex flex-1 justify-between" >
-                <h2 className="text-2xl leading-relaxed">Danh sách nợ do người dùng tạo</h2>
-                <button type="button"
-                        onClick={() => {
-                          setShowAddModal(true);
-                        }}
-                        className="cursor-pointer px-12 py-2 text-sm font-bold text-white bg-green rounded-full hover:bg-[#1bc46e]">Thêm nhắc nợ</button>
+              {showAddModal && (
+                <AddDebtReminder
+                  onClose={handleOnCloseAdd}
+                  visible={showAddModal}
+                />
+              )}
+              <div className="flex flex-1 justify-between">
+                <h2 className="text-2xl leading-relaxed">
+                  Danh sách nợ do người dùng tạo
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAddModal(true);
+                  }}
+                  className="cursor-pointer px-12 py-2 text-sm font-bold text-white bg-green rounded-full hover:bg-[#1bc46e]"
+                >
+                  Thêm nhắc nợ
+                </button>
               </div>
               <div>
                 <DebtReminderList
@@ -167,7 +174,9 @@ const Loan = () => {
                   type={CREATED_DEBT}
                 />
               </div>
-              <div className="text-2xl leading-relaxed">Danh sách nợ do người khác tạo</div>
+              <div className="text-2xl leading-relaxed">
+                Danh sách nợ do người khác tạo
+              </div>
               <div>
                 <DebtReminderList
                   debtReminders={debtReceived.debtReceived}

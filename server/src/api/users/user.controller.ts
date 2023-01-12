@@ -24,11 +24,15 @@ import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { Role, User } from './entity/user.entity';
 import { Roles } from '../../commons/decorator/roles.decorator';
+import { AccountsService } from '../accounts/accounts.service';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private accountService: AccountsService,
+  ) {}
 
   @ApiOperation({ description: 'Tạo người dùng. Employee mới dùng được.' })
   @ApiCreatedResponse({
@@ -99,7 +103,18 @@ export class UserController {
   @Roles(Role.EMPLOYEE)
   @Get('customer/list')
   async findAllCustomer() {
-    const data = await this.userService.findAllCustomer();
+    const customers: any = await this.userService.findAllCustomer();
+
+    const data = await Promise.all(
+      customers.map(async (customer: any) => {
+        const account = await this.accountService.getByCustomerId(customer.id);
+
+        customer = { ...customer, accountNumber: account.accountNumber };
+
+        return customer;
+      }),
+    );
+
     return {
       statusCode: 200,
       message: 'Lấy danh sách khách hàng thành công',

@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 import HomeNavigation from "../../components/homeNavigation";
 import { useSelector } from "react-redux";
 import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
-import { fetcherReceiver } from "../../fetchers/fetcherCustomer";
 import CurrencyInput from "react-currency-input-field";
 import ListRecipentsExternal from "../../components/listRecipentsExternal";
-import { fetcherSendTransfer } from "../../fetchers/fetcherCustomer";
 import ConfirmOTP from "../../components/confirmOTP";
 import { fetcherAddReceiver } from "../../fetchers/fetcherCustomer";
-import { Link } from "react-router-dom";
 import { fetcherListBanks } from "../../fetchers/fetcherCustomer";
 import { fetcherGetInfo } from "../../fetchers/fetcherCustomer";
 import { fetcherSendTransferExternal } from "../../fetchers/fetcherCustomer";
+
 const Other = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
@@ -58,7 +56,7 @@ const Other = () => {
   }
 
   async function addNewRecipent(accSrcNumber, nickName) {
-    const info = await fetcherAddReceiver(accSrcNumber, nickName);
+    await fetcherAddReceiver(accSrcNumber, nickName);
   }
 
   async function sendReqTransfer() {
@@ -164,8 +162,8 @@ const Other = () => {
   };
 
   const handleSave = () => {
-    addNewRecipent(accNum, name)
-    resetState()
+    addNewRecipent(accNum, name);
+    resetState();
   };
 
   if (isSuccess === true) {
@@ -198,14 +196,14 @@ const Other = () => {
                   <button
                     onClick={resetState}
                     id="handlecancel"
-                    className="cursor-pointer text-xl px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
+                    className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
                   >
                     Thực hiện giao dịch mới
                   </button>
                   <button
                     id="handleSave"
                     onClick={handleSave}
-                    className=" cursor-pointer text-xl rounded px-2 py-2 ml-4 text-white  text-xs font-bold bg-darkblue hover:bg-[#cf4a04] disabled:bg-[#edb395] "
+                    className=" cursor-pointer rounded px-2 py-2 ml-4 text-white text-xs font-bold bg-darkblue hover:bg-[#cf4a04] disabled:bg-[#edb395] "
                   >
                     Lưu người nhận này vào danh sách
                   </button>
@@ -227,7 +225,7 @@ const Other = () => {
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
               <label
                 htmlFor="accounts"
-                className="block mb-2 text-sm text-gray-900 font-bold flex flex-col mb-4 px-8"
+                className="text-sm text-gray-900 font-bold flex flex-col mb-4 px-8"
               >
                 Chọn tài khoản thanh toán nguồn
               </label>
@@ -240,10 +238,10 @@ const Other = () => {
                 >
                   {listAccounts !== null
                     ? listAccounts.map((account, index) => (
-                      <option key={index} value={account.accountNumber}>
-                        {account.accountNumber}
-                      </option>
-                    ))
+                        <option key={index} value={account.accountNumber}>
+                          {account.accountNumber}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
