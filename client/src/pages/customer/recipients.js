@@ -23,6 +23,7 @@ const Recipents = () => {
   const [isLoading, setIsLoading] = useState(false);
   async function getList() {
     const list = await fetcherListReceivers(userInfo.id);
+    setIsLoading(false);
     setListRecipents(list.data.data);
   }
   useEffect(() => {
@@ -39,9 +40,6 @@ const Recipents = () => {
     setIsLoading(true);
     getList();
     getBanks();
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
   }, []);
 
   useEffect(() => {

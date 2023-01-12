@@ -15,6 +15,7 @@ const LockUserAccount = () => {
 
   async function getList() {
     const list = await fetcherGetAllCustomer();
+    setIsLoading(false);
     setListRecipents(list.data.data);
   }
 
@@ -25,16 +26,12 @@ const LockUserAccount = () => {
   useEffect(() => {
     setIsLoading(true);
     getList();
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
   }, []);
 
   function hanldeChange() {
     setIsLoading(true);
     setTimeout(() => {
       getList();
-      setIsLoading(false);
     }, 2000);
   }
 
