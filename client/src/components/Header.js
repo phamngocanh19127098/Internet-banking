@@ -52,7 +52,7 @@ const Header = () => {
           {/* {userInfo && `Logged in as ${userInfo.email}`}
           {userInfo === null && "You're not logged in"} */}
         </span>
-        <h1 className="text-white origin-left font-medium text-xl duration-200">
+        <h1 className="text-white uppercase origin-left font-bold text-xl duration-200">
           Taixiu Bank
         </h1>
         <div>

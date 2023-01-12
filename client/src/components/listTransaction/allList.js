@@ -6,28 +6,27 @@ const AllListTransaction = (props) => {
   function numberWithCommas(x) {
     return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  const [finalList, setFinalList] = useState()
+  const [finalList, setFinalList] = useState();
 
   useEffect(() => {
     if (props.allList !== null && props.allList !== undefined) {
-      console.log(props.banks)
+      console.log(props.banks);
       const list = props.allList;
       list.map((element, index) =>
         element["bankDesId"] === null
           ? (element["bankName"] = "TaiXiu Bank")
           : props.banks !== undefined
-            ? props.banks.map((bank) =>
+          ? props.banks.map((bank) =>
               element["bankDesId"] === bank["id"]
                 ? (element["bankName"] = bank["name"])
                 : null
             )
-            : null
+          : null
       );
-      console.log(list)
-      setFinalList(list)
+      console.log(list);
+      setFinalList(list);
     }
   }, [props.allList]);
-
 
   moment.locale("vi");
   return (
@@ -59,7 +58,11 @@ const AllListTransaction = (props) => {
                 {finalList.map((transaction, index) => (
                   <tr
                     key={index}
-                    className={`border-b dark:bg-gray-800 dark:border-gray-700 ${transaction.bankDesId === null ? "bg-[#fffbeb]" : "bg-[#ecfeff]"}`}
+                    className={`border-b dark:bg-gray-800 dark:border-gray-700 ${
+                      transaction.bankDesId === null
+                        ? "bg-[#fffbeb]"
+                        : "bg-[#ecfeff]"
+                    }`}
                   >
                     <th
                       scope="row"
@@ -86,9 +89,7 @@ const AllListTransaction = (props) => {
                         <div>{transaction.accountSrcNumber}</div>
                       )}
                     </td>
-                    <td className="px-6 py-4">
-                      {transaction.bankName}
-                    </td>
+                    <td className="px-6 py-4">{transaction.bankName}</td>
                     <td className="px-8 py-4">
                       {transaction.accountSrcNumber === props.accNum && (
                         <div className="text-red text-base font-bold">
