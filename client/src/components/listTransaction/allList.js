@@ -61,7 +61,7 @@ const AllListTransaction = (props) => {
                     className={`border-b dark:bg-gray-800 dark:border-gray-700 ${
                       transaction.bankDesId === null
                         ? "bg-[#fffbeb]"
-                        : "bg-[#ecfeff]"
+                        : "bg-[#ecfeff] dark:bg-cyan-900"
                     }`}
                   >
                     <th
