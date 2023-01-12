@@ -7,6 +7,8 @@ import { fetcherListReceivers } from "../../fetchers/fetcherCustomer";
 import DeleteRecipent from "../../components/deleteRecipent";
 import EditRecipent from "../../components/editRecipent";
 import Loader from "../../components/loading";
+import { fetcherListBanks } from "../../fetchers/fetcherCustomer";
+
 const Recipents = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -21,26 +23,35 @@ const Recipents = () => {
   const [isLoading, setIsLoading] = useState(false);
   async function getList() {
     const list = await fetcherListReceivers(userInfo.id);
+    setIsLoading(false);
     setListRecipents(list.data.data);
   }
   useEffect(() => {
     console.log(listRecipents);
   }, [listRecipents]);
 
+  const [listBank, setListBank] = useState([]);
+  async function getBanks() {
+    const list = await fetcherListBanks();
+    setListBank(list.data.data);
+  }
+
   useEffect(() => {
     setIsLoading(true);
     getList();
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
+    getBanks();
   }, []);
+
+  useEffect(() => {
+    console.log("BANK ", listBank);
+  }, [listBank]);
 
   function hanldeChange() {
     setIsLoading(true);
     setTimeout(() => {
       getList();
       setIsLoading(false);
-    }, 1000);
+    }, 2000);
   }
 
   if (isLoading)
@@ -78,6 +89,9 @@ const Recipents = () => {
                           <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                             Số tài khoản
                           </th>
+                          <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                            Ngân hàng
+                          </th>
                           <th className="px-8 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                             Chỉnh sửa thông tin
                           </th>
@@ -97,6 +111,17 @@ const Recipents = () => {
                             <td className="px-4 py-2">
                               <div className="text-sm text-black-900">
                                 {account.beneficiaryAccountNumber}
+                              </div>
+                            </td>
+                            <td className="px-4 py-2">
+                              <div className="text-sm text-black-900">
+                                {account.beneficiaryBankId === null &&
+                                  "TaiXiu Bank"}
+                                {listBank.map(
+                                  (bank, index) =>
+                                    bank.id === account.beneficiaryBankId &&
+                                    bank.name
+                                )}
                               </div>
                             </td>
                             <td className="px-6 py-2">
@@ -161,6 +186,7 @@ const Recipents = () => {
             onClose={handleOnCloseAdd}
             visible={showAddModal}
             handleChange={hanldeChange}
+            banks={listBank}
           />
         )}
         {showDeleteModal && (

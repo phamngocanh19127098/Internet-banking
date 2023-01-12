@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { fetcherListReceivers } from "../fetchers/fetcherCustomer";
+import { fetcherListReceiversInternal } from "../fetchers/fetcherCustomer";
 
 const ListRecipents = (props) => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -10,19 +10,22 @@ const ListRecipents = (props) => {
   const [listRecipents, setListRecipents] = useState([{}]);
 
   async function getList() {
-    const list = await fetcherListReceivers(userInfo.id);
+    const list = await fetcherListReceiversInternal(userInfo.id);
     setListRecipents(list.data.data);
   }
+
   useEffect(() => {
-    console.log(listRecipents);
+    if (listRecipents.length !== 0) {
+      setAccNum(listRecipents[0].beneficiaryAccountNumber);
+    }
   }, [listRecipents]);
+
   useEffect(() => {
     getList();
   }, []);
 
   const handleAccount = (e) => {
     setAccNum(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleXClick = (e) => {

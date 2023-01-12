@@ -23,7 +23,6 @@ import { Role } from '../users/entity/user.entity';
 import { UserService } from '../users/user.service';
 import { AccountsService } from './accounts.service';
 import { DepositIntoAccountDto } from './dto/DepositIntoAccountDto';
-import { UpdateAccountDto } from './dto/UpdateAccountDto';
 import { GetAccountInfoExternalDto } from './dto/GetAccountInfoExternalDto';
 import verifyMessage from '../../commons/crypto/verify/VerifyMessage';
 import { AffiliatedBanksService } from '../affiliatedBanks/affiliatedBanks.service';
@@ -58,7 +57,8 @@ export class AccountsController {
   }
 
   @ApiOperation({
-    description: 'Nạp tiền vào tài khoản. Employee mới dùng được.',
+    description:
+      'Nạp tiền vào tài khoản. Employee mới dùng được. Trước khi Execute thì xoá 1 trong 2 field username hoặc accountNumber',
   })
   @ApiOkResponse({ description: 'Nạp tiền vào tài khoản thành công' })
   @ApiBadRequestResponse({
@@ -76,17 +76,29 @@ export class AccountsController {
   @Put('/deposit')
   async depositIntoAccount(@Body() dto: DepositIntoAccountDto) {
     if (dto.accountNumber) {
-      return this.accountsService.depositByAccountNumber(
+      const account = await this.accountsService.depositByAccountNumber(
         dto.accountNumber,
         dto.depositMoney,
       );
+
+      return {
+        data: account,
+        statusCode: 200,
+        message: 'Nạp tiền thành công.',
+      };
     }
 
     if (dto.username) {
-      return this.accountsService.depositByUsername(
+      const account = await this.accountsService.depositByUsername(
         dto.username,
         dto.depositMoney,
       );
+
+      return {
+        data: account,
+        statusCode: 200,
+        message: 'Nạp tiền thành công.',
+      };
     }
   }
 
@@ -187,12 +199,10 @@ export class AccountsController {
     description: 'Truy vấn thông tin tài khoản từ liên ngân hàng',
   })
   @ApiOkResponse({
-    description:
-      'Lấy thông tin tài khoản thành công.',
+    description: 'Lấy thông tin tài khoản thành công.',
   })
   @ApiInternalServerErrorResponse({
-    description:
-      'Lỗi trong quá trình lấy thông tin người dùng',
+    description: 'Lỗi trong quá trình lấy thông tin người dùng',
   })
   @Post('/external/get-info')
   async getAccountInfoExternalByAccountNumber(

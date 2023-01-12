@@ -28,6 +28,7 @@ import { OtpService } from '../otp/otp.service';
 import { sendMail } from 'src/commons/mailing/nodemailer';
 import { InvalidOtpException } from 'src/commons/filters/exceptions/otp/InvalidOtpException';
 import { OtpExpiredTimeException } from 'src/commons/filters/exceptions/otp/OtpExpiredTimeException';
+import { Account } from '../accounts/entities/account.entity';
 
 @Injectable()
 export class AuthService {
@@ -42,23 +43,40 @@ export class AuthService {
   async signup(dto: CreateUserDto, client): Promise<IResponseData> {
     const user = await this.userService.create(dto);
 
+    let account: Account;
+
     if (dto.role === Role.CUSTOMER) {
       const employeeId = client.id;
 
-      this.accountService.create({
+      account = await this.accountService.create({
         customerId: user.id,
         currentBalance: 0,
         createdBy: employeeId,
       });
+
+      delete user.password;
+
+      return {
+        data: { ...user, accountNumber: account.accountNumber },
+        statusCode: 200,
+        message: 'Đăng ký người dùng thành công.',
+      };
+    } else {
+      delete user.password;
+
+      let message: string;
+
+      if (user.role === Role.ADMIN) {
+        message = 'Đăng ký admin thành công.';
+      } else {
+        message = 'Đăng ký nhân viên thành công.';
+      }
+      return {
+        data: user,
+        statusCode: 200,
+        message,
+      };
     }
-
-    delete user.password;
-
-    return {
-      data: user,
-      statusCode: 200,
-      message: 'Đăng ký người dùng thành công.',
-    };
   }
 
   async login(loginDto: LoginUserDto): Promise<IResponseData> {
@@ -185,6 +203,10 @@ export class AuthService {
       throw new BadRequestException(
         'Không tìm thấy người dùng khi quên mật khẩu',
       );
+    }
+
+    if (user.status) {
+      throw new BadRequestException('Tài khoản của bạn đã bị đóng');
     }
 
     const otpCode = generateOTPCode();

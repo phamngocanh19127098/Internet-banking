@@ -24,6 +24,12 @@ module.exports = {
         'main-green': '#076F32',
         'medium-pink-red': '#990F30'
       },
+      spacing: {
+        '128': '32rem',
+        '150': '40rem',
+        '180': '50rem',
+        '210': '67rem',
+      }
     },
   },
   plugins: [],

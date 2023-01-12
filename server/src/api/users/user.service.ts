@@ -5,10 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Repository, UpdateResult } from 'typeorm';
-import { hash, compareSync } from 'bcrypt';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const randomstring = require('randomstring');
-
+import { compareSync, hash } from 'bcrypt';
 import { InvalidCredentialsException } from 'src/commons/filters/exceptions/auth/InvalidCredentialsException';
 import {
   FailLoginException,
@@ -23,6 +20,8 @@ import {
 
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
 import { Role, User } from './entity/user.entity';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const randomstring = require('randomstring');
 
 @Injectable()
 export class UserService {
@@ -79,6 +78,10 @@ export class UserService {
       throw new FailLoginException();
     }
 
+    if (user.status === 1) {
+      throw new BadRequestException('Tài khoản của bạn đã bị đóng.');
+    }
+
     return user;
   }
 
@@ -121,6 +124,20 @@ export class UserService {
     }
   }
 
+  async findAllCustomer() {
+    try {
+      const customer = await this.userRepository.findBy({
+        role: Role.CUSTOMER,
+      });
+      for (const e of customer) {
+        delete e.password;
+      }
+      return customer;
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
   async updateEmployee(id: number, updateUserDto: UpdateUserDto) {
     try {
       const employee: User = await this.userRepository.findOneBy({ id });
@@ -151,6 +168,19 @@ export class UserService {
 
   getUserById(id: number) {
     return this.userRepository.findOneBy({ id });
+  }
+
+  getUserByUsername(username: string) {
+    try {
+      return this.userRepository.findOneBy({
+        username,
+        role: Role.CUSTOMER,
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Xảy ra lỗi từ server khi tìm kiếm người dùng bằng Username',
+      );
+    }
   }
 
   getAccessTokenFromClient(authorization: string) {

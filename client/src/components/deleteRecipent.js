@@ -1,8 +1,9 @@
 import React from "react";
 import { fetcherDeleteReceiver } from "../fetchers/fetcherCustomer";
+
 const DeleteRecipent = (props) => {
   async function deleteRecipent() {
-    const info = await fetcherDeleteReceiver(props.idDel);
+    await fetcherDeleteReceiver(props.idDel);
   }
   const handleRemoveClick = (e) => {
     console.log(props.idDel);
@@ -10,14 +11,19 @@ const DeleteRecipent = (props) => {
     props.handleChange();
     props.onClose();
   };
+
   const handleCancelClick = (e) => {
     props.onClose();
   };
+
   const handleXClick = (e) => {
     props.onClose();
   };
 
-  if (!props.visible) return null;
+  if (!props.visible) {
+    return null;
+  }
+
   return (
     <div className="fixed inset-0 z-auto bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
       <div className="border-t-8 border-t-black relative flex-col justify-center bg-white rounded-xl w-2/5">

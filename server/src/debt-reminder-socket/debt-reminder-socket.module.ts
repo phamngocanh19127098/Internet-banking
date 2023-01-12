@@ -6,9 +6,10 @@ import { DebtReminder } from 'src/api/debtReminders/entities/debtReminders.entit
 import { DebtRemindersModule } from 'src/api/debtReminders/debtReminders.module';
 import { UserModule } from 'src/api/users/user.module';
 import { JwtModule } from '@nestjs/jwt';
+import { TransactionsModule } from 'src/api/transactions/transactions.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DebtReminder]), DebtRemindersModule, UserModule, JwtModule],
+  imports: [TypeOrmModule.forFeature([DebtReminder]), DebtRemindersModule, UserModule, JwtModule, TransactionsModule],
   providers: [DebtReminderSocketGateway, DebtReminderSocketService],
 })
 export class DebtReminderSocketModule {}

@@ -42,6 +42,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger/dist';
+import { BankIdDto } from './dto/bankIdDto';
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -50,6 +51,24 @@ export class TransactionsController {
     private readonly transactionsService: TransactionsService,
     private affiliatedBanksService: AffiliatedBanksService,
   ) {}
+
+  @ApiOperation({ description: 'Lấy tất cả transaction. Admin mới dùng được.' })
+  @ApiOkResponse({ description: 'Lấy tất cả transaction thành công' })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi Tạo giao dịch chuyển khoản',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
+  @Get('/list')
+  findAllfindAllWithoutCondition() {
+    return this.transactionsService.findAllWithoutCondition();
+  }
 
   @ApiOperation({
     description: 'Tạo giao dịch chuyển khoản. Customer mới dùng được.',
@@ -152,13 +171,13 @@ export class TransactionsController {
     const timestamp = new Date().getTime();
     Logger.log(timestamp);
     let data = {
-      accountDesNumber: "23875338674",
+      accountDesNumber: '23875338674',
       amount: 50000,
-      description: "Transfer Money SLB",
-      payTransactionFee: "SRC",
-      accountSrcNumber: "28069884",
-      slug: "SLB"
-    }
+      description: 'Transfer Money SLB',
+      payTransactionFee: 'SRC',
+      accountSrcNumber: '28069884',
+      slug: 'SLB',
+    };
     const testToken = testMsgToken(data, timestamp, 'FwOhnqMkrv');
     const testSign = testSignature(data);
     return { testToken, testSign };
@@ -230,10 +249,32 @@ export class TransactionsController {
     );
   }
 
-  // @Get(':id')
-  // async findOne(@Param('id') id: string) {
-  //   return await this.transactionsService.findOne(+id);
-  // }
+  @ApiOperation({
+    description:
+      'Lấy danh sách các giao dịch theo Bank Id. Admin mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Lấy danh sách các giao dịch theo Bank Id thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Không tồn tại ngân hàng cần đối soát',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách các giao dịch theo Bank Id',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.ADMIN)
+  @Post('listWithBankId')
+  findByBankId(@Body() dto: BankIdDto) {
+    return this.transactionsService.findByBankId(dto.bankId);
+  }
 
   // @Patch(':id')
   // update(
@@ -268,6 +309,26 @@ export class TransactionsController {
   //   };
   // }
 
+  @ApiOperation({
+    description:
+      'Lấy thông tin giao dịch bằng số tài khoản. Customer mới dùng được.',
+  })
+  @ApiOkResponse({ description: 'Lấy danh sách giao dịch thành công' })
+  @ApiBadRequestResponse({
+    description: 'Account không tồn tại',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy thông tin giao dịch bằng số tài khoản',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER, Role.EMPLOYEE)
   @Get('list/:accountNumber')
   async getAllTransactions(@Param('accountNumber') accountNumber: string) {
     const data = await this.transactionsService.getTransactionByAccountNumber(
@@ -302,7 +363,7 @@ export class TransactionsController {
       'Xảy ra lỗi từ server khi lấy thông tin giao dịch nhận tiền bằng số tài khoản',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER, Role.EMPLOYEE)
   @Get('list/received/:accountNumber')
   async getTransactionReceivedByAccountNumber(
     @Param('accountNumber') accountNumber: string,
@@ -339,7 +400,7 @@ export class TransactionsController {
       'Xảy ra lỗi từ server khi lấy thông tin giao dịch chuyển khoản bằng số tài khoản',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER, Role.EMPLOYEE)
   @Get('list/transfer/:accountNumber')
   async getTransactionTransferByAccountNumber(
     @Param('accountNumber') accountNumber: string,
@@ -375,7 +436,7 @@ export class TransactionsController {
       'Xảy ra lỗi từ server khi lấy thông tin giao dịch nhắc nợ bằng số tài khoản',
   })
   @ApiBearerAuth()
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER, Role.EMPLOYEE)
   @Get('list/debtReminder/:accountNumber')
   async getTransactionDebtReminderByAccountNumber(
     @Param('accountNumber') accountNumber: string,

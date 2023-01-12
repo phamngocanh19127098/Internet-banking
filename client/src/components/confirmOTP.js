@@ -4,7 +4,7 @@ import Loader from "./loading";
 
 const ConfirmOTP = (props) => {
   const [OTP, setOTP] = useState("");
-  const [statuscode, setStatuscode] = useState(404);
+  const [statuscode, setStatuscode] = useState();
   const [notification, setNotification] = useState("");
   const [isDisable, setIsDisable] = useState(true);
   const [result, setResult] = useState();
@@ -28,13 +28,17 @@ const ConfirmOTP = (props) => {
   }, [OTP]);
 
   useEffect(() => {
-    if (statuscode === 200) {
-      props.handleSuccess(true);
-      props.infoSuccess(result.data);
-      props.onClose();
+    if (statuscode !== null && statuscode !== undefined) {
+      if (statuscode === 200) {
+        props.handleSuccess(true);
+        props.infoSuccess(result.data);
+        props.onClose();
+      } else {
+        setIsLoading(false);
+        setNotification("Mã OTP chưa chính xác");
+      }
     } else {
-      setIsLoading(false);
-      setNotification("Mã OTP chưa chính xác");
+      setNotification("");
     }
   }, [statuscode]);
 
@@ -114,7 +118,7 @@ const ConfirmOTP = (props) => {
             type="tel"
             required
             onChange={(event) => setOTP(event.target.value)}
-            placeholder="Nhập số tài khoản"
+            placeholder="Nhập mã OTP"
           />
         </div>
         <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">

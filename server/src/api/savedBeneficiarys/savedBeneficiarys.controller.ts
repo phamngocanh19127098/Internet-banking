@@ -8,7 +8,10 @@ import {
   Post,
 } from '@nestjs/common';
 import { SavedBeneficiarysService } from './savedBeneficiarys.service';
-import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
+import {
+  CreateSavedBeneficiaryDto,
+  CreateSavedBeneficiaryAffiliatedDto,
+} from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import {
   ApiBadRequestResponse,
@@ -22,6 +25,7 @@ import { User } from '../../commons/decorator/user.decorator';
 import { Roles } from '../../commons/decorator/roles.decorator';
 import { Role } from '../users/entity/user.entity';
 import {
+  ApiConflictResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiUnauthorizedResponse,
@@ -47,6 +51,9 @@ export class SavedBeneficiarysController {
   })
   @ApiInternalServerErrorResponse({
     description: 'Xảy ra lỗi từ server khi lưu người thụ hưởng',
+  })
+  @ApiConflictResponse({
+    description: 'Người thụ hưởng này đã tồn tại',
   })
   @ApiBearerAuth()
   @Roles(Role.CUSTOMER)
@@ -180,6 +187,102 @@ export class SavedBeneficiarysController {
       data: {},
       statusCode: 200,
       message: 'Xoá người thụ hưởng thành công',
+    };
+  }
+
+  @ApiOperation({
+    description: 'Lưu người thụ hưởng Liên ngân hàng, Customer mới dùng được.',
+  })
+  @ApiCreatedResponse({
+    description: 'Lưu người thụ hưởng Liên ngân hàng thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Tài khoản không tồn tại',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lưu người thụ hưởng Liên ngân hàng',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Post('affiliatedBank')
+  async createBenificiatyAffiliated(
+    @User() user,
+    @Body() createSavedBeneficiaryDto: CreateSavedBeneficiaryAffiliatedDto,
+  ) {
+    const data =
+      await this.savedBeneficiarysService.createBenificiatyAffiliated(
+        createSavedBeneficiaryDto,
+        user.id,
+      );
+
+    return {
+      data,
+      statusCode: 201,
+      message: 'Lưu người thụ hưởng Liên ngân hàng thành công',
+    };
+  }
+
+  @ApiOperation({
+    description:
+      'Lấy danh sách người thụ hưởng liên ngân hàng. Customer mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Lấy danh sách người thụ hưởng liên ngân hàng thành công',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng liên ngân hàng',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Get('list/external/:userId')
+  async findAllAffiliated(@Param('userId') userId: string) {
+    const data = await this.savedBeneficiarysService.findAllExternal(+userId);
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy danh sách người thụ hưởng liên ngân hàng thành công',
+    };
+  }
+
+  @ApiOperation({
+    description:
+      'Lấy danh sách người thụ hưởng nội bộ. Customer mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Lấy danh sách người thụ hưởng nội bộ thành công',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description:
+      'Xảy ra lỗi từ server khi lấy danh sách người thụ hưởng nội bộ',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.CUSTOMER)
+  @Get('list/internal/:userId')
+  async findAllExternal(@Param('userId') userId: string) {
+    const data = await this.savedBeneficiarysService.findAllInternal(+userId);
+    return {
+      data,
+      statusCode: 200,
+      message: 'Lấy danh sách người thụ hưởng nội bộ thành công',
     };
   }
 }

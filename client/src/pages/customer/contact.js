@@ -1,5 +1,6 @@
 import React from "react";
 import HomeNavigation from "../../components/homeNavigation";
+
 const Contact = () => {
   return (
     <div>

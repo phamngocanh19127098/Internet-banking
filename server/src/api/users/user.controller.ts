@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -23,11 +24,15 @@ import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { Role, User } from './entity/user.entity';
 import { Roles } from '../../commons/decorator/roles.decorator';
+import { AccountsService } from '../accounts/accounts.service';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private accountService: AccountsService,
+  ) {}
 
   @ApiOperation({ description: 'Tạo người dùng. Employee mới dùng được.' })
   @ApiCreatedResponse({
@@ -75,6 +80,44 @@ export class UserController {
     return {
       statusCode: 200,
       message: 'Lấy danh sách nhân viên thành công',
+      data,
+    };
+  }
+
+  @ApiOperation({
+    description: 'Lấy danh sách khách hàng. Employee mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Lấy danh sách khách hàng thành công',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi lấy danh sách khách hàng',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.EMPLOYEE)
+  @Get('customer/list')
+  async findAllCustomer() {
+    const customers: any = await this.userService.findAllCustomer();
+
+    const data = await Promise.all(
+      customers.map(async (customer: any) => {
+        const account = await this.accountService.getByCustomerId(customer.id);
+
+        customer = { ...customer, accountNumber: account.accountNumber };
+
+        return customer;
+      }),
+    );
+
+    return {
+      statusCode: 200,
+      message: 'Lấy danh sách khách hàng thành công',
       data,
     };
   }
@@ -165,5 +208,81 @@ export class UserController {
     delete user.password;
 
     return user;
+  }
+
+  @ApiOperation({
+    description: 'Tìm kiếm người dùng bằng Username. Vai trò : employee, admin',
+  })
+  @ApiOkResponse({
+    description: 'Tìm kiếm người dùng bằng username thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Không tìm thấy khách hàng này',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi tìm kiếm người dùng bằng Username',
+  })
+  @ApiBearerAuth()
+  // @Roles( Role.ADMIN, Role.EMPLOYEE)
+  @Get('/get-customer/:username')
+  async findUserByUsername(@Param('username') username: string) {
+    const user = await this.userService.getUserByUsername(username);
+
+    if (!user) throw new BadRequestException('Không tìm thấy khách hàng này');
+    delete user.password;
+    delete user.refreshToken;
+
+    return {
+      statusCode: 200,
+      message: 'Tìm kiếm người dùng bằng username thành công',
+      data: {
+        user: user,
+      },
+    };
+  }
+
+  @ApiOperation({
+    description: 'Đóng tài khoản. Employee, customer mới dùng được.',
+  })
+  @ApiOkResponse({
+    description: 'Đóng tài khoản thành công',
+  })
+  @ApiBadRequestResponse({
+    description: 'Không tìm thấy người dùng hoặc sai kiểu dữ liệu',
+  })
+  @ApiForbiddenResponse({
+    description: 'Vai trò của bạn không thể dùng tính năng này',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Không có quyền dùng tính năng này',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Xảy ra lỗi từ server khi cập nhật thông tin nhân viên',
+  })
+  @ApiBearerAuth()
+  @Roles(Role.EMPLOYEE, Role.CUSTOMER)
+  @Put('changestatus/:username')
+  async lockUserAccount(@Param('username') username: string) {
+    const user = await this.userService.getUserByUsername(username);
+
+    if (!user) {
+      throw new BadRequestException('Người dùng không tồn tại');
+    }
+
+    await this.userService.updateEmployee(user.id, {
+      ...user,
+      status: user.status ? 0 : 1,
+    });
+
+    return {
+      statusCode: 200,
+      message: 'Đóng tài khoản thành công',
+    };
   }
 }

@@ -6,11 +6,12 @@ import { AccountsController } from './accounts.controller';
 import { Account } from './entities/account.entity';
 import { UserModule } from '../users/user.module';
 import { AffiliatedBanksModule } from '../affiliatedBanks/affiliatedBanks.module';
+import { forwardRef } from '@nestjs/common/utils';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Account]),
-    UserModule,
+    forwardRef(() => UserModule),
     AffiliatedBanksModule,
   ],
   controllers: [AccountsController],

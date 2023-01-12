@@ -27,6 +27,12 @@ import UnpaidLoan from "./pages/customer/unpaidLoan";
 import RoleError from "./pages/error/roleError";
 import AddAccount from "./pages/employee/addAccount";
 import PutMoney from "./pages/employee/putMoney";
+import SeeTransactions from "./pages/employee/transactionAcc";
+import Admin from "./pages/admin/adminHome";
+import Management from "./pages/admin/management";
+import ManagementTransaction from "./pages/admin/managementTransaction";
+import LockUserAccount from "./pages/employee/lockUserAccount";
+
 function App() {
   return (
     <Router>
@@ -45,7 +51,6 @@ function App() {
               <Route path="/changepwd" element={<ChangePassword />} />
               <Route path="/roleError" element={<RoleError />} />
               <Route element={<RequireAuth allowedRoles={ROLES.Customer} />}>
-
                 <Route path="/" element={<HomeCustomer />} />
                 <Route path="/customer" element={<HomeCustomer />} />
                 <Route path="/accounts" element={<Accounts />} />
@@ -53,8 +58,7 @@ function App() {
                 <Route path="unpaid-loan" element={<UnpaidLoan />} />
                 <Route path="/recipents" element={<Recipents />} />
                 <Route path="/payment" element={<Payment />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/other" element={<Other />} />
+                <Route path="/paymentExternal" element={<Other />} />
                 <Route path="/transactions" element={<Transaction />} />
               </Route>
               <Route element={<RequireAuth allowedRoles={ROLES.Employee} />}>
@@ -62,11 +66,20 @@ function App() {
                 <Route path="/employee" element={<Employee />} />
                 <Route path="/addAccount" element={<AddAccount />} />
                 <Route path="/putMoney" element={<PutMoney />} />
+                <Route path="/seeTransaction" element={<SeeTransactions />} />
+                <Route path="/lockUserAccount" element={<LockUserAccount />} />
+                {/* <Route path='/employee' element={<Employee />} /> */}
+              </Route>
+              <Route element={<RequireAuth allowedRoles={ROLES.Admin} />}>
+                <Route path="/" element={<Admin />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/management" element={<Management />} />
+                <Route path="/manaTrans" element={<ManagementTransaction />} />
                 {/* <Route path='/employee' element={<Employee />} /> */}
               </Route>
             </Route>
           </Route>
-          <Route path='*' element={<Navigate to='/' replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </Router>

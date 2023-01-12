@@ -1,8 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateSavedBeneficiaryDto } from './dto/create-saved-beneficiary.dto';
+import {
+  BadRequestException,
+  Injectable,
+  ConflictException,
+} from '@nestjs/common';
+import {
+  CreateSavedBeneficiaryDto,
+  CreateSavedBeneficiaryAffiliatedDto,
+} from './dto/create-saved-beneficiary.dto';
 import { UpdateSavedBeneficiaryDto } from './dto/update-saved-beneficiary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository, Not } from 'typeorm';
 import { SavedBeneficiary } from './entities/savedBeneficiary.entity';
 import { Account } from '../accounts/entities/account.entity';
 
@@ -14,6 +21,7 @@ export class SavedBeneficiarysService {
     @InjectRepository(Account)
     private accountRepository: Repository<Account>,
   ) {}
+
   async create(
     createSavedBeneficiaryDto: CreateSavedBeneficiaryDto,
     customerId: number,
@@ -29,6 +37,16 @@ export class SavedBeneficiarysService {
 
       if (infoAccount == null) {
         throw new BadRequestException('Tài khoản không tồn tại');
+      }
+
+      const exist = await this.savedBeneficiaryRepository.findBy({
+        customerId: customerId,
+        beneficiaryAccountNumber:
+          createSavedBeneficiaryDto.beneficiaryAccountNumber,
+      });
+
+      if (exist.length !== 0) {
+        throw new ConflictException('Beneficiary already exist');
       }
 
       if (!createSavedBeneficiaryDto.beneficiaryNickname) {
@@ -48,6 +66,26 @@ export class SavedBeneficiarysService {
 
   findAll(userId: number) {
     return this.savedBeneficiaryRepository.findBy({ customerId: userId });
+  }
+
+  async findAllInternal(userId: number) {
+    // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
+    return await this.savedBeneficiaryRepository.find({
+      where: {
+        customerId: userId,
+        beneficiaryBankId: IsNull(),
+      },
+    });
+  }
+
+  async findAllExternal(userId: number) {
+    // return this.savedBeneficiaryRepository.findBy({ [customerId: userId,] });
+    return await this.savedBeneficiaryRepository.find({
+      where: {
+        customerId: userId,
+        beneficiaryBankId: Not(IsNull()),
+      },
+    });
   }
 
   findOne(id: number) {
@@ -111,6 +149,47 @@ export class SavedBeneficiarysService {
       //     message: "Lỗi trong xoá người thụ hưởng",
       //     error: e.error
       // }
+    }
+  }
+
+  async createBenificiatyAffiliated(
+    createSavedBeneficiaryDto: CreateSavedBeneficiaryAffiliatedDto,
+    customerId: number,
+  ) {
+    try {
+      // const infoAccount = await this.accountRepository
+      //   .createQueryBuilder('account')
+      //   .leftJoinAndSelect('account.user', 'user')
+      //   .where('account.account_number= :account_number', {
+      //     account_number: createSavedBeneficiaryDto.beneficiaryAccountNumber,
+      //   })
+      //   .getOne();
+
+      // if (infoAccount == null) {
+      //   throw new BadRequestException('Tài khoản không tồn tại');
+      // }
+
+      const exist = await this.savedBeneficiaryRepository.findBy({
+        customerId: customerId,
+        beneficiaryAccountNumber:
+          createSavedBeneficiaryDto.beneficiaryAccountNumber,
+      });
+
+      if (exist.length !== 0) {
+        throw new ConflictException('Beneficiary already exist');
+      }
+
+      if (!createSavedBeneficiaryDto.beneficiaryNickname) {
+        createSavedBeneficiaryDto.beneficiaryNickname =
+          createSavedBeneficiaryDto.beneficiaryDefaultName;
+      }
+
+      return await this.savedBeneficiaryRepository.save({
+        ...createSavedBeneficiaryDto,
+        customerId: customerId,
+      });
+    } catch (e) {
+      throw new BadRequestException(e.message);
     }
   }
 }

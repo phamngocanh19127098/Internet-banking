@@ -7,6 +7,7 @@ import CurrencyInput from "react-currency-input-field";
 import ListRecipents from "../../components/listRecipent";
 import { fetcherSendTransfer } from "../../fetchers/fetcherCustomer";
 import ConfirmOTP from "../../components/confirmOTP";
+import { fetcherAddReceiver } from "../../fetchers/fetcherCustomer";
 
 const Payment = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -34,17 +35,29 @@ const Payment = () => {
 
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const [fee, setFee] = React.useState("DES");
+
+  const handleChangeFee = (event) => {
+    setFee(event.target.value);
+    console.log(event.target.value);
+  };
+
   async function getName() {
     const info = await fetcherReceiver(accNum);
     setStatuscode(info.status);
     setResponse(info);
   }
 
+  async function addNewRecipent(accSrcNumber, nickName) {
+    const info = await fetcherAddReceiver(accSrcNumber, nickName);
+  }
+
   async function sendReqTransfer() {
     const info = await fetcherSendTransfer(
       accNum,
       parseInt(money),
-      description
+      description,
+      fee
     );
     setResult(info.data);
   }
@@ -62,10 +75,6 @@ const Payment = () => {
   useEffect(() => {
     getList();
   }, []);
-
-  useEffect(() => {
-    console.log(rootNum);
-  }, rootNum);
 
   useEffect(() => {
     if (listAccounts !== [{}]) {
@@ -109,6 +118,8 @@ const Payment = () => {
       if (result.statusCode === 200) {
         setTransactionId(result.data.id);
         setShowOTPModal(true);
+      } else {
+        alert(result.error.message);
       }
     }
   }, [result]);
@@ -121,6 +132,19 @@ const Payment = () => {
     console.log(description);
     sendReqTransfer();
   };
+  const resetState = () => {
+    setAccNum("");
+    setName("");
+    setMoney("");
+    setStatuscode(404);
+    setNotification("");
+    setShowAddModal(false);
+    setIsSuccess(false);
+  };
+  const handleSave = () => {
+    addNewRecipent(accNum, name);
+    resetState();
+  };
 
   if (isSuccess === true) {
     return (
@@ -130,23 +154,39 @@ const Payment = () => {
             <HomeNavigation id={3} />
             <div className="h-screen flex-auto">
               <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
-                <div className="block mb-2 text-xl text-gray-900 dark:text-white font-bold">
+                <div className="block mb-2 text-2xl text-gray-900 font-bold">
                   Thực hiện giao dịch chuyển khoản thành công
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Tên người chuyển khoản: {userInfo.name}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Tên người người nhận: {name}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   STK người nhận: {accNum}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Số tiền: {money}
                 </div>
-                <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+                <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Nội dung: {description}
+                </div>
+                <div className="flex justify-end pb-4 px-8">
+                  <button
+                    onClick={resetState}
+                    id="handlecancel"
+                    className="cursor-pointer px-2 py-1 ml-4 text-black text-xs font-bold border-[#001B3A] border-[2px] rounded hover:bg-main-green bg-new-green"
+                  >
+                    Thực hiện giao dịch mới
+                  </button>
+                  <button
+                    id="handleSave"
+                    onClick={handleSave}
+                    className=" cursor-pointer rounded px-2 py-2 ml-4 text-white  text-xs font-bold bg-darkblue hover:bg-[#cf4a04] disabled:bg-[#edb395] "
+                  >
+                    Lưu người nhận này vào danh sách
+                  </button>
                 </div>
               </div>
             </div>
@@ -177,7 +217,7 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                      <option value={account.accountNumber}>
+                      <option key={index} value={account.accountNumber}>
                         {account.accountNumber}
                       </option>
                     ))
@@ -237,6 +277,26 @@ const Payment = () => {
                   //onChange={event => setMoney(event.target, value)}
                   onValueChange={(money) => setMoney(money)}
                 />
+              </div>
+              <div className="flex flex-col mb-4 px-8">
+                <div>
+                  <input
+                    type="radio"
+                    value="DES"
+                    checked={fee === "DES"}
+                    onChange={handleChangeFee}
+                  />{" "}
+                  Người chuyển khoản chịu phí
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    value="SRC"
+                    checked={fee === "SRC"}
+                    onChange={handleChangeFee}
+                  />{" "}
+                  Người nhận chịu phí
+                </div>
               </div>
 
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">

@@ -8,6 +8,7 @@ import { fetcherAccessToken } from "../fetchers/token";
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
+  const [result, setResult] = useState();
   const dispatch = useDispatch();
   // automatically authenticate user if token is found
   const { data, isFetching } = useGetDetailsQuery("userDetails", {
@@ -17,48 +18,65 @@ const Header = () => {
 
   async function getTest() {
     const test = await fetcherAccessToken();
+    setResult(test);
     setToken(test.data.metadata.accessToken);
   }
   useEffect(() => {
     getTest();
   }, []);
   useEffect(() => {
+    if (result !== undefined) {
+      if (result.status === 401) {
+        dispatch(logout());
+      }
+    }
+  }, [result]);
+
+  useEffect(() => {
     if (token !== "") localStorage.setItem("userToken", token);
   }, [token]);
 
   useEffect(() => {
     if (data) dispatch(setCredentials(data.data));
-    if (!data) dispatch(logout())
   }, [data, dispatch]);
 
   return (
     <header>
-      <div className="header-status">
-        <span>
+      <div className="flex justify-between header-status bg-gradient-to-b from-main-green to-new-green ">
+        <span className="text-white font-medium text-xl duration-200">
           {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
-              ? `Logged in as ${userInfo.email}`
-              : "You're not logged in"}
+            ? `Xin chào ${userInfo.name}`
+            : "Bạn chưa đăng nhập"}
           {/* {userInfo && `Logged in as ${userInfo.email}`}
           {userInfo === null && "You're not logged in"} */}
         </span>
-        <div className="cta">
+        <h1 className="text-white uppercase origin-left font-bold text-xl duration-200">
+          Taixiu Bank
+        </h1>
+        <div>
           {userInfo ? (
             <>
-              <Link className="mr-6" to="/changepwd">
+              <Link
+                className="mr-6 text-white origin-left font-medium text-xl duration-200"
+                to="/changepwd"
+              >
                 Đổi mật khẩu
               </Link>
               <button
-                className="button cursor-pointer"
+                className="text-white origin-left font-medium text-xl duration-200 button cursor-pointer"
                 onClick={() => dispatch(logout())}
               >
-                Logout
+                Thoát
               </button>
             </>
           ) : (
-            <NavLink className="button" to="/login">
-              Login
+            <NavLink
+              className="button text-white font-medium text-xl duration-200"
+              to="/login"
+            >
+              Đăng nhập
             </NavLink>
           )}
         </div>
