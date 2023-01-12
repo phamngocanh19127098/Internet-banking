@@ -17,6 +17,7 @@ const LockUserAccount = () => {
     const list = await fetcherGetAllCustomer();
     setListRecipents(list.data.data);
   }
+
   useEffect(() => {
     console.log(listRecipents);
   }, [listRecipents]);
@@ -72,6 +73,9 @@ const LockUserAccount = () => {
                           Username
                         </th>
                         <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
+                          Số tài khoản
+                        </th>
+                        <th className="px-4 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black ">
                           Trạng thái
                         </th>
                         <th className="px-6 py-3 text-sm font-bold leading-4 tracking-wider text-left text-black">
@@ -90,6 +94,11 @@ const LockUserAccount = () => {
                           <td className="px-4 py-2">
                             <div className="text-sm text-black-900">
                               {account.username}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">
+                            <div className="text-sm text-black-900">
+                              {account.accountNumber}
                             </div>
                           </td>
                           <td className="px-4 py-2">

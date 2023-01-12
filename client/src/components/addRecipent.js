@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { fetcherAddAffiliatedBank, fetcherReceiver } from "../fetchers/fetcherCustomer";
+import { fetcherAddAffiliatedBank } from "../fetchers/fetcherCustomer";
 import { fetcherAddReceiver } from "../fetchers/fetcherCustomer";
 import { fetcherGetInfo } from "../fetchers/fetcherCustomer";
+
 const AddRecipent = (props) => {
   const [name, setName] = useState("");
   const [nickname, setNickName] = useState("");
@@ -12,9 +13,11 @@ const AddRecipent = (props) => {
   const [result, setResult] = useState();
   const [listBank, setListBank] = useState(props.banks);
   const [value, setValue] = useState(props.banks[0].id);
-  const a = { "id": "", "name": "TaiXiu Bank" }
+
+  const a = { id: "", name: "TaiXiu Bank" };
+
   useEffect(() => {
-    setListBank([...listBank, a])
+    setListBank([...listBank, a]);
   }, []);
   async function getName() {
     const info = await fetcherGetInfo(accNum, value);
@@ -27,20 +30,25 @@ const AddRecipent = (props) => {
     setResult(info.status);
   }
   async function addNewRecipentOtherBank() {
-    const info = await fetcherAddAffiliatedBank(accNum, name, nickname, parseInt(value));
+    const info = await fetcherAddAffiliatedBank(
+      accNum,
+      name,
+      nickname,
+      parseInt(value)
+    );
     setResult(info.status);
   }
   const resetState = () => {
-    setListBank([])
-    setName("")
-    setAccNum("")
-  }
+    setListBank([]);
+    setName("");
+    setAccNum("");
+  };
   const handleXClick = (e) => {
-    resetState()
+    resetState();
     props.onClose();
   };
   useEffect(() => {
-    getName()
+    getName();
   }, [value]);
   useEffect(() => {
     if (nickname === "") console.log(true);
@@ -73,12 +81,12 @@ const AddRecipent = (props) => {
   }, [accNum]);
 
   const handleCancelClick = (e) => {
-    resetState()
+    resetState();
     props.onClose();
   };
 
   const handleChangeSelect = (e) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     setValue(e.target.value);
   };
 
@@ -87,13 +95,12 @@ const AddRecipent = (props) => {
       setNickName(name);
     }
     if (value !== "") {
-      addNewRecipentOtherBank()
-    }
-    else {
+      addNewRecipentOtherBank();
+    } else {
       addNewRecipent();
     }
 
-    resetState()
+    resetState();
     props.handleChange();
     props.onClose();
   };
@@ -128,7 +135,7 @@ const AddRecipent = (props) => {
         </div>
         <div className="flex flex-col mb-4 px-8">
           <div className="border  border-[#001B3A] select-container">
-            <select value={value} onChange={handleChangeSelect} >
+            <select value={value} onChange={handleChangeSelect}>
               {listBank.map((option) => (
                 <option value={option.id}>{option.name}</option>
               ))}

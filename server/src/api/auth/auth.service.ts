@@ -205,6 +205,10 @@ export class AuthService {
       );
     }
 
+    if (user.status) {
+      throw new BadRequestException('Tài khoản của bạn đã bị đóng');
+    }
+
     const otpCode = generateOTPCode();
 
     const otpForgotPasswordDto = new CreateForgotPasswordOtpDto(

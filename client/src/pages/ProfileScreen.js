@@ -1,8 +1,8 @@
-import { useSelector } from 'react-redux'
-import '../styles/profile.css'
+import { useSelector } from "react-redux";
+import "../styles/profile.css";
 
 const ProfileScreen = () => {
-  const { userInfo } = useSelector((state) => state.auth)
+  const { userInfo } = useSelector((state) => state.auth);
 
   return (
     <div>
@@ -12,7 +12,7 @@ const ProfileScreen = () => {
         because you're logged in
       </span>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileScreen
+export default ProfileScreen;

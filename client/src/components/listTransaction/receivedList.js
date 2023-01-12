@@ -34,7 +34,7 @@ const ReceivedListTransaction = (props) => {
         <div className="flex flex-col bg-white ">
           <div className="h-128 w-180 relative overflow-x-auto shadow-md sm:rounded-lg flex-grow overflow-auto ">
             <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
-              <thead className="relative w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+              <thead className="w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
                 <tr className="">
                   <th scope="col" className="sticky px-6 py-3">
                     Tiêu đề

@@ -8,7 +8,7 @@ import { fetcherAccessToken } from "../fetchers/token";
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const [result, setResult] = useState()
+  const [result, setResult] = useState();
   const dispatch = useDispatch();
   // automatically authenticate user if token is found
   const { data, isFetching } = useGetDetailsQuery("userDetails", {
@@ -18,7 +18,7 @@ const Header = () => {
 
   async function getTest() {
     const test = await fetcherAccessToken();
-    setResult(test)
+    setResult(test);
     setToken(test.data.metadata.accessToken);
   }
   useEffect(() => {
@@ -27,12 +27,10 @@ const Header = () => {
   useEffect(() => {
     if (result !== undefined) {
       if (result.status === 401) {
-        dispatch(logout())
+        dispatch(logout());
       }
     }
-
   }, [result]);
-
 
   useEffect(() => {
     if (token !== "") localStorage.setItem("userToken", token);
@@ -49,8 +47,8 @@ const Header = () => {
           {isFetching
             ? `Fetching your profile...`
             : userInfo !== null
-              ? `Logged in as ${userInfo.email}`
-              : "You're not logged in"}
+            ? `Logged in as ${userInfo.email}`
+            : "You're not logged in"}
           {/* {userInfo && `Logged in as ${userInfo.email}`}
           {userInfo === null && "You're not logged in"} */}
         </span>

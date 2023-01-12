@@ -30,6 +30,7 @@ const RegisterScreen = () => {
       setCustomError("Password mismatch");
       return;
     }
+
     // transform email string to lowercase to avoid case sensitivity issues in login
     data.email = data.email.toLowerCase();
 

@@ -34,6 +34,7 @@ const EmployeeNavigation = (props) => {
     );
     setMenus(newChoice);
   }, [props]);
+
   const handlechange = (index) => {
     const newChoice = [...Menus];
     newChoice.map((x, idx) =>
@@ -52,8 +53,7 @@ const EmployeeNavigation = (props) => {
       <div className="m-1  w-60 h-24 relative flex  items-center rounded-full  text-xl text-white">
         <img src="../avatar.png" className="w-14 rounded-full" alt="avatar" />
         <div className="w-36 inline text-xl text-center m-2 mr-2">
-          {" "}
-          {userInfo.name}{" "}
+          {userInfo.name}
         </div>
         <svg
           width="30"

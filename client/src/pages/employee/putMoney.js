@@ -6,6 +6,7 @@ import { fetcherReceiver } from "../../fetchers/fetcherCustomer";
 import { fetcherUsername } from "../../fetchers/fetcherEmployee";
 import Toast from "../../components/toast";
 import Loader from "../../components/loading";
+
 const PutMoney = () => {
   const [info, setInfo] = useState("username");
   const [notification, setNotification] = useState("");
@@ -19,32 +20,34 @@ const PutMoney = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkInfo, setCheckInfo] = useState(true);
   const [list, setList] = useState([]);
+
   let toastProperties = null;
+
   const showToast = (type, message) => {
     switch (type) {
-      case 'success':
+      case "success":
         toastProperties = {
           id: list.length + 1,
-          title: 'Success',
+          title: "Success",
           description: message,
-          backgroundColor: 'new-green'
-        }
+          backgroundColor: "new-green",
+        };
         break;
-      case 'danger':
+      case "danger":
         toastProperties = {
           id: list.length + 1,
-          title: 'Thông báo',
+          title: "Thông báo",
           description: message,
-          backgroundColor: 'red'
-        }
+          backgroundColor: "red",
+        };
         break;
-      case 'info':
+      case "info":
         toastProperties = {
           id: list.length + 1,
-          title: 'Info',
-          description: 'This is a info toast component',
-          backgroundColor: '#5bc0de'
-        }
+          title: "Info",
+          description: "This is a info toast component",
+          backgroundColor: "#5bc0de",
+        };
         break;
       default:
         toastProperties = [];
@@ -56,12 +59,14 @@ const PutMoney = () => {
     const list = await fetcherPutMoney(infoMoney);
     setResult(list);
   }
+
   async function getNameByNum() {
     const info = await fetcherReceiver(check);
     setStatuscode(info.status);
     setResponse(info);
     setCheckInfo(!checkInfo);
   }
+
   async function getNameByUsername() {
     const info = await fetcherUsername(check);
     setStatuscode(info.status);
@@ -79,6 +84,7 @@ const PutMoney = () => {
       value: "accountNumber",
     },
   ];
+
   const handleChange = (e) => {
     setInfo(e.target.value);
   };
@@ -130,13 +136,13 @@ const PutMoney = () => {
     if (result) {
       console.log(result);
       if (result.status === 200) {
-        setIsLoading(false)
+        setIsLoading(false);
         console.log("Success");
-        showToast("success", "Nạp tiền vào tài khoản thành công")
+        showToast("success", "Nạp tiền vào tài khoản thành công");
       } else {
         console.log("FAIL");
-        setIsLoading(false)
-        showToast("danger", result.data.error.message)
+        setIsLoading(false);
+        showToast("danger", result.data.error.message);
       }
     }
   }, [result]);
@@ -144,11 +150,8 @@ const PutMoney = () => {
   const submitForm = () => {
     const data = { [info]: check, depositMoney: parseInt(money) };
     putMoney(data);
-    setIsLoading(true)
+    setIsLoading(true);
   };
-
-
-
 
   if (isLoading)
     return (

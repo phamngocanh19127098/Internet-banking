@@ -13,11 +13,13 @@ const ListRecipents = (props) => {
     const list = await fetcherListReceiversInternal(userInfo.id);
     setListRecipents(list.data.data);
   }
+
   useEffect(() => {
     if (listRecipents.length !== 0) {
-      setAccNum(listRecipents[0].beneficiaryAccountNumber)
+      setAccNum(listRecipents[0].beneficiaryAccountNumber);
     }
   }, [listRecipents]);
+
   useEffect(() => {
     getList();
   }, []);
@@ -80,10 +82,10 @@ const ListRecipents = (props) => {
             >
               {listRecipents.length !== 0
                 ? listRecipents.map((account, index) => (
-                  <option value={account.beneficiaryAccountNumber}>
-                    {account.beneficiaryNickname}
-                  </option>
-                ))
+                    <option value={account.beneficiaryAccountNumber}>
+                      {account.beneficiaryNickname}
+                    </option>
+                  ))
                 : null}
             </select>
           </div>
