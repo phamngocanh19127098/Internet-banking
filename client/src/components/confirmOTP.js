@@ -4,7 +4,7 @@ import Loader from "./loading";
 
 const ConfirmOTP = (props) => {
   const [OTP, setOTP] = useState("");
-  const [statuscode, setStatuscode] = useState(404);
+  const [statuscode, setStatuscode] = useState();
   const [notification, setNotification] = useState("");
   const [isDisable, setIsDisable] = useState(true);
   const [result, setResult] = useState();
@@ -28,14 +28,20 @@ const ConfirmOTP = (props) => {
   }, [OTP]);
 
   useEffect(() => {
-    if (statuscode === 200) {
-      props.handleSuccess(true);
-      props.infoSuccess(result.data);
-      props.onClose();
-    } else {
-      setIsLoading(false);
-      setNotification("Mã OTP chưa chính xác");
+    if (statuscode !== null && statuscode !== undefined) {
+      if (statuscode === 200) {
+        props.handleSuccess(true);
+        props.infoSuccess(result.data);
+        props.onClose();
+      } else {
+        setIsLoading(false);
+        setNotification("Mã OTP chưa chính xác");
+      }
     }
+    else {
+      setNotification("");
+    }
+
   }, [statuscode]);
 
   const handleCancelClick = (e) => {

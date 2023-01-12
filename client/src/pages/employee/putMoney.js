@@ -4,6 +4,8 @@ import CurrencyInput from "react-currency-input-field";
 import { fetcherPutMoney } from "../../fetchers/fetcherEmployee";
 import { fetcherReceiver } from "../../fetchers/fetcherCustomer";
 import { fetcherUsername } from "../../fetchers/fetcherEmployee";
+import Toast from "../../components/toast";
+import Loader from "../../components/loading";
 const PutMoney = () => {
   const [info, setInfo] = useState("username");
   const [notification, setNotification] = useState("");
@@ -14,7 +16,42 @@ const PutMoney = () => {
   const [isDisable, setIsDisable] = useState(true);
   const [response, setResponse] = useState();
   const [money, setMoney] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [checkInfo, setCheckInfo] = useState(true);
+  const [list, setList] = useState([]);
+  let toastProperties = null;
+  const showToast = (type, message) => {
+    switch (type) {
+      case 'success':
+        toastProperties = {
+          id: list.length + 1,
+          title: 'Success',
+          description: message,
+          backgroundColor: 'new-green'
+        }
+        break;
+      case 'danger':
+        toastProperties = {
+          id: list.length + 1,
+          title: 'Thông báo',
+          description: message,
+          backgroundColor: 'red'
+        }
+        break;
+      case 'info':
+        toastProperties = {
+          id: list.length + 1,
+          title: 'Info',
+          description: 'This is a info toast component',
+          backgroundColor: '#5bc0de'
+        }
+        break;
+      default:
+        toastProperties = [];
+    }
+    setList([...list, toastProperties]);
+  };
+
   async function putMoney(infoMoney) {
     const list = await fetcherPutMoney(infoMoney);
     setResult(list);
@@ -93,9 +130,13 @@ const PutMoney = () => {
     if (result) {
       console.log(result);
       if (result.status === 200) {
+        setIsLoading(false)
         console.log("Success");
+        showToast("success", "Nạp tiền vào tài khoản thành công")
       } else {
         console.log("FAIL");
+        setIsLoading(false)
+        showToast("danger", result.data.error.message)
       }
     }
   }, [result]);
@@ -103,7 +144,28 @@ const PutMoney = () => {
   const submitForm = () => {
     const data = { [info]: check, depositMoney: parseInt(money) };
     putMoney(data);
+    setIsLoading(true)
   };
+
+
+
+
+  if (isLoading)
+    return (
+      <div>
+        <div>
+          <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
+            <EmployeeNavigation id={2} />
+            <div className="h-screen flex-auto">
+              <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
+                <Loader />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
   return (
     <div>
       <div>
@@ -164,6 +226,7 @@ const PutMoney = () => {
           </div>
         </div>
       </div>
+      <Toast toastlist={list} setList={setList} />
     </div>
   );
 };

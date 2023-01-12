@@ -1,5 +1,8 @@
 import moment from "moment/moment";
+import "moment/locale/vi";
+
 const TransferListTransaction = (props) => {
+  moment.locale("vi");
   return (
     <div>
       {props.allList !== null && props.allList !== undefined ? (
@@ -32,7 +35,7 @@ const TransferListTransaction = (props) => {
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      <div className="text-red"> Chuyển tiền từ</div>
+                      <div className="text-red"> Chuyển tiền đến</div>
                     </th>
                     <td className="px-6 py-4">
                       <div> {transaction.accountDesNumber}</div>
@@ -44,9 +47,9 @@ const TransferListTransaction = (props) => {
                       </div>
                     </td>
                     <td className="px-8 py-4">
-                      {moment(transaction.updatedAt).format(
-                        "hh:mm:ss DD MMM, YYYY"
-                      )}
+                      {moment(transaction.updatedAt)
+                        .add(7, "h")
+                        .format("HH:mm:ss L")}
                     </td>
                   </tr>
                 ))}
