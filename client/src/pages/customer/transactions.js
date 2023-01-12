@@ -3,32 +3,30 @@ import { useSelector } from "react-redux";
 import HomeNavigation from "../../components/homeNavigation";
 import ReceivedListTransaction from "../../components/listTransaction/receivedList";
 import { useState } from "react";
-import Loader from "../../components/loading";
-import { fetcherListTransactions } from "../../fetchers/fetcherCustomer";
 import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
 import { fetcherTransferList } from "../../fetchers/fetcherEmployee";
 import { fetcherAllList } from "../../fetchers/fetcherEmployee";
 import AllListTransaction from "../../components/listTransaction/allList";
 import TransferListTransaction from "../../components/listTransaction/transferList";
-import { fetcherReceivedList, fetcherDebtList } from "../../fetchers/fetcherEmployee";
+import {
+  fetcherReceivedList,
+  fetcherDebtList,
+} from "../../fetchers/fetcherEmployee";
 import DebtListTransaction from "../../components/listTransaction/debtList";
 
 const Transaction = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const [listTransactions, setListTransactions] = useState([]);
-  const [checkTrans, setCheckTrans] = useState();
   const [checkAccs, setCheckAccs] = useState();
   const [accNum, setAccNum] = useState();
-  const [allList, setAllList] = useState([])
-  const [receivedList, setReceivedList] = useState([])
-  const [transferList, setTransferList] = useState([])
-  const [debtList, setDebtList] = useState([])
-
+  const [allList, setAllList] = useState([]);
+  const [receivedList, setReceivedList] = useState([]);
+  const [transferList, setTransferList] = useState([]);
+  const [debtList, setDebtList] = useState([]);
 
   async function getListAcc() {
     const list = await fetcherAccounts(userInfo.id);
     setCheckAccs(list.status);
-    setAccNum(list.data.data.accounts[0].accountNumber)
+    setAccNum(list.data.data.accounts[0].accountNumber);
   }
 
   async function getAllList() {
@@ -51,8 +49,6 @@ const Transaction = () => {
     setDebtList(info.data.data);
   }
 
-
-
   const [openTab, setOpenTab] = useState(1);
 
   useEffect(() => {
@@ -63,7 +59,6 @@ const Transaction = () => {
       getDebtList();
     }
   }, [checkAccs]);
-
 
   useEffect(() => {
     getListAcc();
@@ -81,31 +76,36 @@ const Transaction = () => {
                   <ul className="flex space-x-2">
                     <li>
                       <div
-
                         onClick={() => setOpenTab(1)}
-                        className={` ${openTab === 1 ? "bg-main-green text-white " : "text-gray-600 bg-white"} inline-block px-4 py-2 rounded shadow`}
+                        className={` ${
+                          openTab === 1
+                            ? "bg-main-green text-white "
+                            : "text-gray-600 bg-white"
+                        } inline-block px-4 py-2 rounded shadow`}
                       >
                         Tất cả giao dịch
                       </div>
                     </li>
                     <li>
                       <div
-
                         onClick={() => setOpenTab(2)}
-                        className={` ${openTab === 2 ? "bg-main-green text-white " : " text-gray-600 bg-white "} inline-block px-4 py-2  rounded shadow`}
-
-
+                        className={` ${
+                          openTab === 2
+                            ? "bg-main-green text-white "
+                            : " text-gray-600 bg-white "
+                        } inline-block px-4 py-2  rounded shadow`}
                       >
                         Chuyển tiền
                       </div>
                     </li>
                     <li>
                       <div
-
                         onClick={() => setOpenTab(3)}
-                        className={` ${openTab === 3 ? "bg-main-green text-white" : " text-gray-600 bg-white "} inline-block px-4 py-2  rounded shadow`}
-
-
+                        className={` ${
+                          openTab === 3
+                            ? "bg-main-green text-white"
+                            : " text-gray-600 bg-white "
+                        } inline-block px-4 py-2  rounded shadow`}
                       >
                         Nhận tiền
                       </div>
@@ -113,11 +113,12 @@ const Transaction = () => {
 
                     <li>
                       <div
-
                         onClick={() => setOpenTab(4)}
-                        className={` ${openTab === 4 ? "bg-main-green text-white" : " text-gray-600 bg-white "} inline-block px-4 py-2 rounded shadow`}
-
-
+                        className={` ${
+                          openTab === 4
+                            ? "bg-main-green text-white"
+                            : " text-gray-600 bg-white "
+                        } inline-block px-4 py-2 rounded shadow`}
                       >
                         Trả nợ
                       </div>

@@ -8,6 +8,7 @@ import DeleteRecipent from "../../components/deleteRecipent";
 import EditRecipent from "../../components/editRecipent";
 import Loader from "../../components/loading";
 import { fetcherListBanks } from "../../fetchers/fetcherCustomer";
+
 const Recipents = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -28,7 +29,7 @@ const Recipents = () => {
     console.log(listRecipents);
   }, [listRecipents]);
 
-  const [listBank, setListBank] = useState([])
+  const [listBank, setListBank] = useState([]);
   async function getBanks() {
     const list = await fetcherListBanks();
     setListBank(list.data.data);
@@ -37,7 +38,7 @@ const Recipents = () => {
   useEffect(() => {
     setIsLoading(true);
     getList();
-    getBanks()
+    getBanks();
     setTimeout(() => {
       setIsLoading(false);
     }, 300);
@@ -116,10 +117,13 @@ const Recipents = () => {
                             </td>
                             <td className="px-4 py-2">
                               <div className="text-sm text-black-900">
-                                {account.beneficiaryBankId === null && "TaiXiu Bank"}
-                                {listBank.map((bank, index) => (
-                                  bank.id === account.beneficiaryBankId && bank.name
-                                ))}
+                                {account.beneficiaryBankId === null &&
+                                  "TaiXiu Bank"}
+                                {listBank.map(
+                                  (bank, index) =>
+                                    bank.id === account.beneficiaryBankId &&
+                                    bank.name
+                                )}
                               </div>
                             </td>
                             <td className="px-6 py-2">

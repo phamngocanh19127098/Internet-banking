@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HomeNavigation from "../../components/homeNavigation";
 import { useSelector } from "react-redux";
 import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
+
 const Accounts = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);

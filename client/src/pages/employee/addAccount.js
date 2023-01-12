@@ -5,47 +5,47 @@ import EmployeeNavigation from "../../components/employeeNavigation";
 import { fetcherAddAccount } from "../../fetchers/fetcherEmployee";
 import SuccessModal from "../../components/successModal";
 import { data } from "browserslist";
-
 import Toast from "../../components/toast";
+
 const AddAccount = () => {
   const { register, handleSubmit } = useForm();
   const [list, setList] = useState([]);
-  const [message, setMessage] = useState()
+  const [message, setMessage] = useState();
   let toastProperties = null;
 
-  const showToast = type => {
+  const showToast = (type) => {
     switch (type) {
-      case 'success':
+      case "success":
         toastProperties = {
           id: list.length + 1,
-          title: 'Success',
-          description: 'This is a success toast component',
-          backgroundColor: 'new-green'
-        }
+          title: "Success",
+          description: "This is a success toast component",
+          backgroundColor: "new-green",
+        };
         break;
-      case 'danger':
+      case "danger":
         toastProperties = {
           id: list.length + 1,
-          title: 'Thông báo',
+          title: "Thông báo",
           description: message,
-          backgroundColor: 'red'
-        }
+          backgroundColor: "red",
+        };
         break;
-      case 'info':
+      case "info":
         toastProperties = {
           id: list.length + 1,
-          title: 'Info',
-          description: 'This is a info toast component',
-          backgroundColor: '#5bc0de'
-        }
+          title: "Info",
+          description: "This is a info toast component",
+          backgroundColor: "#5bc0de",
+        };
         break;
-      case 'warning':
+      case "warning":
         toastProperties = {
           id: list.length + 1,
-          title: 'Warning',
-          description: 'This is a warning toast component',
-          backgroundColor: '#f0ad4e'
-        }
+          title: "Warning",
+          description: "This is a warning toast component",
+          backgroundColor: "#f0ad4e",
+        };
         break;
       default:
         toastProperties = [];
@@ -53,36 +53,33 @@ const AddAccount = () => {
     setList([...list, toastProperties]);
   };
 
-
-  const [result, setResult] = useState()
+  const [result, setResult] = useState();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const handleOnCloseSuccess = () => setShowSuccessModal(false);
 
   async function addAccount(addData) {
     const list = await fetcherAddAccount(addData);
-    setResult(list)
+    setResult(list);
   }
   useEffect(() => {
     if (result) {
-      console.log(result)
+      console.log(result);
       if (result.status === 200) {
         setShowSuccessModal(true);
-      }
-      else {
-        console.log("FAIL")
-        console.log(result.data)
-        setMessage(result.data.error.message)
-        showToast('danger')
+      } else {
+        console.log("FAIL");
+        console.log(result.data);
+        setMessage(result.data.error.message);
+        showToast("danger");
       }
     }
   }, [result]);
 
   const submitForm = (data) => {
-    let addData = data
-    addData.role = "customer"
-    addAccount(addData)
+    let addData = data;
+    addData.role = "customer";
+    addAccount(addData);
   };
-
 
   return (
     <div>
