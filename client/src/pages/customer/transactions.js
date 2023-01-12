@@ -12,7 +12,7 @@ import AllListTransaction from "../../components/listTransaction/allList";
 import TransferListTransaction from "../../components/listTransaction/transferList";
 import { fetcherReceivedList, fetcherDebtList } from "../../fetchers/fetcherEmployee";
 import DebtListTransaction from "../../components/listTransaction/debtList";
-
+import { fetcherListBanks } from "../../fetchers/fetcherCustomer";
 const Transaction = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listTransactions, setListTransactions] = useState([]);
@@ -23,7 +23,11 @@ const Transaction = () => {
   const [receivedList, setReceivedList] = useState([])
   const [transferList, setTransferList] = useState([])
   const [debtList, setDebtList] = useState([])
-
+  const [listBank, setListBank] = useState()
+  async function getBanks() {
+    const list = await fetcherListBanks();
+    setListBank(list.data.data);
+  }
 
   async function getListAcc() {
     const list = await fetcherAccounts(userInfo.id);
@@ -61,6 +65,7 @@ const Transaction = () => {
       getTransferList();
       getReceivedList();
       getDebtList();
+      getBanks();
     }
   }, [checkAccs]);
 
@@ -125,16 +130,16 @@ const Transaction = () => {
                   </ul>
                   <div className="p-3 mt-6 max-h-screen grid-rows-4  ">
                     <div className={`${openTab === 1 ? "block" : "hidden"}`}>
-                      <AllListTransaction allList={allList} accNum={accNum} />
+                      <AllListTransaction allList={allList} accNum={accNum} banks={listBank} />
                     </div>
                     <div className={openTab === 2 ? "block" : "hidden"}>
-                      <TransferListTransaction allList={transferList} />
+                      <TransferListTransaction allList={transferList} banks={listBank} />
                     </div>
                     <div className={openTab === 3 ? "block" : "hidden"}>
-                      <ReceivedListTransaction allList={receivedList} />
+                      <ReceivedListTransaction allList={receivedList} banks={listBank} />
                     </div>
                     <div className={openTab === 4 ? "block" : "hidden"}>
-                      <DebtListTransaction allList={debtList} />
+                      <DebtListTransaction allList={debtList} banks={listBank} />
                     </div>
                   </div>
                 </div>
