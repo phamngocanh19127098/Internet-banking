@@ -23,7 +23,6 @@ import { Role } from '../users/entity/user.entity';
 import { UserService } from '../users/user.service';
 import { AccountsService } from './accounts.service';
 import { DepositIntoAccountDto } from './dto/DepositIntoAccountDto';
-import { UpdateAccountDto } from './dto/UpdateAccountDto';
 import { GetAccountInfoExternalDto } from './dto/GetAccountInfoExternalDto';
 import verifyMessage from '../../commons/crypto/verify/VerifyMessage';
 import { AffiliatedBanksService } from '../affiliatedBanks/affiliatedBanks.service';
