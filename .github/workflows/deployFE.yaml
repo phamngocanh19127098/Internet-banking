@@ -23,4 +23,4 @@ jobs:
       - uses: actions/checkout@v3
       - run: sudo docker pull 19127098/client:latest
       - run: sudo docker rm -f client
-      - run: sudo docker run -d -p 3001:3001 --name client 19127098/client:latest
+      - run: sudo docker run -d -p 80:80 --name client 19127098/client:latest
