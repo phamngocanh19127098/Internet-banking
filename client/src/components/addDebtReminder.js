@@ -32,6 +32,7 @@ const AddDebtReminder = (props) => {
     }, 2000);
     socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
     socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
+    props.onClose();
   };
   return (
     // <div>

@@ -40,11 +40,11 @@ const Loan = () => {
     socket.emit(
       payDebt,
       {
-          authorization : `Bearer ${token}`,
-          toUserId: notification.currentPaymentDebt.userId,
-          amount: notification.currentPaymentDebt.amount,
-          description: "Thanh toán nợ",
-          payTransactionFee : SRC
+        authorization: `Bearer ${token}`,
+        toUserId: notification.currentPaymentDebt.userId,
+        amount: notification.currentPaymentDebt.amount,
+        description: "Thanh toán nợ",
+        payTransactionFee: SRC
       }
     )
   }
@@ -53,8 +53,8 @@ const Loan = () => {
     socket.emit(
       verifyOtp,
       {
-        authorization : `Bearer ${token}`,
-        transactionId : notification.currentTransaction.data.id,
+        authorization: `Bearer ${token}`,
+        transactionId: notification.currentTransaction.data.id,
         otpCode: otp,
       }
     )
@@ -123,18 +123,18 @@ const Loan = () => {
 
   useEffect(() => {
     socket.on(payDebtSuccess, (response) => {
-        if (userInfo.id === response.userId){
-            console.log(notification);
-            dispatch(closeNotification())
-            dispatch(updateCurrentTransaction(response));
-        }
-        
+      if (userInfo.id === response.userId) {
+        console.log(notification);
+        dispatch(closeNotification())
+        dispatch(updateCurrentTransaction(response));
+      }
+
     });
-}, [userInfo.id, dispatch, notification])
+  }, [userInfo.id, dispatch, notification])
 
   useEffect(() => {
-    socket.on(verifyOtpSuccess, (response)=> {
-      if (userInfo.id === notification.currentTransaction?.receiverId){
+    socket.on(verifyOtpSuccess, (response) => {
+      if (userInfo.id === notification.currentTransaction?.receiverId) {
         let message = `Một yêu cầu thanh toán nợvừa được thanh toán`;
         dispatch(newNotification(message))
       }
@@ -195,7 +195,7 @@ const Loan = () => {
                 {!notification.isOpen && <button className="cursor-pointer" onClick={handlePayDebt}>Trả ngay</button>}
                 <div>
                   <label htmlFor="">Nhập OTP</label>
-                  <input type="text" value={otp} onChange={(e) => {setOtp(e.target.value)}}/>
+                  <input type="text" value={otp} onChange={(e) => { setOtp(e.target.value) }} />
                   <div>
                     <button onClick={handleSubmitOtp}>Gửi</button>
                   </div>

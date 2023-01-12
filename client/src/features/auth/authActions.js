@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-const backendURL = "http://127.0.0.1:3001";
+const backendURL = "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001";
 // const backendURL = 'http://127.0.0.1:5000'
 
 export const userLogin = createAsyncThunk(
