@@ -56,17 +56,6 @@ const HomeNavigation = (props) => {
 
   return (
     <div className="m-10 w-72 bg-gradient-to-t from-main-green to-new-green h-[90%] p-5  pt-8 relative duration-300 rounded-xl">
-      <div className="flex gap-x-4 items-center">
-        <h1 className="text-white origin-left font-medium text-xl duration-200">
-          Taixiu Bank
-        </h1>
-      </div>
-      <div className="m-1  h-10 relative flex  items-center rounded-full  text-xl text-white">
-        <div className="w-48 inline text-xl text-center m-2 mr-2">
-          {" "}
-          {userInfo.name}{" "}
-        </div>
-      </div>
       <ul className="pt-2">
         {Menus.map((Menu, index) => (
           <div className="p-2" key={index}>
