@@ -5,7 +5,9 @@ import {
 } from "../constants/debtReminderConstants";
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect(
+  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001"
+);
 
 const AddDebtReminder = (props) => {
   const [accountDesNumber, setAccountDesNumber] = useState("");
@@ -104,9 +106,9 @@ const AddDebtReminder = (props) => {
             type="tel"
             required
             value={accountDesNumber}
-                    onChange={(e) => {
-                      setAccountDesNumber(e.target.value);
-                    }}
+            onChange={(e) => {
+              setAccountDesNumber(e.target.value);
+            }}
             placeholder="Nhập số tài khoản"
           />
         </div>
@@ -130,10 +132,10 @@ const AddDebtReminder = (props) => {
             id="amount"
             type="number"
             required
-                    value={amount}
-                    onChange={(e) => {
-                      setAmount(e.target.value);
-                    }}
+            value={amount}
+            onChange={(e) => {
+              setAmount(e.target.value);
+            }}
             placeholder="Nhập số tiền cần thanh toán"
           />
         </div>
@@ -145,10 +147,10 @@ const AddDebtReminder = (props) => {
             className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
             id="des"
             type="text"
-                    value={description}
-                    onChange={(e) => {
-                      setDescription(e.target.value);
-                    }}
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
             placeholder="Nhập ghi chú"
           />
         </div>

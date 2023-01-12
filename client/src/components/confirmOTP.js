@@ -37,11 +37,9 @@ const ConfirmOTP = (props) => {
         setIsLoading(false);
         setNotification("Mã OTP chưa chính xác");
       }
-    }
-    else {
+    } else {
       setNotification("");
     }
-
   }, [statuscode]);
 
   const handleCancelClick = (e) => {
@@ -120,7 +118,7 @@ const ConfirmOTP = (props) => {
             type="tel"
             required
             onChange={(event) => setOTP(event.target.value)}
-            placeholder="Nhập số tài khoản"
+            placeholder="Nhập mã OTP"
           />
         </div>
         <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">

@@ -154,7 +154,7 @@ const Payment = () => {
             <HomeNavigation id={3} />
             <div className="h-screen flex-auto">
               <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
-                <div className="block mb-2 text-2xl text-gray-900 dark:text-white font-bold">
+                <div className="block mb-2 text-2xl text-gray-900 font-bold">
                   Thực hiện giao dịch chuyển khoản thành công
                 </div>
                 <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">

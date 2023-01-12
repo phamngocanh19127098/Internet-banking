@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const fetcherAddAccount = async (addData) => {
-  const url = `http://localhost:3001/auth/signup`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/auth/signup`;
   try {
     const { data } = await axios({
       method: "post",
@@ -20,7 +20,7 @@ export const fetcherAddAccount = async (addData) => {
 };
 
 export const fetcherPutMoney = async (putMoney) => {
-  const url = `http://localhost:3001/accounts/deposit`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/accounts/deposit`;
   try {
     const { data } = await axios({
       method: "put",
@@ -39,7 +39,7 @@ export const fetcherPutMoney = async (putMoney) => {
 };
 
 export const fetcherUsername = async (username) => {
-  const url = `http://localhost:3001/users/get-customer/${username}`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/users/get-customer/${username}`;
 
   try {
     const { data, status } = await axios({
@@ -57,7 +57,7 @@ export const fetcherUsername = async (username) => {
 };
 
 export const fetcherAllList = async (accountNumber) => {
-  const url = `http://localhost:3001/transactions/list/${accountNumber}`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/transactions/list/${accountNumber}`;
 
   try {
     const { data, status } = await axios({
@@ -75,7 +75,7 @@ export const fetcherAllList = async (accountNumber) => {
 };
 
 export const fetcherReceivedList = async (accountNumber) => {
-  const url = `http://localhost:3001/transactions/list/received/${accountNumber}`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/transactions/list/received/${accountNumber}`;
 
   try {
     const { data, status } = await axios({
@@ -93,7 +93,7 @@ export const fetcherReceivedList = async (accountNumber) => {
 };
 
 export const fetcherTransferList = async (accountNumber) => {
-  const url = `http://localhost:3001/transactions/list/transfer/${accountNumber}`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/transactions/list/transfer/${accountNumber}`;
 
   try {
     const { data, status } = await axios({
@@ -111,7 +111,7 @@ export const fetcherTransferList = async (accountNumber) => {
 };
 
 export const fetcherDebtList = async (accountNumber) => {
-  const url = `http://localhost:3001/transactions/list/debtReminder/${accountNumber}`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/transactions/list/debtReminder/${accountNumber}`;
   try {
     const { data, status } = await axios({
       method: "get",
@@ -128,7 +128,7 @@ export const fetcherDebtList = async (accountNumber) => {
 };
 
 export const fetcherGetAllCustomer = async () => {
-  const url = `http://localhost:3001/users/customer/list`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/users/customer/list`;
   try {
     const { data, statusCode } = await axios({
       method: "get",
@@ -145,7 +145,7 @@ export const fetcherGetAllCustomer = async () => {
 };
 
 export const fetcherUpdateUserStatus = async (username) => {
-  const url = `http://localhost:3001/users/changestatus/${username}`;
+  const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/users/changestatus/${username}`;
   try {
     const { data, statusCode } = await axios({
       method: "put",

@@ -74,7 +74,7 @@ const Transaction = () => {
     <div>
       <div>
         <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
-          <HomeNavigation id={8} />
+          <HomeNavigation id={7} />
           <div className="h-screen flex-auto">
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
               <div className="flex justify-center justify-items-center container mx-auto col-span-3 ">
@@ -84,8 +84,8 @@ const Transaction = () => {
                       <div
                         onClick={() => setOpenTab(1)}
                         className={` ${openTab === 1
-                            ? "bg-main-green text-white "
-                            : "text-gray-600 bg-white"
+                          ? "bg-main-green text-white "
+                          : "text-gray-600 bg-white"
                           } inline-block px-4 py-2 rounded shadow`}
                       >
                         Tất cả giao dịch
@@ -95,8 +95,8 @@ const Transaction = () => {
                       <div
                         onClick={() => setOpenTab(2)}
                         className={` ${openTab === 2
-                            ? "bg-main-green text-white "
-                            : " text-gray-600 bg-white "
+                          ? "bg-main-green text-white "
+                          : " text-gray-600 bg-white "
                           } inline-block px-4 py-2  rounded shadow`}
                       >
                         Chuyển tiền
@@ -106,8 +106,8 @@ const Transaction = () => {
                       <div
                         onClick={() => setOpenTab(3)}
                         className={` ${openTab === 3
-                            ? "bg-main-green text-white"
-                            : " text-gray-600 bg-white "
+                          ? "bg-main-green text-white"
+                          : " text-gray-600 bg-white "
                           } inline-block px-4 py-2  rounded shadow`}
                       >
                         Nhận tiền
@@ -118,8 +118,8 @@ const Transaction = () => {
                       <div
                         onClick={() => setOpenTab(4)}
                         className={` ${openTab === 4
-                            ? "bg-main-green text-white"
-                            : " text-gray-600 bg-white "
+                          ? "bg-main-green text-white"
+                          : " text-gray-600 bg-white "
                           } inline-block px-4 py-2 rounded shadow`}
                       >
                         Trả nợ
