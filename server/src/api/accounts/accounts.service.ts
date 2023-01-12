@@ -170,6 +170,7 @@ export class AccountsService {
       const accounts = await this.getActivePaymentAccountByAccountNumber(
         accountNumber,
       );
+    console.log(accountNumber);
 
       if (!accounts) {
         throw new BadRequestException(

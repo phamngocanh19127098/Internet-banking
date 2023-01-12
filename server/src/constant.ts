@@ -15,3 +15,5 @@ export const payDebt = 'payDebt';
 export const verifyOtp = 'verifyOtp';
 export const verifyOtpSuccess = 'verifyOtpSuccess';
 export const verifyOtpFail = 'verifyOtpFail';
+export const payDebtSuccess = 'payDebtSuccess';
+export const payDebtFail = "payDebtFail";

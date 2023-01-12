@@ -10,6 +10,8 @@ import {
   findAllCreatedDebtReminder,
   findAllDebtReminder,
   findAllReceivedDebtReminder, findAllUnPaidDebtReminder, payDebt,
+  payDebtFail,
+  payDebtSuccess,
   removeCreatedDebtReminder,
   removeReceivedDebtReminder,
   verifyOtp,
@@ -72,7 +74,10 @@ export class DebtReminderSocketGateway {
   @SubscribeMessage(payDebt)
   async payDebt(@MessageBody() payDebtReminderDto: PayDebtReminderDto) {
     let data = await this.debtReminderSocketService.payDebt(payDebtReminderDto, payDebtReminderDto.authorization);
-    return this.server.emit(payDebt, {...data})
+    if (data.statusCode == 200) {
+      return this.server.emit(payDebtSuccess , {...data})
+    }
+    else return this.server.emit(payDebtFail , {...data})
   }
 
   @SubscribeMessage(verifyOtp)

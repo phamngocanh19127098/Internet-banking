@@ -7,15 +7,18 @@ import {
   findAllCreatedDebtReminder,
   findAllReceivedDebtReminder,
   payDebt,
+  payDebtSuccess,
   removeCreatedDebtReminder,
   removeReceivedDebtReminder,
+  verifyOtp,
+  verifyOtpSuccess,
 } from "../../constants/debtReminderConstants";
 import { onInit } from "../../features/debtReminder/debtReminderSlice";
 import { onInitReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
 import DebtReminderList from "../../components/DebtReminderList";
 import AddDebtReminder from "../../components/addDebtReminder";
 import { CREATED_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
-import { closeNotification, newNotification, updateCurrentDebt } from "../../features/notification/notificationSlice";
+import { closeNotification, newNotification, updateCurrentDebt, updateCurrentTransaction } from "../../features/notification/notificationSlice";
 import { SRC } from "../../constants/payTransactionFee";
 const socket = io.connect("http://localhost:3001");
 
@@ -26,6 +29,7 @@ const Loan = () => {
   const debtReceived = useSelector((state) => state.debtReceived);
   const dispatch = useDispatch();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [otp, setOtp] = useState("");
   const handleOnCloseAdd = () => setShowAddModal(false);
   // const [notification, setNotification] = useState("");
 
@@ -42,7 +46,18 @@ const Loan = () => {
           description: "Thanh toán nợ",
           payTransactionFee : SRC
       }
-  )
+    )
+  }
+
+  const handleSubmitOtp = () => {
+    socket.emit(
+      verifyOtp,
+      {
+        authorization : `Bearer ${token}`,
+        transactionId : notification.currentTransaction.data.id,
+        otpCode: otp,
+      }
+    )
   }
 
   useEffect(() => {
@@ -108,14 +123,24 @@ const Loan = () => {
   }, [userInfo.id, dispatch]);
  
   useEffect(() => {
-    socket.on(payDebt, (response) => {
+    socket.on(payDebtSuccess, (response) => {
         if (userInfo.id === response.userId){
-          console.log(response);
+            console.log(notification);
             dispatch(closeNotification())
+            dispatch(updateCurrentTransaction(response));
         }
         
     });
-}, [userInfo.id, dispatch])
+}, [userInfo.id, dispatch, notification])
+
+  useEffect(() => {
+    socket.on(verifyOtpSuccess, (response)=> {
+      if (userInfo.id === notification.currentTransaction?.receiverId){
+        let message = `Một yêu cầu thanh toán nợvừa được thanh toán`;
+        dispatch(newNotification(message))
+      }
+    })
+  })
 
   return (
     <div>
@@ -159,6 +184,13 @@ const Loan = () => {
                   Ok
                 </button>
                 {!notification.isOpen && <button className="cursor-pointer" onClick={handlePayDebt}>Trả ngay</button>}
+                <div>
+                  <label htmlFor="">Nhập OTP</label>
+                  <input type="text" value={otp} onChange={(e) => {setOtp(e.target.value)}}/>
+                  <div>
+                    <button onClick={handleSubmitOtp}>Gửi</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

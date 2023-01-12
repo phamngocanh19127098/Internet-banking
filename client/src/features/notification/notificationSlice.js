@@ -6,6 +6,7 @@ const initialState = {
     isRead: true,
     success :true,
     currentPaymentDebt : null,
+    currentTransaction : null,
 }
 
 const notificationSlice = createSlice({
@@ -25,10 +26,13 @@ const notificationSlice = createSlice({
         },
         updateCurrentDebt : (state, action) => {
             state.currentPaymentDebt = action.payload;
+        },
+        updateCurrentTransaction : (state, action) => {
+            state.currentTransaction = action.payload;
         }
     }
 })
 
-export const { newNotification, closeNotification, updateCurrentDebt } = notificationSlice.actions;
+export const { newNotification, closeNotification, updateCurrentDebt, updateCurrentTransaction } = notificationSlice.actions;
 
 export default notificationSlice.reducer
