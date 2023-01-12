@@ -34,7 +34,7 @@ const AllListTransaction = (props) => {
                     >
                       {transaction.transactionType === "TRANSFER" &&
                         transaction.accountSrcNumber === props.accNum && (
-                          <div className="text-red"> Chuyển tiền từ</div>
+                          <div className="text-red"> Chuyển tiền đến</div>
                         )}
                       {transaction.transactionType ===
                         "DEBT_REMINDERS_PAYMENT" &&

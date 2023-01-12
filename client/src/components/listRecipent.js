@@ -14,7 +14,9 @@ const ListRecipents = (props) => {
     setListRecipents(list.data.data);
   }
   useEffect(() => {
-    console.log(listRecipents);
+    if (listRecipents.length !== 0) {
+      setAccNum(listRecipents[0].beneficiaryAccountNumber)
+    }
   }, [listRecipents]);
   useEffect(() => {
     getList();
@@ -22,7 +24,6 @@ const ListRecipents = (props) => {
 
   const handleAccount = (e) => {
     setAccNum(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleXClick = (e) => {

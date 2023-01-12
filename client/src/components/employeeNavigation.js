@@ -49,7 +49,7 @@ const EmployeeNavigation = (props) => {
           Taixiu Bank
         </h1>
       </div>
-      <div className="m-1  h-24 relative flex  items-center rounded-full  text-xl text-white">
+      <div className="m-1  w-60 h-24 relative flex  items-center rounded-full  text-xl text-white">
         <img src="../avatar.png" className="w-14 rounded-full" alt="avatar" />
         <div className="w-36 inline text-xl text-center m-2 mr-2">
           {" "}
