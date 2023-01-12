@@ -8,7 +8,7 @@ import ListRecipents from "../../components/listRecipent";
 import { fetcherSendTransfer } from "../../fetchers/fetcherCustomer";
 import ConfirmOTP from "../../components/confirmOTP";
 import { fetcherAddReceiver } from "../../fetchers/fetcherCustomer";
-
+import Loader from "../../components/loading";
 const Payment = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
@@ -21,7 +21,7 @@ const Payment = () => {
   const [money, setMoney] = useState();
   const [showAddModal, setShowAddModal] = useState(false);
   const handleOnCloseAdd = () => setShowAddModal(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const handleOnCloseOTP = () => setShowOTPModal(false);
 
@@ -117,6 +117,7 @@ const Payment = () => {
     if (result) {
       if (result.statusCode === 200) {
         setTransactionId(result.data.id);
+        setIsLoading(false);
         setShowOTPModal(true);
       } else {
         alert(result.error.message);
@@ -131,6 +132,7 @@ const Payment = () => {
     console.log(money);
     console.log(description);
     sendReqTransfer();
+    setIsLoading(true);
   };
   const resetState = () => {
     setAccNum("");
@@ -145,7 +147,21 @@ const Payment = () => {
     addNewRecipent(accNum, name);
     resetState();
   };
-
+  if (isLoading)
+    return (
+      <div>
+        <div>
+          <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
+            <HomeNavigation id={3} />
+            <div className="h-screen flex-auto">
+              <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
+                <Loader />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   if (isSuccess === true) {
     return (
       <div>
@@ -217,10 +233,10 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                      <option key={index} value={account.accountNumber}>
-                        {account.accountNumber}
-                      </option>
-                    ))
+                    <option key={index} value={account.accountNumber}>
+                      {account.accountNumber}
+                    </option>
+                  ))
                   : null}
               </select>
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
