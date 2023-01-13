@@ -338,11 +338,13 @@ export class TransactionsService {
     if (bankid) {
       transactions = await this.transactionRepository.findBy({
         bankDesId: bankid,
+        status: 1,
       });
     } else {
       transactions = await this.transactionRepository.find({
         where: {
           bankDesId: IsNull(),
+          status: 1,
         },
       });
     }

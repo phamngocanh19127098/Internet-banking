@@ -11,7 +11,7 @@ import { SRC } from "../constants/payTransactionFee";
 import { updateCurrentDebt } from "../features/notification/notificationSlice";
 import { socketOption } from "../config/socket-option";
 const socket = io.connect(
-  "http://localhost:3001",
+  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001",
   socketOption
 );
 
@@ -21,7 +21,7 @@ const DebtReminderItem = (props) => {
   const { userInfo } = useSelector((state) => state.auth);
   const handlePayDebtAction = () => {
     // const notification = useSelector((state) => state.notification);
-    dispatch(updateCurrentDebt(props.item))
+    dispatch(updateCurrentDebt(props.item));
     socket.emit(payDebt, {
       authorization: `Bearer ${token}`,
       toUserId: props.item.userId,

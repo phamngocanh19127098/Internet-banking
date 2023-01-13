@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 
 import "../styles/header.css";
 import Toast from "./toast";
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect("http://ec2-35-171-9-165.compute-1.amazonaws.com:3001");
 const Footer = () => {
     const dispatch = useDispatch();
     const token = localStorage.getItem("userToken");

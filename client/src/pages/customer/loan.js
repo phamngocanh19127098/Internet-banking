@@ -28,7 +28,10 @@ import {
 import { SRC } from "../../constants/payTransactionFee";
 import { socketOption } from "../../config/socket-option";
 
-const socket = io.connect("http://localhost:3001", socketOption);
+const socket = io.connect(
+  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001",
+  socketOption
+);
 
 const Loan = () => {
   const token = localStorage.getItem("userToken");

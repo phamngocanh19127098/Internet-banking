@@ -87,20 +87,20 @@ function ManagementTransaction() {
       const list = allList;
       list.map(
         (element, index) =>
-        (element["date"] = moment(element["updatedAt"]).utcOffset("+07:00").format(
-          "DD-MM-YYYY hh:mm:ss"
-        ))
+          (element["date"] = moment(element["updatedAt"])
+            .add(7, "h")
+            .format("DD-MM-YYYY HH:mm:ss"))
       );
       list.map((element, index) =>
         element["bankDesId"] === null
           ? (element["bankName"] = "TaiXiu Bank")
           : listBank !== undefined
-            ? listBank.map((bank) =>
+          ? listBank.map((bank) =>
               parseInt(element["bankDesId"]) === parseInt(bank["id"])
                 ? (element["bankName"] = bank["name"])
                 : null
             )
-            : null
+          : null
       );
       setRowData1(list);
     }

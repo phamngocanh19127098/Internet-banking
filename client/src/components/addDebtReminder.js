@@ -10,7 +10,7 @@ import { fetcherReceiver } from "../fetchers/fetcherCustomer";
 import CurrencyInput from "react-currency-input-field";
 import { useEffect } from "react";
 const socket = io.connect(
-  "http://localhost:3001",
+  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001",
   socketOption
 );
 
@@ -20,10 +20,10 @@ const AddDebtReminder = (props) => {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const { userInfo } = useSelector((state) => state.auth);
-  const [statuscode, setStatuscode] = useState(101)
-  const [response, setResponse] = useState()
+  const [statuscode, setStatuscode] = useState(101);
+  const [response, setResponse] = useState();
   const [notification, setNotification] = useState();
-  const [isDisable, setIsDisable] = useState(true)
+  const [isDisable, setIsDisable] = useState(true);
   const handleCancelClick = (e) => {
     // resetState()
     props.onClose();
@@ -64,7 +64,6 @@ const AddDebtReminder = (props) => {
       getName();
     }
   }, [accountDesNumber]);
-
 
   const createDebtReminderHandler = (e) => {
     e.preventDefault();

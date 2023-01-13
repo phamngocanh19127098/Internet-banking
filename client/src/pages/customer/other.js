@@ -11,6 +11,8 @@ import { fetcherGetInfo } from "../../fetchers/fetcherCustomer";
 import { fetcherSendTransferExternal } from "../../fetchers/fetcherCustomer";
 import { fetcherAddAffiliatedBank } from "../../fetchers/fetcherCustomer";
 import Loader from "../../components/loading";
+import { formatMoney } from "../../utils";
+
 const Other = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
@@ -57,7 +59,12 @@ const Other = () => {
   }
 
   async function addNewRecipent(accSrcNumber, nickName) {
-    await fetcherAddAffiliatedBank(accSrcNumber, nickName, nickName, parseInt(value));
+    await fetcherAddAffiliatedBank(
+      accSrcNumber,
+      nickName,
+      nickName,
+      parseInt(value)
+    );
   }
 
   async function sendReqTransfer() {
@@ -105,7 +112,7 @@ const Other = () => {
 
   useEffect(() => {
     console.log(response);
-    if (statuscode === 200) {
+    if (statuscode === 201) {
       if (accNum !== null) {
         setName(response.data.data.user.name);
         setNotification(response.data.data.user.name);
@@ -194,7 +201,7 @@ const Other = () => {
             <HomeNavigation id={4} />
             <div className="h-screen flex-auto">
               <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
-                <div className="block mb-2 text-2xl text-gray-900 dark:text-white font-bold">
+                <div className="block mb-2 text-2xl text-gray-900 font-bold">
                   Thực hiện giao dịch chuyển khoản thành công
                 </div>
                 <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
@@ -207,7 +214,7 @@ const Other = () => {
                   STK người nhận: {accNum}
                 </div>
                 <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
-                  Số tiền: {money}
+                  Số tiền: {formatMoney(money)} VND
                 </div>
                 <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Nội dung: {description}
@@ -258,10 +265,10 @@ const Other = () => {
                 >
                   {listAccounts !== null
                     ? listAccounts.map((account, index) => (
-                      <option key={index} value={account.accountNumber}>
-                        {account.accountNumber}
-                      </option>
-                    ))
+                        <option key={index} value={account.accountNumber}>
+                          {account.accountNumber}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>

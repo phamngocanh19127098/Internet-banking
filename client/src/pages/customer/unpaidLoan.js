@@ -11,7 +11,10 @@ import { PAY_DEBT } from "../../constants/buttonType";
 import DebtReminderList from "../../components/DebtReminderList";
 import DebtList from "../../components/debt/DebtList";
 import { socketOption } from "../../config/socket-option";
-const socket = io.connect("http://localhost:3001", socketOption);
+const socket = io.connect(
+  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001",
+  socketOption
+);
 
 const UnPaidLoan = () => {
   const { userInfo } = useSelector((state) => state.auth);

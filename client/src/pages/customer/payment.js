@@ -244,10 +244,10 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                    <option key={index} value={account.accountNumber}>
-                      {account.accountNumber}
-                    </option>
-                  ))
+                      <option key={index} value={account.accountNumber}>
+                        {account.accountNumber}
+                      </option>
+                    ))
                   : null}
               </select>
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
