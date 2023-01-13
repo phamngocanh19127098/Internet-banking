@@ -85,9 +85,15 @@ const Payment = () => {
   useEffect(() => {
     if (statuscode === 200) {
       if (accNum !== null) {
-        setName(response.data.data.user.name);
-        setNotification(response.data.data.user.name);
-        setIsDisable(false);
+        if (rootNum !== undefined && accNum === rootNum) {
+          setNotification("Bạn không thể chuyển khoản vào chính tài khoản của mình");
+          setName(" ");
+          setIsDisable(true);
+        } else {
+          setName(response.data.data.user.name);
+          setNotification(response.data.data.user.name);
+          setIsDisable(false);
+        }
       } else {
         setNotification("");
         setName(" ");

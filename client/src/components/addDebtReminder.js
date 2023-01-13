@@ -6,7 +6,7 @@ import {
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
 const socket = io.connect(
-  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001"
+  "http://localhost:3001"
 );
 
 const AddDebtReminder = (props) => {
@@ -72,7 +72,7 @@ const AddDebtReminder = (props) => {
     //     </button>
     //   </form>
     // </div>
-    <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
+    <div className="fixed inset-0  z-10 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
       <div className="border-t-8 border-t-black relative flex-col justify-center bg-white rounded-xl w-2/5 ">
         <button
           id="handleX"

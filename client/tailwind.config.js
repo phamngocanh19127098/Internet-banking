@@ -25,6 +25,7 @@ module.exports = {
         'medium-pink-red': '#990F30'
       },
       spacing: {
+        '110': '28rem',
         '128': '32rem',
         '150': '40rem',
         '180': '50rem',
