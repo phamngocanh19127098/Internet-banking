@@ -23,7 +23,8 @@ import { CREATED_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
 import { closeNotification, newNotification, updateCurrentDebt, updateCurrentTransaction } from "../../features/notification/notificationSlice";
 import { SRC } from "../../constants/payTransactionFee";
 import Loader from "../../components/loading";
-const socket = io.connect("http://localhost:3001");
+import { socketOption } from "../../config/socket-option";
+const socket = io.connect("http://localhost:3001", socketOption);
 
 const Loan = () => {
   const token = localStorage.getItem("userToken");

@@ -15,8 +15,10 @@ import { SRC } from "../../constants/payTransactionFee";
 import { removeReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
 import ConfirmOTPDebt from "./otp";
 import Loader from "../loading";
+import { socketOption } from "../../config/socket-option";
 const socket = io.connect(
-    "http://localhost:3001"
+    "http://localhost:3001",
+    socketOption
 );
 const DebtList = (props) => {
     const token = localStorage.getItem("userToken");
