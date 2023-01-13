@@ -3,13 +3,20 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
 import { verifyOtp } from "../../constants/debtReminderConstants";
+import { findAllCreatedDebtReminder, findAllReceivedDebtReminder, findAllUnPaidDebtReminder } from "../../constants/debtReminderConstants";
+import Loader from "../loading";
+import { verifyOtpSuccess } from "../../constants/debtReminderConstants";
+
 const socket = io.connect(
     "http://localhost:3001"
 );
 const ConfirmOTPDebt = (props) => {
     const token = localStorage.getItem("userToken");
     const [OTP, setOTP] = useState("");
+    const { userInfo } = useSelector((state) => state.auth);
     const notification = useSelector((state) => state.notification);
+    const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
     const handleSubmitOtp = () => {
         socket.emit(
             verifyOtp,
@@ -20,7 +27,7 @@ const ConfirmOTPDebt = (props) => {
                 debtReminderId: notification.currentPaymentDebt.id
             }
         )
-        props.onClose();
+        setIsLoading(true)
     }
     const handleXClick = (e) => {
         //   verifyOTP()
@@ -31,12 +38,39 @@ const ConfirmOTPDebt = (props) => {
         props.onClose();
     };
 
+    useEffect(() => {
+        socket.on(verifyOtpSuccess, (response) => {
+            if (userInfo.id === response.userId) {
+                let message = `Một yêu cầu thanh toán nợ với số tiền là ${response.amount} vừa được thanh toán`;
+                socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
+                socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
+                socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
+                setIsLoading(false)
+                props.onClose()
+            }
+            else if (userInfo.id === response.receiverId) {
+                socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
+                socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
+                socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
+                setIsLoading(false)
+                props.onClose()
+            }
+        })
+    }, [notification, dispatch, userInfo.id])
+    if (!props.visible) return null
 
-
-
+    if (isLoading) {
+        return (
+            <div className="fixed inset-0 z-10 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
+                <div className="border-t-8 border-t-black relative flex-col justify-center bg-white rounded-xl w-2/5 ">
+                    <Loader />
+                </div>
+            </div>
+        )
+    }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
+        <div className="fixed inset-0 z-10 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center">
             <div className="border-t-8 border-t-black relative flex-col justify-center bg-white rounded-xl w-2/5 ">
                 <button
                     id="handleX"

@@ -22,6 +22,7 @@ import AddDebtReminder from "../../components/addDebtReminder";
 import { CREATED_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
 import { closeNotification, newNotification, updateCurrentDebt, updateCurrentTransaction } from "../../features/notification/notificationSlice";
 import { SRC } from "../../constants/payTransactionFee";
+import Loader from "../../components/loading";
 const socket = io.connect("http://localhost:3001");
 
 const Loan = () => {
@@ -135,22 +136,7 @@ const Loan = () => {
     });
   }, [userInfo.id, dispatch, notification])
 
-  useEffect(() => {
-    socket.on(verifyOtpSuccess, (response) => {
-      if (userInfo.id === response.userId) {
-        let message = `Một yêu cầu thanh toán nợ với số tiền là ${response.amount} vừa được thanh toán`;
-        dispatch(newNotification(message))
-        socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
-        socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
-        socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
-      }
-      else if (userInfo.id === response.receiverId){
-        socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
-        socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
-        socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
-      }
-    })
-  },[notification,dispatch, userInfo.id])
+
 
   return (
     <div>
@@ -196,24 +182,6 @@ const Loan = () => {
                   debtReminders={debtReceived.debtReceived}
                   type={RECEIVED_DEBT}
                 />
-              </div>
-              <div>
-                <div> Thong bao nhac no </div>
-                <p>{notification.message}</p>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => dispatch(closeNotification())}
-                >
-                  Ok
-                </button>
-                {!notification.isOpen && <button className="cursor-pointer" onClick={handlePayDebt}>Trả ngay</button>}
-                <div>
-                  <label htmlFor="">Nhập OTP</label>
-                  <input type="text" value={otp} onChange={(e) => { setOtp(e.target.value) }} />
-                  <div>
-                    <button onClick={handleSubmitOtp}>Gửi</button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

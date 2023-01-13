@@ -14,6 +14,7 @@ import { CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT } from "../../constants/buttonTyp
 import { SRC } from "../../constants/payTransactionFee";
 import { removeReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
 import ConfirmOTPDebt from "./otp";
+import Loader from "../loading";
 const socket = io.connect(
     "http://localhost:3001"
 );
@@ -21,12 +22,14 @@ const DebtList = (props) => {
     const token = localStorage.getItem("userToken");
     const dispatch = useDispatch();
     const { userInfo } = useSelector((state) => state.auth);
+    const [isLoading, setIsLoading] = useState(false);
     const [showOTP, setShowOTP] = useState(false);
     const handleOnCloseOTP = () => setShowOTP(false);
     const notification = useSelector((state) => state.notification);
 
     const handlePayDebtAction = (userId, amount) => {
         console.log("ABC")
+        setIsLoading(true)
         socket.emit(payDebt, {
             authorization: `Bearer ${token}`,
             toUserId: userId,
@@ -34,8 +37,41 @@ const DebtList = (props) => {
             description: "Thanh toán nợ",
             payTransactionFee: SRC,
         });
-        setShowOTP(true)
     };
+
+    useEffect(() => {
+        socket.on(payDebtSuccess, (response) => {
+            if (userInfo.id === response.userId) {
+                console.log(notification);
+                dispatch(closeNotification())
+                dispatch(updateCurrentTransaction(response));
+                setIsLoading(false)
+                setShowOTP(true)
+            }
+        });
+    }, [userInfo.id, dispatch, notification])
+    if (isLoading === true) {
+        return (
+            <div>
+                <div className="bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] h-64 relative duration-300">
+                    {props.debtReminders.length !== 0 ? (
+                        <div className=" h-64  place-items-start overflow-y-auto overflow-x-auto">
+                            <div className="border-b border-gray-200 shadow px-4 py-4  items-center min-w-full justify-center">
+                                <table className=" table-fixed border-0 min-w-full">
+                                    <Loader />
+                                </table>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className=" text-lg font-semibold border-b border-gray-300">
+                            Danh sách trống
+                        </div>
+                    )}
+                </div>
+
+            </div>
+        )
+    }
     return (
         <div>
             <div className="bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] h-64 relative duration-300">
@@ -118,14 +154,14 @@ const DebtList = (props) => {
 
                                             <td className="px-6 py-2">
                                                 <div>
-                                                    {(props.type === PAY_DEBT || props.type === RECEIVED_DEBT) && (
+                                                    {(props.type === PAY_DEBT || props.type === RECEIVED_DEBT) && (account.paymentStatus === "UNPAID") && (
                                                         <button
                                                             className="cursor-pointer h-fit w-fit  px-6 py-2 text-sm font-bold text-white bg-brightblue rounded-full hover:bg-hover-brightblue"
                                                             onClick={() => {
                                                                 handlePayDebtAction(account.userId, account.amount)
                                                                 dispatch(updateCurrentDebt(account))
                                                             }
-                                                        }
+                                                            }
                                                         >
                                                             Thanh toán
                                                         </button>
@@ -143,7 +179,7 @@ const DebtList = (props) => {
                         Danh sách trống
                     </div>
                 )}
-                {showOTP && (
+                {props.type === RECEIVED_DEBT && showOTP && (
                     <ConfirmOTPDebt
                         onClose={handleOnCloseOTP}
                         visible={showOTP}
