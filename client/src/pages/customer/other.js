@@ -9,7 +9,8 @@ import { fetcherAddReceiver } from "../../fetchers/fetcherCustomer";
 import { fetcherListBanks } from "../../fetchers/fetcherCustomer";
 import { fetcherGetInfo } from "../../fetchers/fetcherCustomer";
 import { fetcherSendTransferExternal } from "../../fetchers/fetcherCustomer";
-
+import { fetcherAddAffiliatedBank } from "../../fetchers/fetcherCustomer";
+import Loader from "../../components/loading";
 const Other = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
@@ -22,7 +23,7 @@ const Other = () => {
   const [money, setMoney] = useState();
   const [showAddModal, setShowAddModal] = useState(false);
   const handleOnCloseAdd = () => setShowAddModal(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const handleOnCloseOTP = () => setShowOTPModal(false);
   const [value, setValue] = useState();
@@ -56,7 +57,7 @@ const Other = () => {
   }
 
   async function addNewRecipent(accSrcNumber, nickName) {
-    await fetcherAddReceiver(accSrcNumber, nickName);
+    await fetcherAddAffiliatedBank(accSrcNumber, nickName, nickName, parseInt(value));
   }
 
   async function sendReqTransfer() {
@@ -104,7 +105,7 @@ const Other = () => {
 
   useEffect(() => {
     console.log(response);
-    if (statuscode === 201) {
+    if (statuscode === 200) {
       if (accNum !== null) {
         setName(response.data.data.user.name);
         setNotification(response.data.data.user.name);
@@ -137,6 +138,7 @@ const Other = () => {
     if (result) {
       if (result.statusCode === 200) {
         setTransactionId(result.data.id);
+        setIsLoading(false);
         setShowOTPModal(true);
       }
     }
@@ -159,13 +161,28 @@ const Other = () => {
     console.log(money);
     console.log(description);
     sendReqTransfer();
+    setIsLoading(true);
   };
 
   const handleSave = () => {
     addNewRecipent(accNum, name);
     resetState();
   };
-
+  if (isLoading)
+    return (
+      <div>
+        <div>
+          <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
+            <HomeNavigation id={4} />
+            <div className="h-screen flex-auto">
+              <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
+                <Loader />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   if (isSuccess === true) {
     return (
       <div>

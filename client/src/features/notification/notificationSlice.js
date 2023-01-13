@@ -22,7 +22,6 @@ const notificationSlice = createSlice({
             state.isOpen = true;
             state.isRead = true;
             state.message = "";
-            state.currentPaymentDebt = null;
         },
         updateCurrentDebt : (state, action) => {
             state.currentPaymentDebt = action.payload;

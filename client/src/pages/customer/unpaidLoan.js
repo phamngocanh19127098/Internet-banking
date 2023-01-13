@@ -9,7 +9,7 @@ import {
 import { onInitUnpaidDebtReminder } from "../../features/debtReminder/unpaidDebtReminder";
 import { PAY_DEBT } from "../../constants/buttonType";
 import DebtReminderList from "../../components/DebtReminderList";
-
+import DebtList from "../../components/debt/DebtList";
 const socket = io.connect("http://localhost:3001");
 
 const UnPaidLoan = () => {
@@ -37,7 +37,8 @@ const UnPaidLoan = () => {
           <HomeNavigation id={6} />
           <div className="h-screen flex-auto">
             <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey h-[90%] p-5 pt-8 relative duration-300">
-              <DebtReminderList
+              <DebtList
+                height={128}
                 debtReminders={unpaidDebt.unpaidDebtReminders}
                 type={PAY_DEBT}
               />

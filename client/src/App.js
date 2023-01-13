@@ -32,7 +32,7 @@ import Admin from "./pages/admin/adminHome";
 import Management from "./pages/admin/management";
 import ManagementTransaction from "./pages/admin/managementTransaction";
 import LockUserAccount from "./pages/employee/lockUserAccount";
-
+import Footer from "./components/footer";
 function App() {
   return (
     <Router>
@@ -82,6 +82,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <Footer />
     </Router>
   );
 }

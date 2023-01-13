@@ -15,6 +15,8 @@ import {JwtService} from '@nestjs/jwt';
 import { VerifyOtpTransferDto } from './dto/verify-otp-transfer.dto';
 import { TransactionsService } from 'src/api/transactions/transactions.service';
 import { VerifyTransferInternalDto } from 'src/api/transactions/dto/transaction.dto';
+import { Transaction } from 'src/api/transactions/entities/transaction.entity';
+import { DebtReminderEnum } from 'src/api/debtReminders/enum/debtReminder.enum';
 
 @Injectable()
 export class DebtReminderSocketService {
@@ -24,7 +26,9 @@ export class DebtReminderSocketService {
     private readonly debtReminderService : DebtRemindersService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly transactionService : TransactionsService
+    private readonly transactionService : TransactionsService,
+    @InjectRepository(Transaction)
+    private readonly transactionRepository : Repository<Transaction>,
   ){
 
   }
@@ -126,6 +130,25 @@ export class DebtReminderSocketService {
       otpCode: verifyOtpDto.otpCode,
     }
     let data = await this.transactionService.verifyTransferOtp(verifyDto, verifyOtpDto.authorization);
+    // let transaction = await this.transactionRepository.findOneBy({
+    //   id: verifyDto.transactionId
+    // });
+    console.log(verifyOtpDto);
+    
+    if (data.statusCode == 200) {
+      let debtReminder = await this.debtReminderRepository.findOneBy({
+        id: +verifyOtpDto.debtReminderId,
+      })
+
+      await this.debtReminderRepository.update({
+        id: debtReminder.id
+      }, {
+        paymentStatus: DebtReminderEnum.PAID
+      });
+      data ['receiverId'] = debtReminder.receiverId;
+      data['userId'] = debtReminder.userId;
+      data['amount'] = debtReminder.amount;
+    }
     return data;
   }
 }

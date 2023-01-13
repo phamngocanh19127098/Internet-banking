@@ -200,7 +200,6 @@ export class TransactionsService {
       throw new BadRequestException('Lỗi khi đang tìm kiếm nguời dùng!');
     }
     let transaction = await this.findOne(dto.transactionId);
-    console.log(transaction);
     if (!transaction) {
       throw new UnExistedTransactionException();
     }
