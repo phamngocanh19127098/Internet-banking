@@ -17,6 +17,7 @@ const ConfirmOTPDebt = (props) => {
                 authorization: `Bearer ${token}`,
                 transactionId: notification.currentTransaction.data.id,
                 otpCode: OTP,
+                debtReminderId: notification.currentPaymentDebt.id
             }
         )
         props.onClose();

@@ -22,4 +22,9 @@ export class VerifyOtpTransferDto {
     @IsString()
     @ApiProperty({default: ""})
     authorization : string;
+
+    @Allow()
+    @IsString()
+    @ApiProperty({default: ""})
+    debtReminderId : string;
 }

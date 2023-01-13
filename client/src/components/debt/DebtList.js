@@ -9,7 +9,7 @@ import {
     removeCreatedDebtReminder,
     removeReceivedDebtReminder,
 } from "../../constants/debtReminderConstants";
-import { closeNotification, updateCurrentTransaction } from "../../features/notification/notificationSlice";
+import { closeNotification, updateCurrentDebt, updateCurrentTransaction } from "../../features/notification/notificationSlice";
 import { CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
 import { SRC } from "../../constants/payTransactionFee";
 import { removeReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
@@ -23,6 +23,7 @@ const DebtList = (props) => {
     const { userInfo } = useSelector((state) => state.auth);
     const [showOTP, setShowOTP] = useState(false);
     const handleOnCloseOTP = () => setShowOTP(false);
+    const notification = useSelector((state) => state.notification);
 
     const handlePayDebtAction = (userId, amount) => {
         console.log("ABC")
@@ -120,7 +121,11 @@ const DebtList = (props) => {
                                                     {(props.type === PAY_DEBT || props.type === RECEIVED_DEBT) && (
                                                         <button
                                                             className="cursor-pointer h-fit w-fit  px-6 py-2 text-sm font-bold text-white bg-brightblue rounded-full hover:bg-hover-brightblue"
-                                                            onClick={() => handlePayDebtAction(account.userId, account.amount)}
+                                                            onClick={() => {
+                                                                handlePayDebtAction(account.userId, account.amount)
+                                                                dispatch(updateCurrentDebt(account))
+                                                            }
+                                                        }
                                                         >
                                                             Thanh toán
                                                         </button>
