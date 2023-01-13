@@ -87,7 +87,7 @@ function ManagementTransaction() {
       const list = allList;
       list.map(
         (element, index) =>
-        (element["date"] = moment(element["updatedAt"]).format(
+        (element["date"] = moment(element["updatedAt"]).utcOffset("+07:00").format(
           "DD-MM-YYYY hh:mm:ss"
         ))
       );
