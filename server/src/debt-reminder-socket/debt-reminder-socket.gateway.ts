@@ -23,6 +23,8 @@ import { RemoveDebtReminderDto } from './dto/remove-debt-reminder.dto';
 import {CreateDebtReminderDto} from "../api/debtReminders/dto/create-debt-reminder.dto";
 import {PayDebtReminderDto} from "../api/transactions/dto/pay-debt-reminder.dto";
 import { VerifyOtpTransferDto } from './dto/verify-otp-transfer.dto';
+import { Roles } from 'src/commons/decorator/roles.decorator';
+import { Role } from 'src/api/users/entity/user.entity';
 
 @WebSocketGateway({cors: {
   origin: '*'
@@ -34,30 +36,35 @@ export class DebtReminderSocketGateway {
     private readonly debtReminderSocketService: DebtReminderSocketService
   ) {}
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(createDebtReminderSocket)
   async create(@MessageBody() createDebtReminderDto: CreateDebtReminderDto) {
     let data = await this.debtReminderSocketService.create(createDebtReminderDto);
     return this.server.emit(createDebtReminderSocket, {...data})
   }
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(findAllCreatedDebtReminder)
   async findAllCreatedDebtReminder(@MessageBody() user: ListDebtReminderDto) {
     let data = await this.debtReminderSocketService.findAllCreatedDebtReminder(user.userId);
     return this.server.emit(findAllCreatedDebtReminder, {data, userId: user.userId});
   }
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(findAllReceivedDebtReminder)
   async findAllReceivedDebtReminder(@MessageBody() user: ListDebtReminderDto) {
     let data = await this.debtReminderSocketService.findAllReceivedDebtReminder(user.userId);
     return this.server.emit(findAllReceivedDebtReminder, {data, userId: user.userId});
   }
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(removeCreatedDebtReminder)
   async remove(@MessageBody() removeDebtReminderDto: RemoveDebtReminderDto) {
     let data = await this.debtReminderSocketService.removeCreatedDebtReminder(removeDebtReminderDto);
     return this.server.emit(removeCreatedDebtReminder, {...data})
   }
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(removeReceivedDebtReminder)
   async removeReceivedDebtReminder(@MessageBody() removeDebtReminderDto: RemoveDebtReminderDto) {
     let data = await this.debtReminderSocketService.removeReceivedDebtReminder(removeDebtReminderDto);
@@ -65,12 +72,14 @@ export class DebtReminderSocketGateway {
     return this.server.emit(removeReceivedDebtReminder, {...data})
   }
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(findAllUnPaidDebtReminder)
   async findAllUnPaidDebtReminder(@MessageBody() user: ListDebtReminderDto) {
     let data = await this.debtReminderSocketService.findAllUnPaidDebtReminder(user.userId);
     return this.server.emit(findAllUnPaidDebtReminder, {data, userId: user.userId});
   }
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(payDebt)
   async payDebt(@MessageBody() payDebtReminderDto: PayDebtReminderDto) {
     let data = await this.debtReminderSocketService.payDebt(payDebtReminderDto, payDebtReminderDto.authorization);
@@ -80,6 +89,7 @@ export class DebtReminderSocketGateway {
     else return this.server.emit(payDebtFail , {...data})
   }
 
+  @Roles(Role.CUSTOMER)
   @SubscribeMessage(verifyOtp)
   async verifyOtp(@MessageBody() verifyOtpDto : VerifyOtpTransferDto){
     let data = await this.debtReminderSocketService.verifyOtp(verifyOtpDto);

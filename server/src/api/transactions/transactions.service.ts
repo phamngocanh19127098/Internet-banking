@@ -321,7 +321,11 @@ export class TransactionsService {
   }
 
   async findAllWithoutCondition() {
-    return this.transactionRepository.find();
+    return this.transactionRepository.find({
+      where: {
+        status: 1,
+      },
+    });
   }
 
   async findOne(id: number) {
@@ -334,11 +338,13 @@ export class TransactionsService {
     if (bankid) {
       transactions = await this.transactionRepository.findBy({
         bankDesId: bankid,
+        status: 1,
       });
     } else {
       transactions = await this.transactionRepository.find({
         where: {
           bankDesId: IsNull(),
+          status: 1,
         },
       });
     }

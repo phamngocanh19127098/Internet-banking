@@ -1,11 +1,9 @@
 import moment from "moment/moment";
 import "moment/locale/vi";
 import { useEffect, useState } from "react";
+import { formatMoney } from "../../utils";
 
 const AllListTransaction = (props) => {
-  function numberWithCommas(x) {
-    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
   const [finalList, setFinalList] = useState();
 
   useEffect(() => {
@@ -93,13 +91,12 @@ const AllListTransaction = (props) => {
                     <td className="px-8 py-4">
                       {transaction.accountSrcNumber === props.accNum && (
                         <div className="text-red text-base font-bold">
-                          {" "}
-                          -{numberWithCommas(transaction.amount)}
+                          -{formatMoney(transaction.amount)}
                         </div>
                       )}
                       {transaction.accountDesNumber === props.accNum && (
                         <div className="text-green text-base font-bold">
-                          +{numberWithCommas(transaction.amount)}
+                          +{formatMoney(transaction.amount)}
                         </div>
                       )}
                     </td>

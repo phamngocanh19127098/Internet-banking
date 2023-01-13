@@ -7,7 +7,7 @@ import { fetcherListByID } from "../../fetchers/fetcherAdmin";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-
+import "moment/locale/vi";
 const dateFilterParams = {
   comparator: function (filterLocalDateAtMidnight, cellValue) {
     var dateAsString = cellValue;
@@ -40,7 +40,7 @@ function ManagementTransaction() {
   const [allList, setAllList] = useState();
   const [rowData1, setRowData1] = useState();
   const [value, setValue] = useState("0");
-
+  moment.locale("vi");
   async function getAllList() {
     const info = await fetcherListAdmin();
     setAllList(info.data.data);
@@ -67,7 +67,6 @@ function ManagementTransaction() {
 
   useEffect(() => {
     if (value === "0") {
-      console.log("A");
       getAllList();
     }
     if (value === "1") {
@@ -88,16 +87,16 @@ function ManagementTransaction() {
       const list = allList;
       list.map(
         (element, index) =>
-          (element["date"] = moment(element["updatedAt"]).format(
-            "DD-MM-YYYY hh:mm:ss"
-          ))
+          (element["date"] = moment(element["updatedAt"])
+            .add(7, "h")
+            .format("DD-MM-YYYY HH:mm:ss"))
       );
       list.map((element, index) =>
         element["bankDesId"] === null
           ? (element["bankName"] = "TaiXiu Bank")
           : listBank !== undefined
           ? listBank.map((bank) =>
-              element["bankDesId"] === bank["id"]
+              parseInt(element["bankDesId"]) === parseInt(bank["id"])
                 ? (element["bankName"] = bank["name"])
                 : null
             )
@@ -105,7 +104,7 @@ function ManagementTransaction() {
       );
       setRowData1(list);
     }
-  }, [allList]);
+  }, [allList, listBank]);
 
   const columns = [
     { headerName: "ID", field: "id", sortable: true, filter: true },
@@ -200,7 +199,7 @@ function ManagementTransaction() {
                 </div>
               ) : null}
 
-              {rowData1 !== null ? (
+              {rowData1 !== null && listBank !== null ? (
                 <div>
                   <div className="ag-theme-alpine" style={{ height: 600 }}>
                     From :{" "}
