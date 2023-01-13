@@ -7,7 +7,7 @@ import { fetcherListByID } from "../../fetchers/fetcherAdmin";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-
+import "moment/locale/vi";
 const dateFilterParams = {
   comparator: function (filterLocalDateAtMidnight, cellValue) {
     var dateAsString = cellValue;
@@ -40,7 +40,7 @@ function ManagementTransaction() {
   const [allList, setAllList] = useState();
   const [rowData1, setRowData1] = useState();
   const [value, setValue] = useState("0");
-
+  moment.locale("vi");
   async function getAllList() {
     const info = await fetcherListAdmin();
     setAllList(info.data.data);
@@ -88,20 +88,20 @@ function ManagementTransaction() {
       const list = allList;
       list.map(
         (element, index) =>
-          (element["date"] = moment(element["updatedAt"]).format(
-            "DD-MM-YYYY hh:mm:ss"
-          ))
+        (element["date"] = moment(element["updatedAt"]).format(
+          "DD-MM-YYYY hh:mm:ss"
+        ))
       );
       list.map((element, index) =>
         element["bankDesId"] === null
           ? (element["bankName"] = "TaiXiu Bank")
           : listBank !== undefined
-          ? listBank.map((bank) =>
+            ? listBank.map((bank) =>
               element["bankDesId"] === bank["id"]
                 ? (element["bankName"] = bank["name"])
                 : null
             )
-          : null
+            : null
       );
       setRowData1(list);
     }
