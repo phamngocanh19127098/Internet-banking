@@ -184,6 +184,7 @@ const Loan = () => {
               </div>
               <div className="">
                 <DebtList
+                  height={64}
                   debtReminders={debtReminder.debtReminders}
                   type={CREATED_DEBT}
                 />
@@ -196,6 +197,7 @@ const Loan = () => {
               </div>
               <div>
                 <DebtList
+                  height={64}
                   debtReminders={debtReceived.debtReceived}
                   type={RECEIVED_DEBT}
                 />

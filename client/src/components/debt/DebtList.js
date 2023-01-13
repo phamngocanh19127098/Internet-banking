@@ -76,7 +76,7 @@ const DebtList = (props) => {
         <div>
             <div className="bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] h-64 relative duration-300">
                 {props.debtReminders.length !== 0 ? (
-                    <div className=" h-64  place-items-start overflow-y-auto overflow-x-auto">
+                    <div className={`h-${props.height} place-items-start overflow-y-auto overflow-x-auto`}>
                         <div className="border-b border-gray-200 shadow px-4 py-4  items-center min-w-full justify-center">
                             <table className=" table-fixed border-0 min-w-full">
                                 <thead className=" border-0 border-b border-b-black">
