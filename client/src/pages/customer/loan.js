@@ -58,6 +58,7 @@ const Loan = () => {
         authorization: `Bearer ${token}`,
         transactionId: notification.currentTransaction.data.id,
         otpCode: otp,
+        debtReminderId: notification.currentPaymentDebt.id
       }
     )
   }
