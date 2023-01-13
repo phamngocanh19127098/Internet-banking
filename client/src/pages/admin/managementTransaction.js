@@ -67,7 +67,6 @@ function ManagementTransaction() {
 
   useEffect(() => {
     if (value === "0") {
-      console.log("A");
       getAllList();
     }
     if (value === "1") {
@@ -97,7 +96,7 @@ function ManagementTransaction() {
           ? (element["bankName"] = "TaiXiu Bank")
           : listBank !== undefined
             ? listBank.map((bank) =>
-              element["bankDesId"] === bank["id"]
+              parseInt(element["bankDesId"]) === parseInt(bank["id"])
                 ? (element["bankName"] = bank["name"])
                 : null
             )
@@ -105,7 +104,7 @@ function ManagementTransaction() {
       );
       setRowData1(list);
     }
-  }, [allList]);
+  }, [allList, listBank]);
 
   const columns = [
     { headerName: "ID", field: "id", sortable: true, filter: true },
@@ -200,7 +199,7 @@ function ManagementTransaction() {
                 </div>
               ) : null}
 
-              {rowData1 !== null ? (
+              {rowData1 !== null && listBank !== null ? (
                 <div>
                   <div className="ag-theme-alpine" style={{ height: 600 }}>
                     From :{" "}
