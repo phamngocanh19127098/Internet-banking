@@ -140,6 +140,9 @@ const Other = () => {
         setTransactionId(result.data.id);
         setIsLoading(false);
         setShowOTPModal(true);
+      } else {
+        alert(result.error.message);
+        setIsLoading(false);
       }
     }
   }, [result]);
