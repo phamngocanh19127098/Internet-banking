@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import HomeNavigation from "../../components/homeNavigation";
 import { useSelector } from "react-redux";
 import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
+import { formatMoney } from "../../utils";
 
 const Accounts = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
-
-  function numberWithCommas(x) {
-    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
 
   async function getList() {
     const list = await fetcherAccounts(userInfo.id);
@@ -51,7 +48,7 @@ const Accounts = () => {
                             </td>
                             <td className="px-4 py-2">
                               <div className="text-sm text-black-900">
-                                {numberWithCommas(account.currentBalance)} VND
+                                {formatMoney(account.currentBalance)} VND
                               </div>
                             </td>
                           </tr>

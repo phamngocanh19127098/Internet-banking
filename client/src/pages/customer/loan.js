@@ -17,13 +17,17 @@ import {
 import DebtList from "../../components/debt/DebtList";
 import { onInit } from "../../features/debtReminder/debtReminderSlice";
 import { onInitReceivedDebt } from "../../features/debtReminder/debtReceivedSlice";
-import DebtReminderList from "../../components/DebtReminderList";
 import AddDebtReminder from "../../components/addDebtReminder";
 import { CREATED_DEBT, RECEIVED_DEBT } from "../../constants/buttonType";
-import { closeNotification, newNotification, updateCurrentDebt, updateCurrentTransaction } from "../../features/notification/notificationSlice";
+import {
+  closeNotification,
+  newNotification,
+  updateCurrentDebt,
+  updateCurrentTransaction,
+} from "../../features/notification/notificationSlice";
 import { SRC } from "../../constants/payTransactionFee";
-import Loader from "../../components/loading";
 import { socketOption } from "../../config/socket-option";
+
 const socket = io.connect("http://localhost:3001", socketOption);
 
 const Loan = () => {
@@ -41,29 +45,23 @@ const Loan = () => {
 
   const handlePayDebt = () => {
     console.log(notification.currentPaymentDebt);
-    socket.emit(
-      payDebt,
-      {
-        authorization: `Bearer ${token}`,
-        toUserId: notification.currentPaymentDebt.userId,
-        amount: notification.currentPaymentDebt.amount,
-        description: "Thanh toán nợ",
-        payTransactionFee: SRC
-      }
-    )
-  }
+    socket.emit(payDebt, {
+      authorization: `Bearer ${token}`,
+      toUserId: notification.currentPaymentDebt.userId,
+      amount: notification.currentPaymentDebt.amount,
+      description: "Thanh toán nợ",
+      payTransactionFee: SRC,
+    });
+  };
 
   const handleSubmitOtp = () => {
-    socket.emit(
-      verifyOtp,
-      {
-        authorization: `Bearer ${token}`,
-        transactionId: notification.currentTransaction.data.id,
-        otpCode: otp,
-        debtReminderId: notification.currentPaymentDebt.id
-      }
-    )
-  }
+    socket.emit(verifyOtp, {
+      authorization: `Bearer ${token}`,
+      transactionId: notification.currentTransaction.data.id,
+      otpCode: otp,
+      debtReminderId: notification.currentPaymentDebt.id,
+    });
+  };
 
   useEffect(() => {
     socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
@@ -130,31 +128,27 @@ const Loan = () => {
     socket.on(payDebtSuccess, (response) => {
       if (userInfo.id === response.userId) {
         console.log(notification);
-        dispatch(closeNotification())
+        dispatch(closeNotification());
         dispatch(updateCurrentTransaction(response));
       }
-
     });
-  }, [userInfo.id, dispatch, notification])
+  }, [userInfo.id, dispatch, notification]);
   useEffect(() => {
     socket.on(verifyOtpSuccess, (response) => {
       if (userInfo.id === response.userId) {
         let message = `Một yêu cầu thanh toán nợ với số tiền là ${response.amount} vừa được thanh toán`;
-        console.log(message)
-        dispatch(newNotification(message))
+        console.log(message);
+        dispatch(newNotification(message));
         socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
         socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
         socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
-
-      }
-      else if (userInfo.id === response.receiverId) {
+      } else if (userInfo.id === response.receiverId) {
         socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
         socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
         socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
-
       }
-    })
-  }, [notification, dispatch, userInfo.id])
+    });
+  }, [notification, dispatch, userInfo.id]);
 
   return (
     <div>
@@ -169,7 +163,7 @@ const Loan = () => {
                   visible={showAddModal}
                 />
               )}
-              <div className="flex flex-1 justify-between">
+              <div className="flex flex-1 justify-between mb-3">
                 <h2 className="text-2xl leading-relaxed">
                   Danh sách nợ do người dùng tạo
                 </h2>
@@ -189,9 +183,6 @@ const Loan = () => {
                   debtReminders={debtReminder.debtReminders}
                   type={CREATED_DEBT}
                 />
-
-
-
               </div>
               <div className="text-2xl leading-relaxed">
                 Danh sách nợ do người khác tạo
