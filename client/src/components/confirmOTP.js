@@ -10,7 +10,7 @@ const ConfirmOTP = (props) => {
   const [result, setResult] = useState();
   async function verifyOTP() {
     const info = await fetcherVerifyTransfer(props.transactionId, OTP);
-    setStatuscode(info.data.statusCode);
+    setStatuscode(info.status);
     setResult(info);
   }
 
@@ -28,8 +28,9 @@ const ConfirmOTP = (props) => {
   }, [OTP]);
 
   useEffect(() => {
+    console.log(result)
     if (statuscode !== null && statuscode !== undefined) {
-      if (statuscode === 200) {
+      if (statuscode === 201) {
         props.handleSuccess(true);
         props.infoSuccess(result.data);
         props.onClose();
@@ -38,6 +39,7 @@ const ConfirmOTP = (props) => {
         setNotification("Mã OTP chưa chính xác");
       }
     } else {
+      setIsLoading(false);
       setNotification("");
     }
   }, [statuscode]);

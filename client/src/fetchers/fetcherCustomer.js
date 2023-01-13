@@ -136,7 +136,7 @@ export const fetcherSendTransfer = async (
 export const fetcherVerifyTransfer = async (transactionId, otpCode) => {
   const url = `http://ec2-35-171-9-165.compute-1.amazonaws.com:3001/transactions/transfer/verify`;
   try {
-    const { data, statusCode } = await axios({
+    const { data, status } = await axios({
       method: "post",
       url,
       data: {
@@ -145,7 +145,7 @@ export const fetcherVerifyTransfer = async (transactionId, otpCode) => {
       },
       headers: { Authorization: "Bearer " + localStorage.getItem("userToken") },
     });
-    return { data, statusCode };
+    return { data, status };
   } catch (err) {
     console.error("Error response:");
     const data = err.response.data;
