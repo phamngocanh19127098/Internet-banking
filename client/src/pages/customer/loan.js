@@ -135,8 +135,25 @@ const Loan = () => {
 
     });
   }, [userInfo.id, dispatch, notification])
+  useEffect(() => {
+    socket.on(verifyOtpSuccess, (response) => {
+      if (userInfo.id === response.userId) {
+        let message = `Một yêu cầu thanh toán nợ với số tiền là ${response.amount} vừa được thanh toán`;
+        console.log(message)
+        dispatch(newNotification(message))
+        socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
+        socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
+        socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
 
+      }
+      else if (userInfo.id === response.receiverId) {
+        socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
+        socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
+        socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
 
+      }
+    })
+  }, [notification, dispatch, userInfo.id])
 
   return (
     <div>

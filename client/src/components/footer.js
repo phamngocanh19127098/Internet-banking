@@ -18,7 +18,7 @@ import { CREATED_DEBT } from "../constants/buttonType";
 import { closeNotification, newNotification, updateCurrentDebt, updateCurrentTransaction } from "../features/notification/notificationSlice";
 import { SRC } from "../constants/payTransactionFee";
 import { io } from "socket.io-client";
-
+import { Link } from "react-router-dom";
 
 import "../styles/header.css";
 import Toast from "./toast";
@@ -81,7 +81,9 @@ const Footer = () => {
     }
     return (
         <div>
-            <Toast toastlist={list} setList={setList} />
+            <Link to="/unpaid-loan">
+                <Toast toastlist={list} setList={setList} />
+            </Link>
         </div>
     );
 };

@@ -6,7 +6,7 @@ import { verifyOtp } from "../../constants/debtReminderConstants";
 import { findAllCreatedDebtReminder, findAllReceivedDebtReminder, findAllUnPaidDebtReminder } from "../../constants/debtReminderConstants";
 import Loader from "../loading";
 import { verifyOtpSuccess } from "../../constants/debtReminderConstants";
-
+import { newNotification } from "../../features/notification/notificationSlice";
 const socket = io.connect(
     "http://localhost:3001"
 );
@@ -42,6 +42,7 @@ const ConfirmOTPDebt = (props) => {
         socket.on(verifyOtpSuccess, (response) => {
             if (userInfo.id === response.userId) {
                 let message = `Một yêu cầu thanh toán nợ với số tiền là ${response.amount} vừa được thanh toán`;
+                dispatch(newNotification(message))
                 socket.emit(findAllReceivedDebtReminder, { userId: userInfo.id });
                 socket.emit(findAllUnPaidDebtReminder, { userId: userInfo.id });
                 socket.emit(findAllCreatedDebtReminder, { userId: userInfo.id });
