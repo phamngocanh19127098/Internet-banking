@@ -321,7 +321,11 @@ export class TransactionsService {
   }
 
   async findAllWithoutCondition() {
-    return this.transactionRepository.find();
+    return this.transactionRepository.find({
+      where: {
+        status: 1,
+      },
+    });
   }
 
   async findOne(id: number) {

@@ -7,8 +7,10 @@ import { findAllCreatedDebtReminder, findAllReceivedDebtReminder, findAllUnPaidD
 import Loader from "../loading";
 import { verifyOtpSuccess } from "../../constants/debtReminderConstants";
 import { newNotification } from "../../features/notification/notificationSlice";
+import { socketOption } from "../../config/socket-option";
 const socket = io.connect(
-    "http://localhost:3001"
+    "http://localhost:3001",
+    socketOption
 );
 const ConfirmOTPDebt = (props) => {
     const token = localStorage.getItem("userToken");

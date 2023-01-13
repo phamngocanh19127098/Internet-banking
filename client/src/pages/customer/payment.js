@@ -9,6 +9,8 @@ import { fetcherSendTransfer } from "../../fetchers/fetcherCustomer";
 import ConfirmOTP from "../../components/confirmOTP";
 import { fetcherAddReceiver } from "../../fetchers/fetcherCustomer";
 import Loader from "../../components/loading";
+import { formatMoney } from "../../utils";
+
 const Payment = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [listAccounts, setListAccounts] = useState([{}]);
@@ -86,7 +88,9 @@ const Payment = () => {
     if (statuscode === 200) {
       if (accNum !== null) {
         if (rootNum !== undefined && accNum === rootNum) {
-          setNotification("Bạn không thể chuyển khoản vào chính tài khoản của mình");
+          setNotification(
+            "Bạn không thể chuyển khoản vào chính tài khoản của mình"
+          );
           setName(" ");
           setIsDisable(true);
         } else {
@@ -189,7 +193,7 @@ const Payment = () => {
                   STK người nhận: {accNum}
                 </div>
                 <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
-                  Số tiền: {money}
+                  Số tiền: {formatMoney(money) + " VND"}
                 </div>
                 <div className="flex  text-xl  text-black font-bold mb-2 mt-4 px-8 ">
                   Nội dung: {description}
@@ -239,10 +243,10 @@ const Payment = () => {
               >
                 {listAccounts !== null
                   ? listAccounts.map((account, index) => (
-                    <option key={index} value={account.accountNumber}>
-                      {account.accountNumber}
-                    </option>
-                  ))
+                      <option key={index} value={account.accountNumber}>
+                        {account.accountNumber}
+                      </option>
+                    ))
                   : null}
               </select>
               <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">

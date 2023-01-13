@@ -9,8 +9,10 @@ import {
 import { CREATED_DEBT, PAY_DEBT, RECEIVED_DEBT } from "../constants/buttonType";
 import { SRC } from "../constants/payTransactionFee";
 import { updateCurrentDebt } from "../features/notification/notificationSlice";
+import { socketOption } from "../config/socket-option";
 const socket = io.connect(
-  "http://localhost:3001"
+  "http://localhost:3001",
+  socketOption
 );
 
 const DebtReminderItem = (props) => {

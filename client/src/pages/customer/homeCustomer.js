@@ -4,6 +4,7 @@ import HomeNavigation from "../../components/homeNavigation";
 import { useSelector } from "react-redux";
 import CloseAccCustomer from "../../components/closeAccCustomer";
 import { fetcherAccounts } from "../../fetchers/fetcherCustomer";
+import { formatMoney } from "../../utils";
 
 const HomeCustomer = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -15,10 +16,6 @@ const HomeCustomer = () => {
   async function getAccount() {
     const list = await fetcherAccounts(userInfo.id);
     setAccount(list.data.data.accounts[0]);
-  }
-
-  function numberWithCommas(x) {
-    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   useEffect(() => {
@@ -49,7 +46,7 @@ const HomeCustomer = () => {
                 Số dư hiện tại:
               </div>
               <div className="text-cente text-main-green font-bold text-2xl duration-200">
-                {numberWithCommas(account.currentBalance)} VND
+                {formatMoney(account.currentBalance)} VND
               </div>
             </div>
             <div className="row-span-2 col-span-2 rounded flex flex-col items-center mt-6">

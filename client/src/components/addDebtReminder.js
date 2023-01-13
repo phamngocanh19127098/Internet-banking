@@ -5,8 +5,10 @@ import {
 } from "../constants/debtReminderConstants";
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
+import { socketOption } from "../config/socket-option";
 const socket = io.connect(
-  "http://localhost:3001"
+  "http://localhost:3001",
+  socketOption
 );
 
 const AddDebtReminder = (props) => {
