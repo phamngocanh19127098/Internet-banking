@@ -6,13 +6,13 @@ import { fetcherAddAccount } from "../../fetchers/fetcherEmployee";
 import SuccessModal from "../../components/successModal";
 import { data } from "browserslist";
 import Toast from "../../components/toast";
-
+import Loader from "../../components/loading";
 const AddAccount = () => {
   const { register, handleSubmit } = useForm();
   const [list, setList] = useState([]);
   const [message, setMessage] = useState();
   let toastProperties = null;
-
+  const [isLoading, setIsLoading] = useState(false);
   const showToast = (type) => {
     switch (type) {
       case "success":
@@ -65,10 +65,12 @@ const AddAccount = () => {
     if (result) {
       console.log(result);
       if (result.status === 200) {
+        setIsLoading(false)
         setShowSuccessModal(true);
       } else {
         console.log("FAIL");
         console.log(result.data);
+        setIsLoading(false)
         setMessage(result.data.error.message);
         showToast("danger");
       }
@@ -79,8 +81,23 @@ const AddAccount = () => {
     let addData = data;
     addData.role = "customer";
     addAccount(addData);
+    setIsLoading(true)
   };
-
+  if (isLoading)
+    return (
+      <div>
+        <div>
+          <div className=" bg-cover w-screen flex h-screen bg-[#F0F2FF] ">
+            <EmployeeNavigation id={1} />
+            <div className="h-screen flex-auto">
+              <div className="m-10 w-200 bg-[#F0F2FF] rounded-sm ring-2 ring-grey  h-[90%] p-5  pt-8 relative duration-300">
+                <Loader />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   return (
     <div>
       <div>

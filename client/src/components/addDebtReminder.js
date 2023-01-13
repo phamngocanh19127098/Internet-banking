@@ -5,19 +5,66 @@ import {
 } from "../constants/debtReminderConstants";
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
+import { socketOption } from "../config/socket-option";
+import { fetcherReceiver } from "../fetchers/fetcherCustomer";
+import CurrencyInput from "react-currency-input-field";
+import { useEffect } from "react";
 const socket = io.connect(
-  "http://localhost:3001"
+  "http://ec2-35-171-9-165.compute-1.amazonaws.com:3001",
+  socketOption
 );
 
 const AddDebtReminder = (props) => {
   const [accountDesNumber, setAccountDesNumber] = useState("");
+  const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const { userInfo } = useSelector((state) => state.auth);
+  const [statuscode, setStatuscode] = useState(101);
+  const [response, setResponse] = useState();
+  const [notification, setNotification] = useState();
+  const [isDisable, setIsDisable] = useState(true);
   const handleCancelClick = (e) => {
     // resetState()
     props.onClose();
   };
+
+  async function getName() {
+    const info = await fetcherReceiver(accountDesNumber);
+    setStatuscode(info.status);
+    setResponse(info);
+  }
+
+  useEffect(() => {
+    if (statuscode === 200) {
+      if (accountDesNumber !== null) {
+        setName(response.data.data.user.name);
+        setNotification(response.data.data.user.name);
+        setIsDisable(false);
+      } else {
+        setNotification("");
+        setName(" ");
+        setIsDisable(true);
+      }
+    } else {
+      if (accountDesNumber !== null && accountDesNumber !== "") {
+        setNotification("Số tài khoản chưa chính xác");
+        setName("");
+        setIsDisable(true);
+      } else {
+        setNotification("");
+        setName("");
+        setIsDisable(true);
+      }
+    }
+  }, [statuscode]);
+  useEffect(() => {
+    console.log(accountDesNumber);
+    if (accountDesNumber !== null && accountDesNumber !== undefined) {
+      getName();
+    }
+  }, [accountDesNumber]);
+
   const createDebtReminderHandler = (e) => {
     e.preventDefault();
 
@@ -113,30 +160,30 @@ const AddDebtReminder = (props) => {
             placeholder="Nhập số tài khoản"
           />
         </div>
-        {/*<div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">*/}
-        {/*  {notification}*/}
-        {/*</div>*/}
+        <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
+          {notification}
+        </div>
         <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
           Tên người sở hữu tài khoản
         </div>
         <div className="flex flex-col mb-4 px-8">
           <div className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline">
-            "Hàm get tên người nhận"
+            {name}
           </div>
         </div>
         <div className="flex  text-xs  text-black font-bold mb-2 mt-4 px-8 ">
           Số tiền cần thanh toán
         </div>
         <div className="flex flex-col mb-4 px-8">
-          <input
+          <CurrencyInput
             className=" appearance-none p-3 shadow rounded bg-white text-sm font-medium  text-gray-800 flex items-center justify-between cursor-pointer border border-[#001B3A]  leading-tight focus:outline-none focus:shadow-outline"
             id="amount"
-            type="number"
             required
+            decimalsLimit={2}
+            suffix=" VND"
             value={amount}
-            onChange={(e) => {
-              setAmount(e.target.value);
-            }}
+            //onChange={event => setMoney(event.target, value)}
+            onValueChange={(amount) => setAmount(amount)}
             placeholder="Nhập số tiền cần thanh toán"
           />
         </div>
@@ -165,6 +212,7 @@ const AddDebtReminder = (props) => {
           </button>
           <button
             id="handleSave"
+            disabled={isDisable}
             onClick={createDebtReminderHandler}
             className=" rounded px-4 py-2 ml-4 text-white  text-xs font-bold hover:bg-[#cf4a04] bg-[#EA580C] disabled:bg-[#edb395] "
           >
